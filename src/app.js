@@ -139,11 +139,53 @@ function simulateLargeDataProcessingAsyncDelayProblem() {
   }
 }
 
+// Функция для имитации асинхронного получения данных с разными задержками
+function fetchDataChunk2(chunkSize, currentIndex, largeData) {
+  return new Promise((resolve) => {
+    const delay = Math.random() * 1000; // Случайная задержка от 0 до 1000 мс
+    const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
+
+    setTimeout(() => {
+      resolve(newData);
+    }, delay);
+  });
+}
+
+// Функция для последовательной обработки чанков данных
+async function processChunksSequentially(largeData, chunkSize) {
+  let currentIndex = 0;
+  const totalChunks = Math.ceil(largeData.length / chunkSize);
+  let dataQueue = [];
+
+  showLoader(); // Показываем лоадер при начале обработки
+
+  while (currentIndex < largeData.length) {
+    const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
+    dataQueue.push(chunkData);
+    currentIndex += chunkSize;
+  }
+
+  for (const chunk of dataQueue) {
+    updateChart(chunk);
+    await new Promise(resolve => setTimeout(resolve, 0)); // Отдаем управление браузеру
+  }
+
+  hideLoader(); // Скрываем лоадер после завершения обработки
+}
+
+function simulateLargeDataProcessingAsyncDelaySolved() {
+  const largeData = Array.from({ length: 1000 }, (_, i) => i);
+  const chunkSize = 100; // Размер чанка
+
+  processChunksSequentially(largeData, chunkSize); // Запускаем обработку
+}
+
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
   initChart();
   // Запуск проблемных функций
   // simulateProblemLargeDataProcessing(); // Проблема 1
   // simulateLargeDataProcessingSolved() // Решение 1
-  simulateLargeDataProcessingAsyncDelayProblem(); // Проблема 2
+  // simulateLargeDataProcessingAsyncDelayProblem(); // Проблема 2
+  simulateLargeDataProcessingAsyncDelaySolved(); // Решение 2
 };
