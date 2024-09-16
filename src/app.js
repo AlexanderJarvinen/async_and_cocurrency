@@ -4,7 +4,7 @@ import './style.css';
 let ctx = document.getElementById("chart").getContext("2d");
 let chart;
 let data = [];
-const dataLength = 10000; // Длина массива данных
+const dataLength = 1000; // Длина массива данных
 const largeData = Array.from({ length: dataLength }, (_, i) => i);
 
 // Функция для инициализации графика
@@ -54,22 +54,31 @@ function updateChart(newData) {
   chart.update();
 }
 
+// Функция для обработки четных чисел с задержкой
+function processEvenNumber(value) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      updateChart(value);
+      resolve(); // Разрешаем промис после задержки
+    }, Math.random() * 1000); // Случайная задержка до 1000 мс
+  });
+}
 
-function initDataForChart() {
-   showLoader(); // Показываем лоадер при начале обработки
-  const largeData = Array.from({ length: 1000 }, (_, i) => i);
+// Функция для обработки данных по порядку
+async function initDataForChart() {
+  showLoader(); // Показываем лоадер при начале обработки
 
-
-  largeData.forEach((value) => {
+  // Обработка данных по порядку
+  for (const value of largeData) {
     if (value % 2 === 0) {
       // Если число четное, обрабатываем с задержкой
-      setTimeout(() => {
-       updateChart(value);
-      }, Math.random() * 1000); // Случайная задержка до 1000 мс
+      await processEvenNumber(value);
     } else {
-       updateChart(value);
+      // Если число нечетное, обрабатываем синхронно
+      updateChart(value);
     }
-  });
+  }
+
   hideLoader(); // Скрываем лоадер после завершения обработки
 }
 
