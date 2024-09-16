@@ -2,16 +2,24 @@ import Chart from 'chart.js/auto';
 import './style.css';
 
 let ctx = document.getElementById("chart").getContext("2d");
+let ctx2 = document.getElementById("chart2").getContext("2d"); // Контекст для второго графика
 let chart;
+let chart2;
 let data = [];
 const dataLength = 100; // Длина массива данных
 const largeData = Array.from({ length: dataLength }, (_, i) => i);
-const batchSize = Math.floor(dataLength / 5); // Пачка — это одна пятая от общего количества
+const batchSize = Math.floor(dataLength / 100); // Пачка — это одна пятая от общего количества
 
-// Функция для инициализации графика
-function initChart() {
+// Генерация массива случайных чисел
+const randomArray = Array.from({ length: dataLength }, () => Math.floor(Math.random() * dataLength));
+
+// Функция для инициализации графиков
+function initCharts() {
   if (chart) {
     chart.destroy();
+  }
+  if (chart2) {
+    chart2.destroy();
   }
 
   chart = new Chart(ctx, {
@@ -24,6 +32,28 @@ function initChart() {
           data: [],
           borderColor: "rgba(75, 192, 192, 1)",
           fill: false,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      animation: {
+        duration: 0,
+      },
+    },
+  });
+
+  chart2 = new Chart(ctx2, {
+    type: "bar",
+    data: {
+      labels: [], // Изначально пустые данные
+      datasets: [
+        {
+          label: "Index of Data Points",
+          data: [],
+          backgroundColor: "rgba(153, 102, 255, 0.2)",
+          borderColor: "rgba(153, 102, 255, 1)",
+          borderWidth: 1,
         },
       ],
     },
@@ -55,18 +85,37 @@ function updateProgressBar(index) {
   progressBar.value = progress;
   progressText.innerText = `${Math.floor(progress)}%`;
 
-  // Если прогресс достиг 100%, обновляем график
+  // Если прогресс достиг 100%, обновляем графики
   if (progress === 100) {
-    updateChart();
+    updateCharts();
   }
 }
 
-// Обновление графика после полной обработки данных
-function updateChart() {
+// Найти индекс элемента из randomArray в largeData
+function findIndexInLargeData(value) {
+  return largeData.indexOf(value);
+}
+
+// Обновление графиков после полной обработки данных
+function updateCharts() {
   chart.data.labels = data.map((_, i) => i + 1);
   chart.data.datasets[0].data = data;
+  
+  // Находим и выводим индекс каждого элемента data в randomArray
+  const indices = data.map(item => {
+    const indexInRandomArray = randomArray.indexOf(item);
+    return indexInRandomArray === -1 ? null : indexInRandomArray;
+  });
+
+  // Обновляем первый график
   chart.update();
-  console.log("График обновлен");
+  console.log("График данных обновлен");
+
+  // Обновляем второй график
+  chart2.data.labels = indices.map((_, i) => i + 1);
+  chart2.data.datasets[0].data = indices;
+  chart2.update();
+  console.log("График индексов обновлен");
 }
 
 // Функция для обработки четных чисел с задержкой
@@ -135,6 +184,6 @@ function initDataForChart() {
 
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
-  initChart();
+  initCharts();
   initDataForChart();
 };
