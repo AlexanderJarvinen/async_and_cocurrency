@@ -58,14 +58,20 @@ function updateChart(newData) {
 }
 
 // Проблема 1: Блокировка основного потока
-function simulateLargeDataProcessing() {
+function simulateProblemLargeDataProcessing() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
   
-  // largeData.forEach((value) => {
-  //   // Долгая обработка данных
-  //   for (let i = 0; i < 1000; i++) {}
-  //   updateChart([value]);
-  // });
+  largeData.forEach((value) => {
+    // Долгая обработка данных
+    for (let i = 0; i < 1000; i++) {}
+    updateChart([value]);
+  }); 
+}
+
+// Решение 1: Блокировка основного потока
+function simulateLargeDataProcessingSolved() {
+  const largeData = Array.from({ length: 50000 }, (_, i) => i);
+  
   
   let currentIndex = 0;
 
@@ -96,9 +102,48 @@ function simulateLargeDataProcessing() {
   
 }
 
+
+// Функция для имитации асинхронного получения данных с разными задержками
+function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
+  const delay = Math.random() * 1000; // Случайная задержка от 0 до 1000 мс
+
+  const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
+
+  setTimeout(() => {
+    callback(newData, currentIndex);
+  }, delay);
+}
+
+// Проблема 2: Aсинхронного получения данных с разными задержками
+function simulateLargeDataProcessingAsyncDelayProblem() {
+  const largeData = Array.from({ length: 1000 }, (_, i) => i);
+  const chunkSize = 100; // Размер чанка
+
+  let currentIndex = 0;
+  const totalChunks = Math.ceil(largeData.length / chunkSize);
+
+  showLoader(); // Показываем лоадер при начале обработки
+
+  for (let i = 0; i < totalChunks; i++) {
+    fetchDataChunk(chunkSize, currentIndex, largeData, (newData) => {
+      // Данные могут прийти асинхронно, но по порядку
+      updateChart(newData);
+
+      // Скрываем лоадер только после получения всех чанков
+      if (currentIndex >= largeData.length - chunkSize) {
+        hideLoader();
+      }
+    });
+
+    currentIndex += chunkSize; // Переходим к следующему чанку
+  }
+}
+
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
   initChart();
   // Запуск проблемных функций
-  // simulateLargeDataProcessing(); // Проблема 1
+  // simulateProblemLargeDataProcessing(); // Проблема 1
+  // simulateLargeDataProcessingSolved() // Решение 1
+  simulateLargeDataProcessingAsyncDelayProblem(); // Проблема 2
 };
