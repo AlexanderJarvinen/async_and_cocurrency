@@ -11,6 +11,7 @@ let ctx2 = document.getElementById("chart2").getContext("2d");
 let chart;
 let chart2;
 let data = [];
+let indexData = [];
 let randomArray = [];
 let indices = [];
 const dataLength = 100; // Длина массива данных
@@ -91,7 +92,7 @@ function updateProgressBar(index) {
 
   // Если прогресс достиг 100%, отправляем данные в Web Worker
   if (progress === 100) {
-    processDataInWorker();
+    updateCharts();
   }
 }
 
@@ -102,15 +103,16 @@ function updateCharts() {
   chart.update();
   console.log("График данных обновлен");
 
-  chart2.data.labels = indices.map((_, i) => i + 1);
-  chart2.data.datasets[0].data = indices;
+  chart2.data.labels = indexData.map((_, i) => i + 1);
+  chart2.data.datasets[0].data = indexData;
   chart2.update();
   console.log("График индексов обновлен");
 }
 
 // Отправляем данные в Web Worker для обработки
-function processDataInWorker() {
-  worker.postMessage({ data, dataLength });
+function processDataInWorker(batch) {
+  console.log("batch", batch);
+  worker.postMessage({ batch, dataLength });
 }
 
 // Обработчик сообщений от Web Worker
@@ -119,7 +121,7 @@ worker.onmessage = function(e) {
   indices = e.data.indices;
 
   // Обновляем графики с результатами от Web Worker
-  updateCharts();
+  indexData.push(indices);
 };
 
 // Функция для обработки четных чисел с задержкой
@@ -160,6 +162,8 @@ function processData() {
     const batch = largeData.slice(index, index + batchSize);
 
     processBatch(batch).then(() => {
+      console.log('processBatch', batchSize)
+      processDataInWorker(batch)
       index += batchSize;
       updateProgressBar(index);
       setTimeout(processNextChunk, 0);
