@@ -1,17 +1,21 @@
 import Chart from 'chart.js/auto';
 import './style.css';
+import MyWorker from './worker.worker.js';
+
+// Создаем Web Worker
+const worker = new MyWorker();
+
 
 let ctx = document.getElementById("chart").getContext("2d");
-let ctx2 = document.getElementById("chart2").getContext("2d"); // Контекст для второго графика
+let ctx2 = document.getElementById("chart2").getContext("2d");
 let chart;
 let chart2;
 let data = [];
+let randomArray = [];
+let indices = [];
 const dataLength = 100; // Длина массива данных
 const largeData = Array.from({ length: dataLength }, (_, i) => i);
-const batchSize = Math.floor(dataLength / 100); // Пачка — это одна пятая от общего количества
-
-// Генерация массива случайных чисел
-const randomArray = Array.from({ length: dataLength }, () => Math.floor(Math.random() * dataLength));
+const batchSize = Math.floor(dataLength / 100); // Пачка 
 
 // Функция для инициализации графиков
 function initCharts() {
@@ -25,7 +29,7 @@ function initCharts() {
   chart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: [], // Изначально пустые данные
+      labels: [],
       datasets: [
         {
           label: "Data Points",
@@ -46,7 +50,7 @@ function initCharts() {
   chart2 = new Chart(ctx2, {
     type: "bar",
     data: {
-      labels: [], // Изначально пустые данные
+      labels: [],
       datasets: [
         {
           label: "Index of Data Points",
@@ -85,45 +89,44 @@ function updateProgressBar(index) {
   progressBar.value = progress;
   progressText.innerText = `${Math.floor(progress)}%`;
 
-  // Если прогресс достиг 100%, обновляем графики
+  // Если прогресс достиг 100%, отправляем данные в Web Worker
   if (progress === 100) {
-    updateCharts();
+    processDataInWorker();
   }
 }
 
-// Найти индекс элемента из randomArray в largeData
-function findIndexInLargeData(value) {
-  return largeData.indexOf(value);
-}
-
-// Обновление графиков после полной обработки данных
+// Обновление графиков после получения данных от Web Worker
 function updateCharts() {
   chart.data.labels = data.map((_, i) => i + 1);
   chart.data.datasets[0].data = data;
-  
-  // Находим и выводим индекс каждого элемента data в randomArray
-  const indices = data.map(item => {
-    const indexInRandomArray = randomArray.indexOf(item);
-    return indexInRandomArray === -1 ? null : indexInRandomArray;
-  });
-
-  // Обновляем первый график
   chart.update();
   console.log("График данных обновлен");
 
-  // Обновляем второй график
   chart2.data.labels = indices.map((_, i) => i + 1);
   chart2.data.datasets[0].data = indices;
   chart2.update();
   console.log("График индексов обновлен");
 }
 
+// Отправляем данные в Web Worker для обработки
+function processDataInWorker() {
+  worker.postMessage({ data, dataLength });
+}
+
+// Обработчик сообщений от Web Worker
+worker.onmessage = function(e) {
+  randomArray = e.data.randomArray;
+  indices = e.data.indices;
+
+  // Обновляем графики с результатами от Web Worker
+  updateCharts();
+};
+
 // Функция для обработки четных чисел с задержкой
 function processEvenNumber(value) {
   return new Promise(resolve => {
     setTimeout(() => {
       resolve(value); // Возвращаем значение после задержки
-      console.log(value);
     }, Math.random() * 1000); // Случайная задержка до 1000 мс
   });
 }
@@ -134,16 +137,13 @@ async function processBatch(batch) {
 
   for (const value of batch) {
     if (value % 2 === 0) {
-      // Если число четное, обрабатываем с задержкой
       const result = await processEvenNumber(value);
       results.push(result);
     } else {
-      // Если число нечетное, добавляем сразу
       results.push(value);
     }
   }
 
-  // Добавляем результаты в общий массив данных, но не обновляем график
   data.push(...results);
 }
 
@@ -157,22 +157,15 @@ function processData() {
       return;
     }
 
-    // Получаем следующий блок данных для обработки
     const batch = largeData.slice(index, index + batchSize);
 
-    // Обрабатываем текущий блок данных
     processBatch(batch).then(() => {
       index += batchSize;
-
-      // Обновляем прогресс-бар
       updateProgressBar(index);
-
-      // Используем setTimeout с задержкой 0 для планирования следующей макротаски
       setTimeout(processNextChunk, 0);
     });
   }
 
-  // Запускаем первую итерацию
   processNextChunk();
 }
 
@@ -183,7 +176,6 @@ function initDataForChart() {
 }
 
 window.onload = () => {
-  console.log('DOM fully loaded and parsed');
   initCharts();
   initDataForChart();
 };

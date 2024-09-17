@@ -13,6 +13,10 @@ module.exports = {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
       },
+      {
+        test: /\.worker\.js$/, // Все файлы с расширением .worker.js обрабатываются worker-loader
+        use: { loader: "worker-loader" },
+      },
     ],
   },
   plugins: [
@@ -26,7 +30,7 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    open: true,  // Автоматически открывает браузер при старте
+    open: true, // Автоматически открывает браузер при старте
   },
   mode: "development",
 };
