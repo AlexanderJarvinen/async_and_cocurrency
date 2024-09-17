@@ -23,17 +23,20 @@ This is a web application for visualizing data using charts. The application use
    git clone https://github.com/AlexanderJarvinen/async_and_cocurrency.git
 
 2. Navigate to the project directory:
-
+   
+   ```bash
    cd async_and_cocurrency
 
 3. Install the dependencies:
 
+   ```bash
    npm install
 
 ### Development
 
 To start the development server and open the application in your default browser, use:
 
+   ```bash
    npm start
 
 The application will be available at http://localhost:9000.
@@ -42,6 +45,7 @@ The application will be available at http://localhost:9000.
 
 To build the project for production, run:
 
+   ```bash
    npm run build
 
 This will generate the bundle.js file in the dist directory.
