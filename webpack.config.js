@@ -15,8 +15,13 @@ module.exports = {
       },
       {
         test: /\.worker\.js$/, // Все файлы с расширением .worker.js обрабатываются worker-loader
-        use: { loader: "worker-loader" },
-      },
+         use: {
+          loader: 'worker-loader',
+          options: {
+            filename: '[name].[contenthash].worker.js', // Используем уникальные имена для воркеров
+          }
+        }
+      }
     ],
   },
   plugins: [
@@ -30,7 +35,11 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    open: true, // Автоматически открывает браузер при старте
+    open: true, // Автоматически открывает браузер при старте,
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin',
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+    }
   },
   mode: "development",
 };
