@@ -64,7 +64,7 @@ function getYouTubeData(sharedBuffer) {
     console.log('Вычисления завершены в воркере YouTube');
 
     // Уведомляем основной поток о завершении
-    postMessage('done');
+    postMessage(popularityData);
   }, 0);
 }
 

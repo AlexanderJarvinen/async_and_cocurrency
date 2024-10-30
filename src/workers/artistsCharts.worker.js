@@ -16,6 +16,7 @@ onmessage = function(e) {
     }
   });
 
+   console.log("PRO PLAT", processedPlatforms)
   // Отправляем результат обратно в основной поток
   postMessage({ platforms: processedPlatforms });
 };

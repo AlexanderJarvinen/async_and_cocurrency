@@ -28,6 +28,8 @@ const largeData = Array.from({ length: dataLength }, (_, i) => i);
 const batchSize = Math.floor(dataLength / 100); // Пачка 
 // Эмуляция данных для 12 месяцев
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const platformCharts = {};
+let globalProgress = 0;
 
 
 // Отрисовка графиков
@@ -120,12 +122,12 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
   }
 });
 
-    const platformCharts = {};
+
 
     artist_charts_worker.onmessage = function(e) {
     const processedPlatforms = e.data.platforms;
 
-      if(indexData.length == 99) {
+      if (globalProgress === 100) {
             processedPlatforms.forEach(platform => {
         const ctx = document.getElementById(platform.id).getContext('2d');
         
@@ -160,9 +162,10 @@ function updateProgressBar(index) {
   const progress = (index / dataLength) * 100;
   progressBar.value = progress;
   progressText.innerText = `${Math.floor(progress)}%`;
+  globalProgress = progress;
 
   // Если прогресс достиг 100%, отправляем данные в Web Worker
-  if (progress === 100) {
+  if (globalProgress === 100) {
     updateCharts();
   }
 }
@@ -189,8 +192,15 @@ function processDataInWorker(batch) {
 }
 
 youtube_chart_worker.onmessage = function(e) {
-  const popularityData = e.data;
-  console.log('YouTube Popularity Data:', popularityData);
+    const youtubePopularityData = e.data;
+   console.log('YouTube Popularity Data:', youtubePopularityData);
+  
+  // Проверяем, есть ли график для YouTube в platformCharts и обновляем его данные
+  if (platformCharts['youtubeChart']) {
+    platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData;
+    platformCharts['youtubeChart'].update();
+    console.log('YouTube график обновлен');
+  }
 };
 
 // Обработчик сообщений от Web Worker
