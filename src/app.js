@@ -125,6 +125,7 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
 
 
     artist_charts_worker.onmessage = function(e) {
+    console.log("Основной код: Получено сообщение от artist_charts_worker", e.data);
     const processedPlatforms = e.data.platforms;
 
       if (globalProgress === 100) {
@@ -156,6 +157,7 @@ function hideLoader() {
 
 // Обновляем прогресс-бар
 function updateProgressBar(index) {
+  console.log("Основной код: Обновление прогресс-бара");
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
 
@@ -172,6 +174,7 @@ function updateProgressBar(index) {
 
 // Обновление графиков после получения данных от Web Worker
 function updateCharts() {
+  console.log("Основной код: Обновление графиков данных");
   chart.data.labels = data.map((_, i) => i + 1);
   chart.data.datasets[0].data = data;
   chart.update();
@@ -185,6 +188,7 @@ function updateCharts() {
 
 // Отправляем данные в Web Worker для обработки
 function processDataInWorker(batch) {
+  console.log("Основной код: Отправка данных в Web Workers для обработки");
   console.log("batch", batch);
   worker.postMessage({ batch, dataLength });
   artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer });
@@ -205,6 +209,7 @@ youtube_chart_worker.onmessage = function(e) {
 
 // Обработчик сообщений от Web Worker
 worker.onmessage = function(e) {
+  console.log("Основной код: Получено сообщение от основного воркера", e.data);
   randomArray = e.data.randomArray;
   indices = e.data.indices;
 
@@ -223,6 +228,7 @@ function processEvenNumber(value) {
 
 // Обработка данных пачками с использованием макротасков (setTimeout)
 async function processBatch(batch) {
+  console.log("Основной код: Обработка пачки данных", batch);
   const results = [];
 
   for (const value of batch) {
@@ -239,6 +245,7 @@ async function processBatch(batch) {
 
 // Функция для обработки данных с использованием макротасков
 function processData() {
+  console.log("Основной код: Начало обработки данных");
   let index = 0;
 
   function processNextChunk() {
