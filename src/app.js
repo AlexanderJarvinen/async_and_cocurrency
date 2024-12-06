@@ -8,6 +8,7 @@ import {
   initializeMemoryLogTable,
   processChunksSequentially,
   fetchDataChunk2,
+  fetchDataChunk,
   logMetrics
 } from './utils'
 
