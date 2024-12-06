@@ -1,0 +1,83 @@
+export function addMemoryLog() {
+    const logDiv = document.getElementById("log");
+    const table = document.getElementById("memoryLogTable");
+
+    if (performance.memory) {
+        const { usedJSHeapSize, totalJSHeapSize, jsHeapSizeLimit } = performance.memory;
+        const timestamp = new Date().toLocaleTimeString();
+
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+            <td>${timestamp}</td>
+            <td>${formatMemoryUsage(usedJSHeapSize)}</td>
+            <td>${formatMemoryUsage(totalJSHeapSize)}</td>
+            <td>${formatMemoryUsage(jsHeapSizeLimit)}</td>
+          `;
+        table.appendChild(newRow);
+    } else {
+        const warningRow = document.createElement("tr");
+        warningRow.innerHTML = `<td colspan="4">Memory API is not supported in this browser.</td>`;
+        table.appendChild(warningRow);
+    }
+}
+
+// Форматирование значения памяти в MB
+export function formatMemoryUsage(bytes) {
+    return (bytes / 1024 / 1024).toFixed(2);
+}
+
+// Show the loader
+export function showLoader() {
+    document.getElementById("loader").style.display = "block";
+}
+
+// Hide the loader
+export function hideLoader() {
+    document.getElementById("loader").style.display = "none";
+}
+
+// Table initialization
+export function initializeMemoryLogTable() {
+    const logDiv = document.getElementById("log");
+    const table = document.createElement("table");
+    table.id = "memoryLogTable";
+
+    const headerRow = document.createElement("tr");
+    headerRow.innerHTML = `
+          <th>Timestamp</th>
+          <th>Used JS Heap Size (MB)</th>
+          <th>Total JS Heap Size (MB)</th>
+          <th>JS Heap Size Limit (MB)</th>
+        `;
+    table.appendChild(headerRow);
+    logDiv.appendChild(table);
+}
+
+// Function to process chunks sequentially
+export async function processChunksSequentially(largeData, chunkSize) {
+    let currentIndex = 0;
+    const totalChunks = Math.ceil(largeData.length / chunkSize);
+    let dataQueue = [];
+
+    showLoader(); // Show the loader at the start of processing
+
+    while (currentIndex < largeData.length) {
+        const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
+        dataQueue.push(chunkData);
+        currentIndex += chunkSize;
+    }
+
+    for (const chunk of dataQueue) {
+        updateChart(chunk);
+        await new Promise(resolve => setTimeout(resolve, 0)); // Yield to the browser
+    }
+
+    hideLoader(); // Hide the loader after processing is complete
+}
+
+export function simulateLargeDataProcessingAsyncDelaySolved() {
+    const largeData = Array.from({ length: 1000 }, (_, i) => i);
+    const chunkSize = 100; // Chunk size
+
+    processChunksSequentially(largeData, chunkSize); // Start processing
+}
