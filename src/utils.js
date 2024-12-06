@@ -53,28 +53,6 @@ export function initializeMemoryLogTable() {
     logDiv.appendChild(table);
 }
 
-// Function to process chunks sequentially
-export async function processChunksSequentially(largeData, chunkSize) {
-    let currentIndex = 0;
-    const totalChunks = Math.ceil(largeData.length / chunkSize);
-    let dataQueue = [];
-
-    showLoader(); // Show the loader at the start of processing
-
-    while (currentIndex < largeData.length) {
-        const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
-        dataQueue.push(chunkData);
-        currentIndex += chunkSize;
-    }
-
-    for (const chunk of dataQueue) {
-        updateChart(chunk);
-        await new Promise(resolve => setTimeout(resolve, 0)); // Yield to the browser
-    }
-
-    hideLoader(); // Hide the loader after processing is complete
-}
-
 // Function to simulate asynchronous data fetching with random delays
 export function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
     const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
@@ -117,8 +95,4 @@ export function logMetrics(memoryUsed, timeElapsed) {
 
     // Добавляем строку в таблицу (контейнер логов)
     logDiv.appendChild(row);
-}
-
-export function performanceApiInit () {
-    
 }

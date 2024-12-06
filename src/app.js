@@ -6,7 +6,6 @@ import {
   showLoader,
   hideLoader,
   initializeMemoryLogTable,
-  processChunksSequentially,
   fetchDataChunk2,
   fetchDataChunk,
   logMetrics
@@ -209,14 +208,69 @@ function simulateLargeDataProcessingAsyncDelayProblem() {
   }
 }
 
+// Solution 2: Resolving a problem using Promise
 function simulateLargeDataProcessingAsyncDelaySolved() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
-  const chunkSize = 100; // Chunk size
+  const chunkSize = 100; // Размер чанка
 
-  processChunksSequentially(largeData, chunkSize); // Start processing
+  const startMemory = performance.memory ? performance.memory.usedJSHeapSize : null;
+  const startTime = performance.now();
+
+  processChunksSequentially(largeData, chunkSize)
+      .then(() => {
+        const endTime = performance.now();
+        const endMemory = performance.memory ? performance.memory.usedJSHeapSize : null;
+
+        console.log(`Time taken: ${(endTime - startTime).toFixed(2)}ms`);
+        if (startMemory !== null && endMemory !== null) {
+          console.log(`Memory usage change: ${(endMemory - startMemory) / 1024 / 1024} MB`);
+        } else {
+          console.log("Memory metrics are not supported in this environment.");
+        }
+      })
+      .catch(error => {
+        console.error("Error during processing:", error);
+      });
 }
 
+// Функция для обработки чанков последовательно
+export async function processChunksSequentially(largeData, chunkSize) {
+  let currentIndex = 0;
+  const totalChunks = Math.ceil(largeData.length / chunkSize);
+  let dataQueue = [];
+  const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+  const startTime = performance.now();
 
+  showLoader(); // Показываем индикатор загрузки в начале обработки
+
+  while (currentIndex < largeData.length) {
+    const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
+    dataQueue.push(chunkData);
+
+    // Замеряем текущее использование памяти и время
+    const currentMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+    const currentTime = performance.now();
+    const memoryUsed = currentMemory - startMemory;
+    const timeElapsed = currentTime - startTime;
+
+    // Логируем метрики
+    logMetrics(memoryUsed, timeElapsed);
+
+    currentIndex += chunkSize;
+  }
+
+  for (const chunk of dataQueue) {
+    const chunkRenderStartTime = performance.now();
+
+    updateChart(chunk);
+    await new Promise(resolve => setTimeout(resolve, 0)); // Освобождение потока для браузера
+
+    const chunkRenderEndTime = performance.now();
+    console.log(`Chart updated for chunk in ${(chunkRenderEndTime - chunkRenderStartTime).toFixed(2)}ms`);
+  }
+
+  hideLoader(); // Убираем индикатор загрузки после завершения обработки
+}
 
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
@@ -226,8 +280,8 @@ window.onload = () => {
   // Run problematic functions
   // simulateProblemLargeDataProcessing(); // Problem 1
   // simulateLargeDataProcessingSolved() // Solution 1
-  simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
-  // simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
+  // simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
+  simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
 };
 
 
