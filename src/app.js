@@ -57,15 +57,83 @@ function updateChart(newData) {
   chart.update();
 }
 
+
 // Problem 1: Blocking the main thread
 function simulateProblemLargeDataProcessing() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
 
-  largeData.forEach((value) => {
-    // Lengthy data processing
+  // Проверяем поддержку Memory API
+  if (performance.memory) {
+    console.log(`Initial Memory Usage: ${formatMemoryUsage(performance.memory.usedJSHeapSize)} MB`);
+  } else {
+    console.warn("Memory API is not supported in this browser.");
+  }
+
+  // Начало отсчета времени
+  const startMark = "simulateProblemLargeDataProcessing-start";
+  const endMark = "simulateProblemLargeDataProcessing-end";
+  performance.mark(startMark);
+
+  const heapLimit = performance.memory.jsHeapSizeLimit; // Лимит кучи
+  console.log(`Heap size limit: ${(heapLimit / 1024 / 1024).toFixed(2)} MB`);
+
+  largeData.forEach((value, index) => {
+    // Проверяем текущее использование памяти
+    const usedHeap = performance.memory.usedJSHeapSize;
+    const usedHeapMB = usedHeap / 1024 / 1024;
+    const heapLimitMB = heapLimit / 1024 / 1024;
+
+    if (usedHeap >= heapLimit * 0.9) { // Если используется 90% лимита
+      throw new Error(
+          `Memory usage exceeded safe threshold: ${usedHeapMB.toFixed(2)} MB (limit: ${heapLimitMB.toFixed(2)} MB)`
+      );
+    }
+
+    // Долгая обработка данных
     for (let i = 0; i < 1000; i++) {}
+
     updateChart([value]);
+
+    // Лог каждые 100 итераций
+    if (index % 100 === 0) {
+      console.log(
+          `Processed ${index} items, Current Memory: ${usedHeapMB.toFixed(2)} MB`
+      );
+    }
   });
+
+  // Завершаем отсчет времени
+  performance.mark(endMark);
+
+  // Измеряем время выполнения
+  performance.measure(
+      "simulateProblemLargeDataProcessing-duration",
+      startMark,
+      endMark
+  );
+
+  // Получаем результат измерения времени
+  const measure = performance.getEntriesByName(
+      "simulateProblemLargeDataProcessing-duration"
+  )[0];
+
+  console.log(`simulateProblemLargeDataProcessing took ${measure.duration} ms`);
+
+  // Проверяем использование памяти после выполнения
+  if (performance.memory) {
+    console.log(`Final Memory Usage: ${formatMemoryUsage(performance.memory.usedJSHeapSize)} MB`);
+    console.log(`Total Memory Change: ${formatMemoryUsage(performance.memory.usedJSHeapSize - performance.memory.totalJSHeapSize)} MB`);
+  }
+
+  // Очистка меток и измерений
+  performance.clearMarks(startMark);
+  performance.clearMarks(endMark);
+  performance.clearMeasures("simulateProblemLargeDataProcessing-duration");
+}
+
+// Форматирование значения памяти в MB
+function formatMemoryUsage(bytes) {
+  return (bytes / 1024 / 1024).toFixed(2);
 }
 
 // Solution 1: Avoid blocking the main thread
@@ -180,10 +248,53 @@ function simulateLargeDataProcessingAsyncDelaySolved() {
 
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
+  initializeMemoryLogTable();
+  addMemoryLog();
   initChart();
   // Run problematic functions
-  // simulateProblemLargeDataProcessing(); // Problem 1
+  simulateProblemLargeDataProcessing(); // Problem 1
   // simulateLargeDataProcessingSolved() // Solution 1
   // simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
-  simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
+  // simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
 };
+
+// Инициализация таблицы
+function initializeMemoryLogTable() {
+  const logDiv = document.getElementById("log");
+  const table = document.createElement("table");
+  table.id = "memoryLogTable";
+
+  const headerRow = document.createElement("tr");
+  headerRow.innerHTML = `
+          <th>Timestamp</th>
+          <th>Used JS Heap Size (MB)</th>
+          <th>Total JS Heap Size (MB)</th>
+          <th>JS Heap Size Limit (MB)</th>
+        `;
+  table.appendChild(headerRow);
+  logDiv.appendChild(table);
+}
+
+// Добавление записи в таблицу
+function addMemoryLog() {
+  const logDiv = document.getElementById("log");
+  const table = document.getElementById("memoryLogTable");
+
+  if (performance.memory) {
+    const { usedJSHeapSize, totalJSHeapSize, jsHeapSizeLimit } = performance.memory;
+    const timestamp = new Date().toLocaleTimeString();
+
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
+            <td>${timestamp}</td>
+            <td>${formatMemoryUsage(usedJSHeapSize)}</td>
+            <td>${formatMemoryUsage(totalJSHeapSize)}</td>
+            <td>${formatMemoryUsage(jsHeapSizeLimit)}</td>
+          `;
+    table.appendChild(newRow);
+  } else {
+    const warningRow = document.createElement("tr");
+    warningRow.innerHTML = `<td colspan="4">Memory API is not supported in this browser.</td>`;
+    table.appendChild(warningRow);
+  }
+}
