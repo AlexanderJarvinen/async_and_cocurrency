@@ -6,7 +6,7 @@ let chart;
 let data = [10, 20, 30, 40, 50];
 
 function initChart() {
-  // Если график уже существует, уничтожаем его перед созданием нового
+  // If the chart already exists, destroy it before creating a new one
   if (chart) {
     chart.destroy();
   }
@@ -33,22 +33,22 @@ function initChart() {
   });
 }
 
-// Показываем лоадер
+// Show the loader
 function showLoader() {
   document.getElementById("loader").style.display = "block";
 }
 
-// Скрываем лоадер
+// Hide the loader
 function hideLoader() {
   document.getElementById("loader").style.display = "none";
 }
 
-// Обновление графика test
+// Test chart update
 function testUpdateChart(newData) {
   console.log("testUpdateChart", newData);
 }
 
-// Обновление графика
+// Update the chart
 function updateChart(newData) {
   console.log("updateChartNewData", newData);
   data = [...data, ...newData];
@@ -57,55 +57,53 @@ function updateChart(newData) {
   chart.update();
 }
 
-// Проблема 1: Блокировка основного потока
+// Problem 1: Blocking the main thread
 function simulateProblemLargeDataProcessing() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
-  
+
   largeData.forEach((value) => {
-    // Долгая обработка данных
+    // Lengthy data processing
     for (let i = 0; i < 1000; i++) {}
     updateChart([value]);
-  }); 
+  });
 }
 
-// Решение 1: Блокировка основного потока
+// Solution 1: Avoid blocking the main thread
 function simulateLargeDataProcessingSolved() {
   const largeData = Array.from({ length: 50000 }, (_, i) => i);
-  
-  
+
   let currentIndex = 0;
 
-  showLoader(); // Показываем лоадер при начале обработки
+  showLoader(); // Show the loader at the start of processing
 
   function processChunk() {
-    const chunkSize = 1000; // Обрабатываем по 1000 элементов за раз
+    const chunkSize = 1000; // Process 1000 items at a time
     const newData = [];
 
     for (let i = 0; i < chunkSize && currentIndex < largeData.length; i++) {
       const value = largeData[currentIndex];
-      newData.push(value); // Собираем новые данные
+      newData.push(value); // Collect new data
       currentIndex++;
     }
 
-    // Обновляем график с новой порцией данных
+    // Update the chart with the new chunk of data
     updateChart(newData);
 
-    // Если есть еще данные, продолжаем обработку
+    // If there is more data, continue processing
     if (currentIndex < largeData.length) {
-      setTimeout(processChunk, 0); // Отдаем управление браузеру и продолжаем позже
+      setTimeout(processChunk, 0); // Yield to the browser and continue later
     } else {
-      hideLoader(); // Скрываем лоадер после завершения обработки
+      hideLoader(); // Hide the loader after processing is complete
     }
   }
 
-  processChunk(); // Запускаем обработку
-  
+  processChunk(); // Start processing
 }
 
 
-// Функция для имитации асинхронного получения данных с разными задержками
+// Function to simulate asynchronous data fetching with random delays
 function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
-  const delay = Math.random() * 1000; // Случайная задержка от 0 до 1000 мс
+  const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
 
   const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
 
@@ -114,35 +112,35 @@ function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
   }, delay);
 }
 
-// Проблема 2: Aсинхронного получения данных с разными задержками
+// Problem 2: Asynchronous data fetching with random delays
 function simulateLargeDataProcessingAsyncDelayProblem() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
-  const chunkSize = 100; // Размер чанка
+  const chunkSize = 100; // Chunk size
 
   let currentIndex = 0;
   const totalChunks = Math.ceil(largeData.length / chunkSize);
 
-  showLoader(); // Показываем лоадер при начале обработки
+  showLoader(); // Show the loader at the start of processing
 
   for (let i = 0; i < totalChunks; i++) {
     fetchDataChunk(chunkSize, currentIndex, largeData, (newData) => {
-      // Данные могут прийти асинхронно, но по порядку
+      // Data may arrive asynchronously but in order
       updateChart(newData);
 
-      // Скрываем лоадер только после получения всех чанков
+      // Hide the loader only after all chunks are received
       if (currentIndex >= largeData.length - chunkSize) {
         hideLoader();
       }
     });
 
-    currentIndex += chunkSize; // Переходим к следующему чанку
+    currentIndex += chunkSize; // Move to the next chunk
   }
 }
 
-// Функция для имитации асинхронного получения данных с разными задержками
+// Function to simulate asynchronous data fetching with random delays
 function fetchDataChunk2(chunkSize, currentIndex, largeData) {
   return new Promise((resolve) => {
-    const delay = Math.random() * 1000; // Случайная задержка от 0 до 1000 мс
+    const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
     const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
 
     setTimeout(() => {
@@ -151,13 +149,13 @@ function fetchDataChunk2(chunkSize, currentIndex, largeData) {
   });
 }
 
-// Функция для последовательной обработки чанков данных
+// Function to process chunks sequentially
 async function processChunksSequentially(largeData, chunkSize) {
   let currentIndex = 0;
   const totalChunks = Math.ceil(largeData.length / chunkSize);
   let dataQueue = [];
 
-  showLoader(); // Показываем лоадер при начале обработки
+  showLoader(); // Show the loader at the start of processing
 
   while (currentIndex < largeData.length) {
     const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
@@ -167,25 +165,25 @@ async function processChunksSequentially(largeData, chunkSize) {
 
   for (const chunk of dataQueue) {
     updateChart(chunk);
-    await new Promise(resolve => setTimeout(resolve, 0)); // Отдаем управление браузеру
+    await new Promise(resolve => setTimeout(resolve, 0)); // Yield to the browser
   }
 
-  hideLoader(); // Скрываем лоадер после завершения обработки
+  hideLoader(); // Hide the loader after processing is complete
 }
 
 function simulateLargeDataProcessingAsyncDelaySolved() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
-  const chunkSize = 100; // Размер чанка
+  const chunkSize = 100; // Chunk size
 
-  processChunksSequentially(largeData, chunkSize); // Запускаем обработку
+  processChunksSequentially(largeData, chunkSize); // Start processing
 }
 
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
   initChart();
-  // Запуск проблемных функций
-  // simulateProblemLargeDataProcessing(); // Проблема 1
-  // simulateLargeDataProcessingSolved() // Решение 1
-  // simulateLargeDataProcessingAsyncDelayProblem(); // Проблема 2
-  simulateLargeDataProcessingAsyncDelaySolved(); // Решение 2
+  // Run problematic functions
+  // simulateProblemLargeDataProcessing(); // Problem 1
+  // simulateLargeDataProcessingSolved() // Solution 1
+  // simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
+  simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
 };
