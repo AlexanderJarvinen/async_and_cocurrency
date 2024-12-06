@@ -76,6 +76,17 @@ export async function processChunksSequentially(largeData, chunkSize) {
 }
 
 // Function to simulate asynchronous data fetching with random delays
+export function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
+    const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
+
+    const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
+
+    setTimeout(() => {
+        callback(newData, currentIndex);
+    }, delay);
+}
+
+// Function to simulate asynchronous data fetching with random delays
 export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
     return new Promise((resolve) => {
         const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
@@ -85,4 +96,29 @@ export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
             resolve(newData);
         }, delay);
     });
+}
+
+export function logMetrics(memoryUsed, timeElapsed) {
+    const logDiv = document.getElementById("log");
+
+    // Создаем новую строку таблицы
+    const row = document.createElement("tr");
+
+    // Создаем ячейки для памяти и времени
+    const memoryCell = document.createElement("td");
+    memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Переводим байты в МБ
+
+    const timeCell = document.createElement("td");
+    timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Время в миллисекундах
+
+    // Добавляем ячейки в строку
+    row.appendChild(memoryCell);
+    row.appendChild(timeCell);
+
+    // Добавляем строку в таблицу (контейнер логов)
+    logDiv.appendChild(row);
+}
+
+export function performanceApiInit () {
+    
 }

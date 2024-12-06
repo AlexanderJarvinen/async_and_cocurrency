@@ -1,6 +1,15 @@
 import Chart from 'chart.js/auto';
 import './style.css';
-import { addMemoryLog, formatMemoryUsage, showLoader, hideLoader, initializeMemoryLogTable, processChunksSequentially, fetchDataChunk2  } from './utils'
+import {
+  addMemoryLog,
+  formatMemoryUsage,
+  showLoader,
+  hideLoader,
+  initializeMemoryLogTable,
+  processChunksSequentially,
+  fetchDataChunk2,
+  logMetrics
+} from './utils'
 
 let ctx = document.getElementById("chart").getContext("2d");
 let chart;
@@ -169,38 +178,10 @@ function simulateLargeDataProcessingSolved() {
   processChunk(); // Начинаем обработку
 }
 
-function logMetrics(memoryUsed, timeElapsed) {
-  const logDiv = document.getElementById("log");
-
-  // Создаем новую строку таблицы
-  const row = document.createElement("tr");
-
-  // Создаем ячейки для памяти и времени
-  const memoryCell = document.createElement("td");
-  memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Переводим байты в МБ
-
-  const timeCell = document.createElement("td");
-  timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Время в миллисекундах
-
-  // Добавляем ячейки в строку
-  row.appendChild(memoryCell);
-  row.appendChild(timeCell);
-
-  // Добавляем строку в таблицу (контейнер логов)
-  logDiv.appendChild(row);
-}
 
 
-// Function to simulate asynchronous data fetching with random delays
-function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
-  const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
 
-  const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
 
-  setTimeout(() => {
-    callback(newData, currentIndex);
-  }, delay);
-}
 
 // Problem 2: Asynchronous data fetching with random delays
 function simulateLargeDataProcessingAsyncDelayProblem() {
@@ -227,7 +208,7 @@ function simulateLargeDataProcessingAsyncDelayProblem() {
   }
 }
 
-export function simulateLargeDataProcessingAsyncDelaySolved() {
+function simulateLargeDataProcessingAsyncDelaySolved() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
   const chunkSize = 100; // Chunk size
 
@@ -243,8 +224,8 @@ window.onload = () => {
   initChart();
   // Run problematic functions
   // simulateProblemLargeDataProcessing(); // Problem 1
-  simulateLargeDataProcessingSolved() // Solution 1
-  // simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
+  // simulateLargeDataProcessingSolved() // Solution 1
+  simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
   // simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
 };
 
