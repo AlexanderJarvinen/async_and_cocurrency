@@ -75,9 +75,14 @@ export async function processChunksSequentially(largeData, chunkSize) {
     hideLoader(); // Hide the loader after processing is complete
 }
 
-export function simulateLargeDataProcessingAsyncDelaySolved() {
-    const largeData = Array.from({ length: 1000 }, (_, i) => i);
-    const chunkSize = 100; // Chunk size
+// Function to simulate asynchronous data fetching with random delays
+export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
+    return new Promise((resolve) => {
+        const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
+        const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
 
-    processChunksSequentially(largeData, chunkSize); // Start processing
+        setTimeout(() => {
+            resolve(newData);
+        }, delay);
+    });
 }
