@@ -57,14 +57,14 @@ function updateChart(newData) {
 function simulateProblemLargeDataProcessing() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
 
-  // Проверяем поддержку Memory API
+  // Check Memory API support
   if (performance.memory) {
     console.log(`Initial Memory Usage: ${formatMemoryUsage(performance.memory.usedJSHeapSize)} MB`);
   } else {
     console.warn("Memory API is not supported in this browser.");
   }
 
-  // Начало отсчета времени
+  // Start of time countdown
   const startMark = "simulateProblemLargeDataProcessing-start";
   const endMark = "simulateProblemLargeDataProcessing-end";
   performance.mark(startMark);
@@ -73,7 +73,7 @@ function simulateProblemLargeDataProcessing() {
   console.log(`Heap size limit: ${(heapLimit / 1024 / 1024).toFixed(2)} MB`);
 
   largeData.forEach((value, index) => {
-    // Проверяем текущее использование памяти
+    // Check current memory usage
     const usedHeap = performance.memory.usedJSHeapSize;
     const usedHeapMB = usedHeap / 1024 / 1024;
     const heapLimitMB = heapLimit / 1024 / 1024;
@@ -84,12 +84,9 @@ function simulateProblemLargeDataProcessing() {
       );
     }
 
-    // Долгая обработка данных
-    for (let i = 0; i < 1000; i++) {}
-
     updateChart([value]);
 
-    // Лог каждые 100 итераций
+    // Log every 100 iterations
     if (index % 100 === 0) {
       console.log(
           `Processed ${index} items, Current Memory: ${usedHeapMB.toFixed(2)} MB`
@@ -97,30 +94,30 @@ function simulateProblemLargeDataProcessing() {
     }
   });
 
-  // Завершаем отсчет времени
+  // Finalizing the countdown
   performance.mark(endMark);
 
-  // Измеряем время выполнения
+  // Measuring runtime
   performance.measure(
       "simulateProblemLargeDataProcessing-duration",
       startMark,
       endMark
   );
 
-  // Получаем результат измерения времени
+  // We get the result of time measurement
   const measure = performance.getEntriesByName(
       "simulateProblemLargeDataProcessing-duration"
   )[0];
 
   console.log(`simulateProblemLargeDataProcessing took ${measure.duration} ms`);
 
-  // Проверяем использование памяти после выполнения
+  // Check memory usage after execution
   if (performance.memory) {
     console.log(`Final Memory Usage: ${formatMemoryUsage(performance.memory.usedJSHeapSize)} MB`);
     console.log(`Total Memory Change: ${formatMemoryUsage(performance.memory.usedJSHeapSize - performance.memory.totalJSHeapSize)} MB`);
   }
 
-  // Очистка меток и измерений
+  // Cleaning marks and measurements
   performance.clearMarks(startMark);
   performance.clearMarks(endMark);
   performance.clearMeasures("simulateProblemLargeDataProcessing-duration");
@@ -131,57 +128,52 @@ function simulateLargeDataProcessingSolved() {
   const largeData = Array.from({ length: 50000 }, (_, i) => i);
   let currentIndex = 0;
 
-  // Изменяем начальные параметры
-  let chunkSize = 1000; // Начальный размер чанка
-  let delay = 0; // Начальная задержка перед следующей итерацией
+  // Changing the initial parameters
+  let chunkSize = 1000; // Initial chunk size
+  let delay = 0; // Initial delay before the next iteration
 
-  showLoader(); // Показываем лоадер перед началом обработки
+  showLoader(); // Showing the loader before processing
 
-  // Замеряем начальное состояние времени и памяти
+  // Measuring the initial state of time and memory
   const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
   const startTime = performance.now();
 
   function processChunk() {
     const newData = [];
 
-    // Обрабатываем данные с текущим размером чанка
+    // Process data with current chunk size
     for (let i = 0; i < chunkSize && currentIndex < largeData.length; i++) {
       const value = largeData[currentIndex];
       newData.push(value);
       currentIndex++;
     }
 
-    // Обновляем график с новым чанком данных
+    // Updating the graph with the new data chunk
     updateChart(newData);
 
-    // Замеряем текущее использование памяти и время
+    // Measuring the current memory usage and time
     const currentMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
     const currentTime = performance.now();
     const memoryUsed = currentMemory - startMemory;
     const timeElapsed = currentTime - startTime;
 
-    // Логируем метрики
+    // Logging metrics
     logMetrics(memoryUsed, timeElapsed);
 
-    // Изменяем параметры на каждой итерации
-    chunkSize = Math.min(5000, chunkSize + 500); // Увеличиваем размер чанка
-    delay = Math.max(0, delay + 10); // Увеличиваем задержку
+    // Change the parameters at each iteration
+    chunkSize = Math.min(5000, chunkSize + 500); // Increasing the size of the chunk
+    delay = Math.max(0, delay + 10); // Increase the delay
 
-    // Если есть еще данные, продолжаем обработку
+    // If there is more data, continue processing
     if (currentIndex < largeData.length) {
-      setTimeout(processChunk, delay); // Пауза перед следующей итерацией
+      setTimeout(processChunk, delay); // Pause before the next iteration
     } else {
-      hideLoader(); // Прячем лоадер после завершения обработки
+      hideLoader(); //  Hiding the loader after processing is complete
     }
   }
 
-  processChunk(); // Начинаем обработку
+  processChunk(); // Let's start processing
 }
-
-
-
-
-
 
 // Problem 2: Asynchronous data fetching with random delays
 function simulateLargeDataProcessingAsyncDelayProblem() {
@@ -211,7 +203,7 @@ function simulateLargeDataProcessingAsyncDelayProblem() {
 // Solution 2: Resolving a problem using Promise
 function simulateLargeDataProcessingAsyncDelaySolved() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
-  const chunkSize = 100; // Размер чанка
+  const chunkSize = 100; // Chunk size
 
   const startMemory = performance.memory ? performance.memory.usedJSHeapSize : null;
   const startTime = performance.now();
@@ -233,7 +225,7 @@ function simulateLargeDataProcessingAsyncDelaySolved() {
       });
 }
 
-// Функция для обработки чанков последовательно
+// Function for processing chunks sequentially
 export async function processChunksSequentially(largeData, chunkSize) {
   let currentIndex = 0;
   const totalChunks = Math.ceil(largeData.length / chunkSize);
@@ -241,19 +233,19 @@ export async function processChunksSequentially(largeData, chunkSize) {
   const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
   const startTime = performance.now();
 
-  showLoader(); // Показываем индикатор загрузки в начале обработки
+  showLoader(); // Show loading indicator at the beginning of processing
 
   while (currentIndex < largeData.length) {
     const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
     dataQueue.push(chunkData);
 
-    // Замеряем текущее использование памяти и время
+    // Measuring the current memory usage and time
     const currentMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
     const currentTime = performance.now();
     const memoryUsed = currentMemory - startMemory;
     const timeElapsed = currentTime - startTime;
 
-    // Логируем метрики
+    // Logging metrics
     logMetrics(memoryUsed, timeElapsed);
 
     currentIndex += chunkSize;
@@ -263,13 +255,13 @@ export async function processChunksSequentially(largeData, chunkSize) {
     const chunkRenderStartTime = performance.now();
 
     updateChart(chunk);
-    await new Promise(resolve => setTimeout(resolve, 0)); // Освобождение потока для браузера
+    await new Promise(resolve => setTimeout(resolve, 0)); // Freeing up the thread for the browser
 
     const chunkRenderEndTime = performance.now();
     console.log(`Chart updated for chunk in ${(chunkRenderEndTime - chunkRenderStartTime).toFixed(2)}ms`);
   }
 
-  hideLoader(); // Убираем индикатор загрузки после завершения обработки
+  hideLoader(); // Remove the loading indicator after processing is complete
 }
 
 window.onload = () => {

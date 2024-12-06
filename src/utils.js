@@ -79,20 +79,20 @@ export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
 export function logMetrics(memoryUsed, timeElapsed) {
     const logDiv = document.getElementById("log");
 
-    // Создаем новую строку таблицы
+    // Create a new table row
     const row = document.createElement("tr");
 
-    // Создаем ячейки для памяти и времени
+    // Create cells for memory and time
     const memoryCell = document.createElement("td");
-    memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Переводим байты в МБ
+    memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Convert bytes to MB
 
     const timeCell = document.createElement("td");
-    timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Время в миллисекундах
+    timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Time in milliseconds
 
-    // Добавляем ячейки в строку
+    // Adding cells to a row
     row.appendChild(memoryCell);
     row.appendChild(timeCell);
 
-    // Добавляем строку в таблицу (контейнер логов)
+    // Add a row to the table (log container)
     logDiv.appendChild(row);
 }
