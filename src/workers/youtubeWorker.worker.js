@@ -33,19 +33,11 @@ function getYouTubeData(sharedBuffer) {
   let subscribers = Math.floor(Math.random() * 100) + 1;
   let s = 0;
 
-  // Логируем начало вычислений
-  console.log('Начало вычислений в воркере YouTube...');
-
   // Эмуляция долгих вычислений
   setTimeout(() => {
     while (s <= 1000000) {
       subscribers += Math.floor(Math.random() * 100) + 1;
       s++;
-
-      // Логируем процесс каждые 200000 итераций
-      if (s % 200000 === 0) {
-        console.log(`Итерация YouTube: ${s}`);
-      }
     }
 
     const views = 50000000;
@@ -59,9 +51,6 @@ function getYouTubeData(sharedBuffer) {
     for (let month = 0; month < 12; month++) {
       popularityData[month] = Math.floor(calculateYouTubePopularity(subscribers, views, engagement, mentions, retention, growth, virality) * (1 + (Math.random() - 0.5) / 5));
     }
-
-    // Логируем конец вычислений
-    console.log('Вычисления завершены в воркере YouTube');
 
     // Уведомляем основной поток о завершении
     postMessage(popularityData);

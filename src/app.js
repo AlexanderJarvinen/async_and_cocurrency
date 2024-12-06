@@ -6,7 +6,6 @@ import YoutubeChartWorker from './workers/youtubeWorker.worker.js';
 
 // Создание нового SharedArrayBuffer
 const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT); // 12 месяцев
-const popularityData = new Float32Array(sharedBuffer);
 
 
 // Создаем Web Worker
@@ -25,7 +24,7 @@ let randomArray = [];
 let indices = [];
 const dataLength = 100; // Длина массива данных
 const largeData = Array.from({ length: dataLength }, (_, i) => i);
-const batchSize = Math.floor(dataLength / 100); // Пачка 
+const batchSize = Math.floor(dataLength / 100); // Пачка
 // Эмуляция данных для 12 месяцев
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const platformCharts = {};
@@ -35,7 +34,6 @@ let globalProgress = 0;
 // Отрисовка графиков
 const platforms = [
   { id: 'spotifyChart', label: 'Spotify', maxData: 50000, color: 'rgba(30, 215, 96, 1)', bg: 'rgba(30, 215, 96, 0.2)' },
-  // { id: 'youtubeChart', label: 'YouTube', maxData: null, color: 'rgba(255, 0, 0, 1)', bg: 'rgba(255, 0, 0, 0.2)', customData: getYouTubeData(data => data)},
   { id: 'youtubeChart', label: 'YouTube', maxData: 100000, color: 'rgba(255, 0, 0, 1)', bg: 'rgba(255, 0, 0, 0.2)'},
   { id: 'instagramChart', label: 'Instagram', maxData: 30000, color: 'rgba(193, 53, 132, 1)', bg: 'rgba(193, 53, 132, 0.2)' },
   { id: 'facebookChart', label: 'Facebook', maxData: 25000, color: 'rgba(59, 89, 152, 1)', bg: 'rgba(59, 89, 152, 0.2)' },
@@ -49,6 +47,7 @@ const platforms = [
 
 // Функция для инициализации графиков
 function initCharts() {
+  performance.mark('initCharts-start');
   if (chart) {
     chart.destroy();
   }
@@ -125,13 +124,12 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
 
 
     artist_charts_worker.onmessage = function(e) {
-    console.log("Основной код: Получено сообщение от artist_charts_worker", e.data);
     const processedPlatforms = e.data.platforms;
 
       if (globalProgress === 100) {
             processedPlatforms.forEach(platform => {
         const ctx = document.getElementById(platform.id).getContext('2d');
-        
+
         if (platformCharts[platform.id]) {
           platformCharts[platform.id].destroy();
         }
@@ -141,7 +139,6 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
     }
   };
 
-  // Отправка платформ в Web Worker для обработки
 
 }
 
@@ -157,7 +154,6 @@ function hideLoader() {
 
 // Обновляем прогресс-бар
 function updateProgressBar(index) {
-  console.log("Основной код: Обновление прогресс-бара");
   const progressBar = document.getElementById("progress-bar");
   const progressText = document.getElementById("progress-text");
 
@@ -174,22 +170,17 @@ function updateProgressBar(index) {
 
 // Обновление графиков после получения данных от Web Worker
 function updateCharts() {
-  console.log("Основной код: Обновление графиков данных");
   chart.data.labels = data.map((_, i) => i + 1);
   chart.data.datasets[0].data = data;
   chart.update();
-  console.log("График данных обновлен");
 
   chart2.data.labels = indexData.map((_, i) => i + 1);
   chart2.data.datasets[0].data = indexData;
   chart2.update();
-  console.log("График индексов обновлен");
 }
 
 // Отправляем данные в Web Worker для обработки
 function processDataInWorker(batch) {
-  console.log("Основной код: Отправка данных в Web Workers для обработки");
-  console.log("batch", batch);
   worker.postMessage({ batch, dataLength });
   artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer });
   youtube_chart_worker.postMessage({ buffer: sharedBuffer });;
@@ -197,19 +188,16 @@ function processDataInWorker(batch) {
 
 youtube_chart_worker.onmessage = function(e) {
     const youtubePopularityData = e.data;
-   console.log('YouTube Popularity Data:', youtubePopularityData);
-  
+
   // Проверяем, есть ли график для YouTube в platformCharts и обновляем его данные
   if (platformCharts['youtubeChart']) {
     platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData;
     platformCharts['youtubeChart'].update();
-    console.log('YouTube график обновлен');
   }
 };
 
 // Обработчик сообщений от Web Worker
 worker.onmessage = function(e) {
-  console.log("Основной код: Получено сообщение от основного воркера", e.data);
   randomArray = e.data.randomArray;
   indices = e.data.indices;
 
@@ -228,7 +216,6 @@ function processEvenNumber(value) {
 
 // Обработка данных пачками с использованием макротасков (setTimeout)
 async function processBatch(batch) {
-  console.log("Основной код: Обработка пачки данных", batch);
   const results = [];
 
   for (const value of batch) {
@@ -245,7 +232,6 @@ async function processBatch(batch) {
 
 // Функция для обработки данных с использованием макротасков
 function processData() {
-  console.log("Основной код: Начало обработки данных");
   let index = 0;
 
   function processNextChunk() {
@@ -257,7 +243,6 @@ function processData() {
     const batch = largeData.slice(index, index + batchSize);
 
     processBatch(batch).then(() => {
-      console.log('processBatch', batchSize)
       processDataInWorker(batch)
       index += batchSize;
       updateProgressBar(index);
