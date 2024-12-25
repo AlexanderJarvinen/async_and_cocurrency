@@ -3,6 +3,7 @@ import './style.css';
 import MyWorker from './worker.worker.js';
 import ArtistChartsWorker from './workers/artistsCharts.worker.js';
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js';
+import { logMetrics } from './utils.js';
 
 // Создание нового SharedArrayBuffer
 const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT); // 12 месяцев
@@ -230,7 +231,7 @@ async function processBatch(batch) {
   data.push(...results);
 }
 
-// Функция для обработки данных с использованием макротасков
+// Функция для обработки данных с использованием макротасков и Performance API
 function processData() {
   let index = 0;
 
@@ -242,10 +243,27 @@ function processData() {
 
     const batch = largeData.slice(index, index + batchSize);
 
+    // Начало измерения времени
+    const startTime = performance.now();
+    const initialMemory = performance.memory.usedJSHeapSize;
+
     processBatch(batch).then(() => {
-      processDataInWorker(batch)
+      processDataInWorker(batch);
+
       index += batchSize;
       updateProgressBar(index);
+
+      // Конец измерения времени
+      const endTime = performance.now();
+      const finalMemory = performance.memory.usedJSHeapSize;
+
+      // Логирование метрик
+      const timeElapsed = endTime - startTime;
+      const memoryUsed = finalMemory - initialMemory;
+
+      logMetrics(memoryUsed, timeElapsed);
+
+      // Переход к следующей пачке данных
       setTimeout(processNextChunk, 0);
     });
   }
