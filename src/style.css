@@ -58,3 +58,20 @@ th {
     transform: rotate(360deg);
   }
 }
+
+.btnWrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  width: 200px;
+  padding: 8px 12px;
+  border-radius:10px;
+  background-color: #30d5c8;
+  border: 2px solid #1b877e;
+
+  &:active {
+    border-color: #19ffff;
+  }
+}

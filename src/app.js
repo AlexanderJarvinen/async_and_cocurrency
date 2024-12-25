@@ -54,7 +54,7 @@ function updateChart(newData) {
 
 
 // Problem 1: Blocking the main thread
-function simulateProblemLargeDataProcessing() {
+export function simulateProblemLargeDataProcessing() {
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
 
   // Check Memory API support
@@ -264,16 +264,25 @@ export async function processChunksSequentially(largeData, chunkSize) {
   hideLoader(); // Remove the loading indicator after processing is complete
 }
 
+window.simulateProblemLargeDataProcessing = simulateProblemLargeDataProcessing;
+
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
   initializeMemoryLogTable();
   addMemoryLog();
   initChart();
-  // Run problematic functions
-  // simulateProblemLargeDataProcessing(); // Problem 1
-  // simulateLargeDataProcessingSolved() // Solution 1
-  // simulateLargeDataProcessingAsyncDelayProblem(); // Problem 2
-  simulateLargeDataProcessingAsyncDelaySolved(); // Solution 2
+  document
+      .getElementById("simulateProblemLargeDataProcessingButton")
+      .addEventListener("click", simulateProblemLargeDataProcessing);
+  document
+      .getElementById("simulateProblemLargeDataProcessingButtonSolving")
+      .addEventListener("click", simulateLargeDataProcessingSolved);
+  document
+      .getElementById("simulateLargeDataAsyncDelayButton")
+      .addEventListener("click", simulateLargeDataProcessingAsyncDelayProblem);
+  document
+      .getElementById("simulateLargeDataAsyncDelayButtonSolving")
+      .addEventListener("click", simulateLargeDataProcessingAsyncDelaySolved);
 };
 
 
