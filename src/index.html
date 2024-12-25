@@ -19,9 +19,12 @@
       </div>
     </div>
     <div id="progress-container">
-      <button>Start Main Chart Data Loading</button>
-       <progress id="progress-bar" value="0" max="100"></progress>
+      <button id="startMainChartDataLoadingButton">Start Main Chart Data Loading</button>
+      <div class="progress-bar-container">
+        <progress id="progress-bar" value="0" max="100"></progress>
         <span id="progress-text">0%</span>
+      </div>
+      <button id="startWorkersButton">Start Workers</button>
     </div>
     <div>
       <canvas id="chart2"></canvas>
