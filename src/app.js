@@ -237,7 +237,7 @@ function processData() {
 
   function processNextChunk() {
     if (index >= largeData.length) {
-      hideLoader();
+      // hideLoader();
       return;
     }
 
@@ -273,7 +273,7 @@ function processData() {
 
 // Инициализация данных и запуск обработки
 function initDataForChart() {
-  showLoader();
+  // showLoader();
   processData();
 }
 

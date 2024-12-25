@@ -19,6 +19,14 @@ canvas {
   margin-top: 20px;
 }
 
+.mainLogWrapper {
+  max-width: 500px;
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 .entry {
   margin-bottom: 5px;
 }
@@ -34,6 +42,20 @@ canvas {
   width: 120px;
   height: 120px;
   animation: spin 1s linear infinite;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+th, td {
+  border: 1px solid #ddd;
+  text-align: left;
+  padding: 8px;
+}
+th {
+  background-color: #f2f2f2;
 }
 
 @keyframes spin {
@@ -56,4 +78,14 @@ canvas {
   position: relative;
   width: 100%;
   height: 300px;
+}
+
+.chartAndLogWrapper {
+  display: flex;
+  padding: 30px;
+  gap:30px;
+}
+
+#progress-container {
+  margin: 20px 0;
 }

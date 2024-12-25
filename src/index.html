@@ -9,20 +9,25 @@
   </head>
 
   <body>
-    <div id="loader"></div>
-    <div id="chart-container">
-      <canvas id="chart"></canvas>
+<!--    <div id="loader"></div>-->
+    <div  class="chartAndLogWrapper">
+      <div>
+        <canvas id="chart"></canvas>
+      </div>
+      <div class="mainLogWrapper">
+        <div id="log"></div>
+      </div>
     </div>
-    <div id="log"></div>
     <div id="progress-container">
+      <button>Start Main Chart Data Loading</button>
        <progress id="progress-bar" value="0" max="100"></progress>
         <span id="progress-text">0%</span>
     </div>
-    <div id="chart-container">
+    <div>
       <canvas id="chart2"></canvas>
     </div>
     <h1>Artist Popularity on Various Platforms</h1>
-  
+
   <div class="charts-container">
     <div class="chart-box">
       <canvas id="spotifyChart"></canvas>
