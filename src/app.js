@@ -279,7 +279,14 @@ function initDataForChart() {
 
 window.onload = () => {
   initCharts();
-  initDataForChart();
+  // initDataForChart();
+  document
+      .getElementById("startMainChartDataLoadingButton")
+      .addEventListener("click",  processData);
+
+  document
+      .getElementById("startWorkersButton")
+      .addEventListener("click",  processData);
 };
 
 
