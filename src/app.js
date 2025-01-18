@@ -55,6 +55,8 @@ function updateChart(newData) {
 
 // Problem 1: Blocking the main thread
 export function simulateProblemLargeDataProcessing() {
+  showLoader();
+  resetAllProcesses();
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
 
   // Check Memory API support
@@ -71,6 +73,9 @@ export function simulateProblemLargeDataProcessing() {
 
   const heapLimit = performance.memory.jsHeapSizeLimit; // Лимит кучи
   console.log(`Heap size limit: ${(heapLimit / 1024 / 1024).toFixed(2)} MB`);
+
+  const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+  const startTime = performance.now();
 
   largeData.forEach((value, index) => {
     // Check current memory usage
@@ -91,6 +96,13 @@ export function simulateProblemLargeDataProcessing() {
       console.log(
           `Processed ${index} items, Current Memory: ${usedHeapMB.toFixed(2)} MB`
       );
+
+      const currentTime = performance.now();
+      const memoryUsed = usedHeap - startMemory;
+      const timeElapsed = currentTime - startTime;
+
+      // Logging metrics at every 100th iteration
+      logMetrics(memoryUsed, timeElapsed);
     }
   });
 
@@ -117,14 +129,26 @@ export function simulateProblemLargeDataProcessing() {
     console.log(`Total Memory Change: ${formatMemoryUsage(performance.memory.usedJSHeapSize - performance.memory.totalJSHeapSize)} MB`);
   }
 
+  // Logging final metrics
+  const finalMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+  const finalTime = performance.now();
+  const memoryUsed = finalMemory - startMemory;
+  const timeElapsed = finalTime - startTime;
+
+  logMetrics(memoryUsed, timeElapsed);
+
   // Cleaning marks and measurements
   performance.clearMarks(startMark);
   performance.clearMarks(endMark);
   performance.clearMeasures("simulateProblemLargeDataProcessing-duration");
+  addMemoryLog(false);
+  hideLoader(); //  Hiding the loader after processing is complete
 }
+
 
 // Solution 1: Avoid blocking the main thread
 function simulateLargeDataProcessingSolved() {
+  resetAllProcesses();
   const largeData = Array.from({ length: 50000 }, (_, i) => i);
   let currentIndex = 0;
 
@@ -178,21 +202,33 @@ function simulateLargeDataProcessingSolved() {
 
 // Problem 2: Asynchronous data fetching with random delays
 function simulateLargeDataProcessingAsyncDelayProblem() {
+  resetAllProcesses();
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
   const chunkSize = 100; // Chunk size
 
   let currentIndex = 0;
   const totalChunks = Math.ceil(largeData.length / chunkSize);
 
+  const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+  const startTime = performance.now();
+
   showLoader(); // Show the loader at the start of processing
 
   for (let i = 0; i < totalChunks; i++) {
     fetchDataChunk(chunkSize, currentIndex, largeData, (newData) => {
+      const currentMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+      const currentTime = performance.now();
+      const memoryUsed = currentMemory - startMemory;
+      const timeElapsed = currentTime - startTime;
+
+      // Logging metrics
+      logMetrics(memoryUsed, timeElapsed);
       // Data may arrive asynchronously but in order
       updateChart(newData);
 
       // Hide the loader only after all chunks are received
       if (currentIndex >= largeData.length - chunkSize) {
+        addMemoryLog(false);
         hideLoader();
       }
     });
@@ -228,6 +264,7 @@ function simulateLargeDataProcessingAsyncDelaySolved() {
 
 // Function for processing chunks sequentially
 export async function processChunksSequentially(largeData, chunkSize) {
+  resetAllProcesses();
   let currentIndex = 0;
   const totalChunks = Math.ceil(largeData.length / chunkSize);
   let dataQueue = [];
@@ -263,6 +300,7 @@ export async function processChunksSequentially(largeData, chunkSize) {
   }
 
   hideLoader(); // Remove the loading indicator after processing is complete
+  addMemoryLog(false);
 }
 
 window.simulateProblemLargeDataProcessing = simulateProblemLargeDataProcessing;
