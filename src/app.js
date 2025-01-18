@@ -24,7 +24,7 @@ function initChart() {
   chart = new Chart(ctx, {
     type: "line",
     data: {
-      labels: data.map((_, i) => i + 1),
+      labels: [],
       datasets: [
         {
           label: "Data Points",
@@ -283,6 +283,9 @@ window.onload = () => {
   document
       .getElementById("simulateLargeDataAsyncDelayButtonSolving")
       .addEventListener("click", simulateLargeDataProcessingAsyncDelaySolved);
+  document
+      .getElementById("resetDataProcessingButton")
+      .addEventListener("click", resetAllProcesses);
 };
 
 
