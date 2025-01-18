@@ -1,18 +1,39 @@
-export function addMemoryLog() {
+export function addMemoryLog(isReset) {
     const logDiv = document.getElementById("log");
     const table = document.getElementById("memoryLogTable");
+
+    const rows = table.getElementsByTagName('tr');
+
+    const rowsArray = Array.from(rows);
+
+    rowsArray.forEach(row => {
+        const hasTh = row.querySelector('th') !== null;
+
+        if (!hasTh) {
+            row.parentNode.removeChild(row);
+        }
+    });
 
     if (performance.memory) {
         const { usedJSHeapSize, totalJSHeapSize, jsHeapSizeLimit } = performance.memory;
         const timestamp = new Date().toLocaleTimeString();
 
         const newRow = document.createElement("tr");
-        newRow.innerHTML = `
+        if(!isReset) {
+            newRow.innerHTML = `
             <td>${timestamp}</td>
             <td>${formatMemoryUsage(usedJSHeapSize)}</td>
             <td>${formatMemoryUsage(totalJSHeapSize)}</td>
             <td>${formatMemoryUsage(jsHeapSizeLimit)}</td>
           `;
+        } else {
+            newRow.innerHTML = `
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+          `;
+        }
         table.appendChild(newRow);
     } else {
         const warningRow = document.createElement("tr");
@@ -38,7 +59,7 @@ export function hideLoader() {
 
 // Table initialization
 export function initializeMemoryLogTable() {
-    const logDiv = document.getElementById("log");
+    const logDiv = document.getElementById("totalLog");
     const table = document.createElement("table");
     table.id = "memoryLogTable";
 
@@ -78,21 +99,71 @@ export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
 
 export function logMetrics(memoryUsed, timeElapsed) {
     const logDiv = document.getElementById("log");
+    let table = logDiv.querySelector('table');
 
-    // Create a new table row
-    const row = document.createElement("tr");
+    // Если таблицы нет, создаем новую
+    if (!table) {
+        table = document.createElement('table');
+        logDiv.appendChild(table);
+    }
 
-    // Create cells for memory and time
-    const memoryCell = document.createElement("td");
-    memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Convert bytes to MB
+    // Проверяем, содержит ли таблица строки <tr>
+    const hasRows = table.getElementsByTagName('tr').length > 0;
 
-    const timeCell = document.createElement("td");
-    timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Time in milliseconds
+    if (!hasRows) {
+        // Создаем строки <tr>
+        const row1 = document.createElement("tr");
+        row1.setAttribute('id', 'memoryUsed');
+        const row2 = document.createElement("tr");
+        row2.setAttribute('id', 'timeElapsed');
 
-    // Adding cells to a row
-    row.appendChild(memoryCell);
-    row.appendChild(timeCell);
+        // Создаем ячейки для первой строки
+        const cell1 = document.createElement('td');
+        cell1.textContent = 'Memory Used'; // Текст для первой ячейки
 
-    // Add a row to the table (log container)
-    logDiv.appendChild(row);
+        const cell2 = document.createElement('td');
+        cell2.textContent = 'Time Elapsed'; // Текст для второй ячейки
+
+        // Добавляем ячейки в строки
+        row1.appendChild(cell1);
+        row2.appendChild(cell2);
+
+        // Добавляем строки в таблицу
+        table.appendChild(row1);
+        table.appendChild(row2);
+
+    } else {
+        const memoryUsedRow = table.querySelector("#memoryUsed");
+        const timeElapsedRow = table.querySelector("#timeElapsed");
+
+        const memoryCell = document.createElement("td");
+        const timeCell = document.createElement("td");
+        memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`;
+        timeCell.textContent = `${timeElapsed.toFixed(2)} ms`;
+        memoryUsedRow.appendChild(memoryCell);
+        timeElapsedRow.appendChild(timeCell);
+    }
+
+
+
+
+    // // Create a new table row
+    // const row1 = document.createElement("tr").setAttribute('id', 'memoryUsed');
+    // const row2 = document.createElement("tr").setAttribute('id', 'timeElapsed');
+    //
+    // logDiv.appendChild(row1);
+    //
+    // // Create cells for memory and time
+    // const memoryCell = document.createElement("td");
+    // memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Convert bytes to MB
+    //
+    // const timeCell = document.createElement("td");
+    // timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Time in milliseconds
+    //
+    // // Adding cells to a row
+    // row.appendChild(memoryCell);
+    // row.appendChild(timeCell);
+    //
+    // // Add a row to the table (log container)
+
 }

@@ -13,7 +13,7 @@ import {
 
 let ctx = document.getElementById("chart").getContext("2d");
 let chart;
-let data = [10, 20, 30, 40, 50];
+let data = [];
 
 function initChart() {
   // If the chart already exists, destroy it before creating a new one
@@ -168,6 +168,7 @@ function simulateLargeDataProcessingSolved() {
     if (currentIndex < largeData.length) {
       setTimeout(processChunk, delay); // Pause before the next iteration
     } else {
+      addMemoryLog(false);
       hideLoader(); //  Hiding the loader after processing is complete
     }
   }
@@ -266,10 +267,17 @@ export async function processChunksSequentially(largeData, chunkSize) {
 
 window.simulateProblemLargeDataProcessing = simulateProblemLargeDataProcessing;
 
+function resetAllProcesses() {
+   addMemoryLog(true);
+   document.getElementById("log").innerHTML="";
+   data=[];
+   initChart();
+}
+
 window.onload = () => {
   console.log('DOM fully loaded and parsed');
   initializeMemoryLogTable();
-  addMemoryLog();
+  addMemoryLog(true);
   initChart();
   document
       .getElementById("simulateProblemLargeDataProcessingButton")
