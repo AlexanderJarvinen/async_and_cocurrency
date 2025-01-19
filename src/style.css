@@ -104,6 +104,7 @@ th {
   position: relative;
   width: 100%;
   height: 300px;
+  margin-top: 50px;
 }
 
 .chartAndLogWrapper {
@@ -134,4 +135,12 @@ button {
   &:active {
     border-color: #19ffff;
   }
+}
+
+.platformChart {
+  margin-top: 20px;
+}
+
+.platformChartBtn {
+  margin-top: 20px;
 }

@@ -52,6 +52,12 @@ function initCharts() {
     chart2.destroy();
   }
 
+  platforms.forEach(platform => {
+    if (platformCharts[platform.id]) {
+      platformCharts[platform.id].destroy();
+    }
+  });
+
   chart = new Chart(ctx, {
     type: "line",
     data: {
@@ -117,6 +123,11 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
     }
   }
 });
+
+  platforms.forEach(platform => {
+    const ctx = document.getElementById(platform.id).getContext('2d');
+    platformCharts[platform.id] = new Chart(ctx, chartConfig(platform.label, platform.data, platform.color, platform.bg));
+  });
 
 
 
