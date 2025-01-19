@@ -3,7 +3,7 @@ import './style.css';
 import MyWorker from './worker.worker.js';
 import ArtistChartsWorker from './workers/artistsCharts.worker.js';
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js';
-import { logMetrics } from './utils.js';
+import { logMetrics, processLargeData, dataLength } from './utils.js';
 
 // Создание нового SharedArrayBuffer
 const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT); // 12 месяцев
@@ -23,13 +23,9 @@ let data = [];
 let indexData = [];
 let randomArray = [];
 let indices = [];
-const dataLength = 100; // Длина массива данных
-const largeData = Array.from({ length: dataLength }, (_, i) => i);
-const batchSize = Math.floor(dataLength / 100); // Пачка
 // Эмуляция данных для 12 месяцев
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const platformCharts = {};
-let globalProgress = 0;
 
 
 // Отрисовка графиков
@@ -141,27 +137,7 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
 
 }
 
-// Показываем лоадер
-function showLoader(id) {
-  document.getElementById(id).style.display = "block";
-}
 
-// Скрываем лоадер
-function hideLoader(id) {
-  document.getElementById(id).style.display = "none";
-}
-
-// Обновляем прогресс-бар
-function updateProgressBar(index, progressBarId, progressTextId) {
-  const progressBar = document.getElementById(progressBarId);
-  const progressText = document.getElementById(progressTextId);
-
-  const progress = (index / dataLength) * 100;
-  progressBar.value = progress;
-  progressText.innerText = `${Math.floor(progress)}%`;
-  globalProgress = progress;
-
-}
 
 // Обновление графиков после получения данных от Web Worker
 function updateMainThreadChart() {
@@ -229,86 +205,28 @@ async function processBatch(batch) {
 
 // Функция для обработки данных с использованием макротасков и Performance API
 function processDataForMainFlow() {
-  showLoader("mainThreadLoader");
-  let index = 0;
-
-  function processNextChunk() {
-    if (index >= largeData.length) {
-      hideLoader("mainThreadLoader");
-      updateMainThreadChart();
-      return;
-    }
-
-    const batch = largeData.slice(index, index + batchSize);
-
-    // Начало измерения времени
-    const startTime = performance.now();
-    const initialMemory = performance.memory.usedJSHeapSize;
-
-    processBatch(batch, data).then((resp) => {
-      data.push(...resp);
-      index += batchSize;
-      updateProgressBar(index, "main-thread-progress-bar", "main-thread-progress-text");
-
-      // Конец измерения времени
-      const endTime = performance.now();
-      const finalMemory = performance.memory.usedJSHeapSize;
-
-      // Логирование метрик
-      const timeElapsed = endTime - startTime;
-      const memoryUsed = finalMemory - initialMemory;
-
-      logMetrics('mainThreadLog', memoryUsed, timeElapsed);
-
-      // Переход к следующей пачке данных
-      setTimeout(processNextChunk, 0);
-    });
-  }
-
-
-  processNextChunk();
+  processLargeData({
+    loaderId: "mainThreadLoader",
+    progressBarId: "main-thread-progress-bar",
+    progressTextId: "main-thread-progress-text",
+    logId: "mainThreadLog",
+    updateChartCallback: updateMainThreadChart,
+    batchProcessor: processBatch,
+    dataContainer: data, // Основной массив данных
+  });
 }
 
 // Инициализация данных и запуск обработки
 function initDataForWorker() {
-  showLoader("mainWorkerLoader");
-  let index = 0;
-
-  function processNextChunk() {
-    if (index >= largeData.length) {
-      hideLoader("mainWorkerLoader");
-      updateMainWorkerChart()
-      return;
-    }
-
-    const batch = largeData.slice(index, index + batchSize);
-
-    // Начало измерения времени
-    const startTime = performance.now();
-    const initialMemory = performance.memory.usedJSHeapSize;
-
-    processBatch(batch).then(() => {
-      processDataInWorker(batch);
-
-      index += batchSize;
-      updateProgressBar(index, "main-worker-progress-bar", "main-worker-progress-text");
-
-      // Конец измерения времени
-      const endTime = performance.now();
-      const finalMemory = performance.memory.usedJSHeapSize;
-
-      // Логирование метрик
-      const timeElapsed = endTime - startTime;
-      const memoryUsed = finalMemory - initialMemory;
-
-      logMetrics("mainWorkerLog", memoryUsed, timeElapsed);
-
-      // Переход к следующей пачке данных
-      setTimeout(processNextChunk, 0);
-    });
-  }
-
-  processNextChunk();
+  processLargeData({
+    loaderId: "mainWorkerLoader",
+    progressBarId: "main-worker-progress-bar",
+    progressTextId: "main-worker-progress-text",
+    logId: "mainWorkerLog",
+    updateChartCallback: updateMainWorkerChart,
+    batchProcessor: processBatch,
+    workerProcessor: processDataInWorker, // Передача данных в воркер
+  });
 }
 
 window.onload = () => {
