@@ -127,7 +127,6 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
     artist_charts_worker.onmessage = function(e) {
     const processedPlatforms = e.data.platforms;
 
-      if (globalProgress === 100) {
             processedPlatforms.forEach(platform => {
         const ctx = document.getElementById(platform.id).getContext('2d');
 
@@ -137,44 +136,41 @@ const chartConfig = (label, data, borderColor, backgroundColor) => ({
 
         platformCharts[platform.id] = new Chart(ctx, chartConfig(platform.label, platform.data, platform.color, platform.bg));
       });
-    }
   };
 
 
 }
 
 // Показываем лоадер
-function showLoader() {
-  document.getElementById("loader").style.display = "block";
+function showLoader(id) {
+  document.getElementById(id).style.display = "block";
 }
 
 // Скрываем лоадер
-function hideLoader() {
-  document.getElementById("loader").style.display = "none";
+function hideLoader(id) {
+  document.getElementById(id).style.display = "none";
 }
 
 // Обновляем прогресс-бар
-function updateProgressBar(index) {
-  const progressBar = document.getElementById("progress-bar");
-  const progressText = document.getElementById("progress-text");
+function updateProgressBar(index, progressBarId, progressTextId) {
+  const progressBar = document.getElementById(progressBarId);
+  const progressText = document.getElementById(progressTextId);
 
   const progress = (index / dataLength) * 100;
   progressBar.value = progress;
   progressText.innerText = `${Math.floor(progress)}%`;
   globalProgress = progress;
 
-  // Если прогресс достиг 100%, отправляем данные в Web Worker
-  if (globalProgress === 100) {
-    updateCharts();
-  }
 }
 
 // Обновление графиков после получения данных от Web Worker
-function updateCharts() {
+function updateMainThreadChart() {
   chart.data.labels = data.map((_, i) => i + 1);
   chart.data.datasets[0].data = data;
   chart.update();
+}
 
+function updateMainWorkerChart() {
   chart2.data.labels = indexData.map((_, i) => i + 1);
   chart2.data.datasets[0].data = indexData;
   chart2.update();
@@ -228,16 +224,60 @@ async function processBatch(batch) {
     }
   }
 
-  data.push(...results);
+  return results;
 }
 
 // Функция для обработки данных с использованием макротасков и Performance API
-function processData() {
+function processDataForMainFlow() {
+  showLoader("mainThreadLoader");
   let index = 0;
 
   function processNextChunk() {
     if (index >= largeData.length) {
-      // hideLoader();
+      hideLoader("mainThreadLoader");
+      updateMainThreadChart();
+      return;
+    }
+
+    const batch = largeData.slice(index, index + batchSize);
+
+    // Начало измерения времени
+    const startTime = performance.now();
+    const initialMemory = performance.memory.usedJSHeapSize;
+
+    processBatch(batch, data).then((resp) => {
+      data.push(...resp);
+      index += batchSize;
+      updateProgressBar(index, "main-thread-progress-bar", "main-thread-progress-text");
+
+      // Конец измерения времени
+      const endTime = performance.now();
+      const finalMemory = performance.memory.usedJSHeapSize;
+
+      // Логирование метрик
+      const timeElapsed = endTime - startTime;
+      const memoryUsed = finalMemory - initialMemory;
+
+      logMetrics('mainThreadLog', memoryUsed, timeElapsed);
+
+      // Переход к следующей пачке данных
+      setTimeout(processNextChunk, 0);
+    });
+  }
+
+
+  processNextChunk();
+}
+
+// Инициализация данных и запуск обработки
+function initDataForWorker() {
+  showLoader("mainWorkerLoader");
+  let index = 0;
+
+  function processNextChunk() {
+    if (index >= largeData.length) {
+      hideLoader("mainWorkerLoader");
+      updateMainWorkerChart()
       return;
     }
 
@@ -251,7 +291,7 @@ function processData() {
       processDataInWorker(batch);
 
       index += batchSize;
-      updateProgressBar(index);
+      updateProgressBar(index, "main-worker-progress-bar", "main-worker-progress-text");
 
       // Конец измерения времени
       const endTime = performance.now();
@@ -261,7 +301,7 @@ function processData() {
       const timeElapsed = endTime - startTime;
       const memoryUsed = finalMemory - initialMemory;
 
-      logMetrics(memoryUsed, timeElapsed);
+      logMetrics("mainWorkerLog", memoryUsed, timeElapsed);
 
       // Переход к следующей пачке данных
       setTimeout(processNextChunk, 0);
@@ -271,22 +311,16 @@ function processData() {
   processNextChunk();
 }
 
-// Инициализация данных и запуск обработки
-function initDataForChart() {
-  // showLoader();
-  processData();
-}
-
 window.onload = () => {
   initCharts();
   // initDataForChart();
   document
       .getElementById("startMainChartDataLoadingButton")
-      .addEventListener("click",  processData);
+      .addEventListener("click",  processDataForMainFlow);
 
   document
       .getElementById("startWorkersButton")
-      .addEventListener("click",  processData);
+      .addEventListener("click",  initDataForWorker);
 };
 
 

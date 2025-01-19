@@ -1,5 +1,5 @@
-export function logMetrics(memoryUsed, timeElapsed) {
-    const logDiv = document.getElementById("log");
+export function logMetrics(logPanel, memoryUsed, timeElapsed) {
+    const logDiv = document.getElementById(logPanel);
 
     // Получаем или создаём первую строку для памяти
     let memoryRow = logDiv.querySelector(".memory-row");

@@ -19,7 +19,7 @@ canvas {
   margin-top: 20px;
 }
 
-.mainLogWrapper {
+.logWrapper {
   max-width: 500px;
   overflow-x: auto;
   display: flex;
@@ -31,17 +31,43 @@ canvas {
   margin-bottom: 5px;
 }
 
-#loader {
+.chart-wrapper {
+  position: relative; /* Устанавливаем относительно обертки */
+  display: inline-block; /* Подгоняем размер под содержимое */
+}
+
+.loader-wrapper {
+  position: absolute; /* Абсолютное позиционирование внутри обертки */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex; /* Используем Flexbox для центрирования */
+  justify-content: center; /* Горизонтальное центрирование */
+  align-items: center; /* Вертикальное центрирование */
+  pointer-events: none; /* Чтобы события мыши не мешали графику */
+  z-index: 10; /* Поверх графика */
+}
+
+.loader {
   display: none;
   transform: translate(-50%, -50%);
   border: 16px solid #f3f3f3;
   /* Light grey */
-  border-top: 16px solid #3498db;
-  /* Blue */
   border-radius: 50%;
   width: 120px;
   height: 120px;
   animation: spin 1s linear infinite;
+}
+
+#mainThreadLoader {
+  border-top: 16px solid #3498db;
+  /* Blue */
+}
+
+#mainWorkerLoader {
+  border-top: 16px solid #ff2400;
+  /* Blue */
 }
 
 table {

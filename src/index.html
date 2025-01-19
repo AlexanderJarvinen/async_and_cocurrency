@@ -9,26 +9,41 @@
   </head>
 
   <body>
-<!--    <div id="loader"></div>-->
     <div  class="chartAndLogWrapper">
-      <div>
+      <div class="chart-wrapper">
+        <div class="loader-wrapper">
+          <div id="mainThreadLoader" class="loader"></div>
+        </div>
         <canvas id="chart"></canvas>
       </div>
-      <div class="mainLogWrapper">
-        <div id="log"></div>
+      <div class="logWrapper">
+        <div id="mainThreadLog"></div>
       </div>
     </div>
     <div id="progress-container">
       <button id="startMainChartDataLoadingButton">Start Main Chart Data Loading</button>
       <div class="progress-bar-container">
-        <progress id="progress-bar" value="0" max="100"></progress>
-        <span id="progress-text">0%</span>
+        <h5>Main Thread</h5>
+        <progress id="main-thread-progress-bar" value="0" max="100"></progress>
+        <span id="main-thread-progress-text">0%</span>
+        <h5>Main Worker</h5>
+        <progress id="main-worker-progress-bar" value="0" max="100"></progress>
+        <span id="main-worker-progress-text">0%</span>
       </div>
       <button id="startWorkersButton">Start Workers</button>
     </div>
-    <div>
-      <canvas id="chart2"></canvas>
+    <div  class="chartAndLogWrapper">
+      <div class="chart-wrapper">
+        <div class="loader-wrapper">
+          <div id="mainWorkerLoader" class="loader"></div>
+        </div>
+        <canvas id="chart2"></canvas>
+      </div>
+      <div class="logWrapper">
+        <div id="mainWorkerLog"></div>
+      </div>
     </div>
+
     <h1>Artist Popularity on Various Platforms</h1>
 
   <div class="charts-container">
