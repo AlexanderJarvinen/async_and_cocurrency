@@ -1,12 +1,12 @@
-export const dataLength = 100 // Длина массива данных
+export const dataLength = 100 // Length of the data array
 const largeData = Array.from({ length: dataLength }, (_, i) => i)
-const batchSize = Math.floor(dataLength / 100) // Пачка
+const batchSize = Math.floor(dataLength / 100) // Bulk
 let globalProgress = 0
 
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
 
-  // Получаем или создаём первую строку для памяти
+  // Get or create the first line for memory
   let memoryRow = logDiv.querySelector('.memory-row')
   if (!memoryRow) {
     memoryRow = document.createElement('tr')
@@ -14,7 +14,7 @@ export function logMetrics(logPanel, memoryUsed, timeElapsed) {
     logDiv.appendChild(memoryRow)
   }
 
-  // Получаем или создаём вторую строку для времени
+  // Get or create a second string for the time
   let timeRow = logDiv.querySelector('.time-row')
   if (!timeRow) {
     timeRow = document.createElement('tr')
@@ -22,12 +22,12 @@ export function logMetrics(logPanel, memoryUsed, timeElapsed) {
     logDiv.appendChild(timeRow)
   }
 
-  // Добавляем ячейку с памятью в первую строку
+  // Add the memory cell to the first line
   const memoryCell = document.createElement('td')
   memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB` // Convert bytes to MB
   memoryRow.appendChild(memoryCell)
 
-  // Добавляем ячейку с временем во вторую строку
+  // Add the cell with time to the second row
   const timeCell = document.createElement('td')
   timeCell.textContent = `${timeElapsed.toFixed(2)} ms` // Time in milliseconds
   timeRow.appendChild(timeCell)
@@ -55,7 +55,7 @@ export function processLargeData({
 
     const batch = largeData.slice(index, index + batchSize)
 
-    // Начало измерения времени
+    // Start time measurement
     const startTime = performance.now()
     const initialMemory = performance.memory.usedJSHeapSize
 
@@ -71,17 +71,17 @@ export function processLargeData({
       index += batchSize
       updateProgressBar(index, progressBarId, progressTextId)
 
-      // Конец измерения времени
+      // End of time measurement
       const endTime = performance.now()
       const finalMemory = performance.memory.usedJSHeapSize
 
-      // Логирование метрик
+      // Logging metrics
       const timeElapsed = endTime - startTime
       const memoryUsed = finalMemory - initialMemory
 
       logMetrics(logId, memoryUsed, timeElapsed)
 
-      // Переход к следующей пачке данных
+      // Go to the next stack of data
       setTimeout(processNextChunk, 0)
     })
   }
@@ -89,17 +89,17 @@ export function processLargeData({
   processNextChunk()
 }
 
-// Показываем лоадер
+// Show loader
 function showLoader(id) {
   document.getElementById(id).style.display = 'block'
 }
 
-// Скрываем лоадер
+// Hide the loader
 function hideLoader(id) {
   document.getElementById(id).style.display = 'none'
 }
 
-// Обновляем прогресс-бар
+// Update the progress bar
 function updateProgressBar(index, progressBarId, progressTextId) {
   const progressBar = document.getElementById(progressBarId)
   const progressText = document.getElementById(progressTextId)

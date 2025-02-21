@@ -5,10 +5,10 @@ import ArtistChartsWorker from './workers/artistsCharts.worker.js'
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
 import { logMetrics, processLargeData, dataLength } from './utils.js'
 
-// Создание нового SharedArrayBuffer
-const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT) // 12 месяцев
+// Creating a new SharedArrayBuffer
+const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT) // 12 months
 
-// Создаем Web Worker
+// Create Web Worker
 const worker = new MyWorker()
 const artist_charts_worker = new ArtistChartsWorker()
 const youtube_chart_worker = new YoutubeChartWorker()
@@ -21,7 +21,7 @@ let data = []
 let indexData = []
 let randomArray = []
 let indices = []
-// Эмуляция данных для 12 месяцев
+// Data emulation for 12 months
 const months = [
   'January',
   'February',
@@ -38,7 +38,7 @@ const months = [
 ]
 const platformCharts = {}
 
-// Отрисовка графиков
+// Rendering of  charts
 const platforms = [
   {
     id: 'spotifyChart',
@@ -105,7 +105,7 @@ const platforms = [
   },
 ]
 
-// Функция для инициализации графиков
+// Function for charts initialization
 function initCharts() {
   performance.mark('initCharts-start')
   if (chart) {
@@ -164,7 +164,7 @@ function initCharts() {
     },
   })
 
-  // Настройки графиков для каждой платформы
+  // Charts settings for each platform
   const chartConfig = (label, data, borderColor, backgroundColor) => ({
     type: 'line',
     data: {
@@ -215,7 +215,7 @@ function initCharts() {
   }
 }
 
-// Обновление графиков после получения данных от Web Worker
+// Update charts after receiving data from Web Worker
 function updateMainThreadChart() {
   chart.data.labels = data.map((_, i) => i + 1)
   chart.data.datasets[0].data = data
@@ -228,7 +228,7 @@ function updateMainWorkerChart() {
   chart2.update()
 }
 
-// Отправляем данные в Web Worker для обработки
+// Send data to Web Worker for processing
 function processDataInWorker(batch) {
   worker.postMessage({ batch, dataLength })
   artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
@@ -238,32 +238,32 @@ function processDataInWorker(batch) {
 youtube_chart_worker.onmessage = function (e) {
   const youtubePopularityData = e.data
 
-  // Проверяем, есть ли график для YouTube в platformCharts и обновляем его данные
+  // Check if there is a chart for YouTube in platformCharts and update its data
   if (platformCharts['youtubeChart']) {
     platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData
     platformCharts['youtubeChart'].update()
   }
 }
 
-// Обработчик сообщений от Web Worker
+// Web Worker message handler
 worker.onmessage = function (e) {
   randomArray = e.data.randomArray
   indices = e.data.indices
 
-  // Обновляем графики с результатами от Web Worker
+  // Update graphs with results from Web Worker
   indexData.push(indices)
 }
 
-// Функция для обработки четных чисел с задержкой
+// Function for processing even numbers with delay
 function processEvenNumber(value) {
   return new Promise((resolve) => {
     setTimeout(() => {
-      resolve(value) // Возвращаем значение после задержки
-    }, Math.random() * 1000) // Случайная задержка до 1000 мс
+      resolve(value) // Return value after delay
+    }, Math.random() * 1000) // Random delay up to 1000 ms
   })
 }
 
-// Обработка данных пачками с использованием макротасков (setTimeout)
+// Data processing in batches using macrotasks (setTimeout)
 async function processBatch(batch) {
   const results = []
 
@@ -279,7 +279,7 @@ async function processBatch(batch) {
   return results
 }
 
-// Функция для обработки данных с использованием макротасков и Performance API
+// Function for data processing using macrotasks and Performance API
 function processDataForMainFlow() {
   processLargeData({
     loaderId: 'mainThreadLoader',
@@ -288,11 +288,11 @@ function processDataForMainFlow() {
     logId: 'mainThreadLog',
     updateChartCallback: updateMainThreadChart,
     batchProcessor: processBatch,
-    dataContainer: data, // Основной массив данных
+    dataContainer: data,  // Main data array
   })
 }
 
-// Инициализация данных и запуск обработки
+// Initialize data and start processing
 function initDataForWorker() {
   processLargeData({
     loaderId: 'mainWorkerLoader',
@@ -301,7 +301,7 @@ function initDataForWorker() {
     logId: 'mainWorkerLog',
     updateChartCallback: updateMainWorkerChart,
     batchProcessor: processBatch,
-    workerProcessor: processDataInWorker, // Передача данных в воркер
+    workerProcessor: processDataInWorker, // Transmit data to the Warker
   })
 }
 

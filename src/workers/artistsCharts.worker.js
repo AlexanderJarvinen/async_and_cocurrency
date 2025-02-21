@@ -1,4 +1,4 @@
-// Обработчик сообщений от основного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   const platforms = e.data.platforms
   const sharedBuffer = e.data.buffer
@@ -11,18 +11,18 @@ onmessage = function (e) {
     return { ...platform, data }
   })
 
-  // Используем данные из SharedArrayBuffer для обработки
+  // Use data from SharedArrayBuffer for processing
   processedPlatforms.forEach((platform, index) => {
     if (index === 0) {
       platform.data = Array.from(popularityData)
     }
   })
 
-  // Отправляем результат обратно в основной поток
+  // Send the result back to the main thread
   postMessage({ platforms: processedPlatforms })
 }
 
-// Функция генерации случайных данных (аналогична основной программе)
+// Function of random data generation (similar to the main program)
 function getRandomData(baseValue, variance) {
   const randomData = Array.from({ length: 12 }, () => {
     const randomVariation = Math.floor(Math.random() * variance) - variance / 2

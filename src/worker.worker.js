@@ -1,19 +1,19 @@
-// Обработчик сообщений от основного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   const { batch, dataLength } = e.data
 
-  // Генерация массива случайных чисел
+  // Generation of random number array
   const randomArray = Array.from({ length: dataLength }, () =>
     Math.floor(Math.random() * dataLength)
   )
 
-  // Находим индексы элементов из batch в randomArray
+  // Find indexes of elements from batch in randomArray
   const indices = batch.map((item) => {
     const indexInRandomArray = randomArray.indexOf(item)
     const indicesResult = indexInRandomArray === -1 ? null : indexInRandomArray
     return indicesResult
   })
 
-  // Отправляем результат обратно в основной поток
+  // Send the result back to the main thread
   postMessage({ randomArray, indices })
 }

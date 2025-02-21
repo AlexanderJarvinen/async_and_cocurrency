@@ -1,4 +1,4 @@
-// Функция для генерации случайных данных с колебаниями
+// Function for generating random data with fluctuations
 function getRandomData(baseValue, variance) {
   return Array.from({ length: 12 }, () => {
     const randomVariation = Math.floor(Math.random() * variance) - variance / 2
@@ -6,7 +6,7 @@ function getRandomData(baseValue, variance) {
   })
 }
 
-// Формула для расчета популярности на YouTube
+// Formula for calculating YouTube popularity
 function calculateYouTubePopularity(
   subscribers,
   views,
@@ -35,13 +35,13 @@ function calculateYouTubePopularity(
   )
 }
 
-// Генерация данных для YouTube на основе формулы популярности за 12 месяцев
+// Generate data for YouTube based on 12 months popularity formula
 function getYouTubeData(sharedBuffer) {
   const popularityData = new Float32Array(sharedBuffer)
   let subscribers = Math.floor(Math.random() * 100) + 1
   let s = 0
 
-  // Эмуляция долгих вычислений
+  // Emulation of long calculations
   setTimeout(() => {
     while (s <= 1000000) {
       subscribers += Math.floor(Math.random() * 100) + 1
@@ -55,7 +55,7 @@ function getYouTubeData(sharedBuffer) {
     const growth = 10 // 10% growth
     const virality = 1 // 1 viral video
 
-    // Расчет популярности для 12 месяцев и запись в SharedArrayBuffer
+    // Calculation of popularity for 12 months and writing to SharedArrayBuffer
     for (let month = 0; month < 12; month++) {
       popularityData[month] = Math.floor(
         calculateYouTubePopularity(
@@ -71,12 +71,12 @@ function getYouTubeData(sharedBuffer) {
       )
     }
 
-    // Уведомляем основной поток о завершении
+    // Notify the main thread of completion
     postMessage(popularityData)
   }, 0)
 }
 
-// Обработчик сообщений от главного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
     getYouTubeData(e.data.buffer)

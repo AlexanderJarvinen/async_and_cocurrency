@@ -14,11 +14,11 @@ module.exports = {
         use: ['style-loader', 'css-loader'],
       },
       {
-        test: /\.worker\.js$/, // Все файлы с расширением .worker.js обрабатываются worker-loader
+        test: /\.worker\.js$/, // All files with the .worker.js extension are handled by worker-loader
         use: {
           loader: 'worker-loader',
           options: {
-            filename: '[name].[contenthash].worker.js', // Используем уникальные имена для воркеров
+            filename: '[name].[contenthash].worker.js', // Use unique names for the worshippers
           },
         },
       },
@@ -35,7 +35,7 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    open: true, // Автоматически открывает браузер при старте,
+    open: true, // Automatically opens the browser on startup,
     headers: {
       'Cross-Origin-Opener-Policy': 'same-origin',
       'Cross-Origin-Embedder-Policy': 'require-corp',
