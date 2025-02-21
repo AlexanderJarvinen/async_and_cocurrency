@@ -75,7 +75,8 @@ table {
   width: 100%;
   margin-top: 20px;
 }
-th, td {
+th,
+td {
   border: 1px solid #ddd;
   text-align: left;
   padding: 8px;
@@ -110,7 +111,7 @@ th {
 .chartAndLogWrapper {
   display: flex;
   padding: 30px;
-  gap:30px;
+  gap: 30px;
 }
 
 #progress-container {
@@ -120,15 +121,15 @@ th {
 }
 
 .progress-bar-container {
-   display: flex;
-   flex-direction: column;
-   justify-content: center;
- }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 
 button {
   width: 200px;
   padding: 8px 12px;
-  border-radius:10px;
+  border-radius: 10px;
   background-color: #30d5c8;
   border: 2px solid #1b877e;
 
