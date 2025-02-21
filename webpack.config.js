@@ -26,7 +26,7 @@ module.exports = {
     },
     compress: true,
     port: 9000,
-    open: true, // Автоматически открывает браузер при старте
+    open: true, // Automatically opens the browser on startup
   },
   mode: 'development',
 }

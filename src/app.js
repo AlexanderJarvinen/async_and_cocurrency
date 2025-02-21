@@ -4,10 +4,10 @@ import './style.css'
 let ctx = document.getElementById('chart').getContext('2d')
 let chart
 let data = []
-const dataLength = 10000 // Длина массива данных
+const dataLength = 10000 // Length of the data array
 const largeData = Array.from({ length: dataLength }, (_, i) => i)
 
-// Функция для инициализации графика
+// Function for chart initialization
 function initChart() {
   if (chart) {
     chart.destroy()
@@ -35,17 +35,17 @@ function initChart() {
   })
 }
 
-// Показываем лоадер
+// Show loader
 function showLoader() {
   document.getElementById('loader').style.display = 'block'
 }
 
-// Скрываем лоадер
+// Hide the loader
 function hideLoader() {
   document.getElementById('loader').style.display = 'none'
 }
 
-// Обновление графика
+// Updating the chart
 function updateChart(newData) {
   console.log('updateChartNewData', newData)
   data.push(newData)
@@ -55,20 +55,20 @@ function updateChart(newData) {
 }
 
 function initDataForChart() {
-  showLoader() // Показываем лоадер при начале обработки
+  showLoader() // Show loader at the beginning of processing
   const largeData = Array.from({ length: 1000 }, (_, i) => i)
 
   largeData.forEach((value) => {
     if (value % 2 === 0) {
-      // Если число четное, обрабатываем с задержкой
+      // If the number is even, process with delay
       setTimeout(() => {
         updateChart(value)
-      }, Math.random() * 1000) // Случайная задержка до 1000 мс
+      }, Math.random() * 1000) // Random delay up to 1000 ms
     } else {
       updateChart(value)
     }
   })
-  hideLoader() // Скрываем лоадер после завершения обработки
+  hideLoader() // Hide the loader after processing is complete
 }
 
 window.onload = () => {
