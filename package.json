@@ -4,7 +4,7 @@
   "scripts": {
     "build": "webpack",
     "start": "webpack serve --open",
-    "format": "prettier --write"
+    "format": "prettier --write ."
   },
   "devDependencies": {
     "css-loader": "^6.0.0",
