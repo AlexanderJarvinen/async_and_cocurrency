@@ -44,7 +44,7 @@ export function addMemoryLog(isReset) {
     }
 }
 
-// Форматирование значения памяти в MB
+// Formatting the memory value in MB
 export function formatMemoryUsage(bytes) {
     return (bytes / 1024 / 1024).toFixed(2);
 }
