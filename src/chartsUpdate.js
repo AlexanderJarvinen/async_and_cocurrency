@@ -1,5 +1,6 @@
 import Chart from 'chart.js/auto';
-import { platforms, artist_charts_worker, months, indexData, platformCharts, data, chartConfig  } from './initData.js';
+import { platforms, months, indexData, platformCharts, data, chartConfig  } from './initData.js';
+import { artist_charts_worker } from './workerInit.js';
 
 let chart, chart2;
 let ctx = document.getElementById('chart').getContext('2d');
@@ -63,7 +64,7 @@ export function initCharts() {
       },
     },
   })
-  
+
 
   platforms.forEach((platform) => {
     const ctx = document.getElementById(platform.id).getContext('2d')
@@ -72,7 +73,7 @@ export function initCharts() {
       chartConfig(platform.label, platform.data, platform.color, platform.bg)
     )
   })
-  
+
 }
 
 // Update charts after receiving data from Web Worker
