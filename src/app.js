@@ -1,219 +1,23 @@
-import Chart from 'chart.js/auto'
 import './style.css'
 import MyWorker from './worker.worker.js'
-import ArtistChartsWorker from './workers/artistsCharts.worker.js'
+
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
 import { logMetrics, processLargeData, dataLength } from './utils.js'
+import { initCharts } from './chartsUpdate.js'
 
 // Creating a new SharedArrayBuffer
 const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT) // 12 months
 
 // Create Web Worker
 const worker = new MyWorker()
-const artist_charts_worker = new ArtistChartsWorker()
+
 const youtube_chart_worker = new YoutubeChartWorker()
 
-let ctx = document.getElementById('chart').getContext('2d')
-let ctx2 = document.getElementById('chart2').getContext('2d')
-let chart
-let chart2
 let data = []
 let indexData = []
 let randomArray = []
 let indices = []
-// Data emulation for 12 months
-const months = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
-]
-const platformCharts = {}
 
-// Rendering of  charts
-const platforms = [
-  {
-    id: 'spotifyChart',
-    label: 'Spotify',
-    maxData: 50000,
-    color: 'rgba(30, 215, 96, 1)',
-    bg: 'rgba(30, 215, 96, 0.2)',
-  },
-  {
-    id: 'youtubeChart',
-    label: 'YouTube',
-    maxData: 100000,
-    color: 'rgba(255, 0, 0, 1)',
-    bg: 'rgba(255, 0, 0, 0.2)',
-  },
-  {
-    id: 'instagramChart',
-    label: 'Instagram',
-    maxData: 30000,
-    color: 'rgba(193, 53, 132, 1)',
-    bg: 'rgba(193, 53, 132, 0.2)',
-  },
-  {
-    id: 'facebookChart',
-    label: 'Facebook',
-    maxData: 25000,
-    color: 'rgba(59, 89, 152, 1)',
-    bg: 'rgba(59, 89, 152, 0.2)',
-  },
-  {
-    id: 'twitterChart',
-    label: 'Twitter',
-    maxData: 20000,
-    color: 'rgba(29, 161, 242, 1)',
-    bg: 'rgba(29, 161, 242, 0.2)',
-  },
-  {
-    id: 'pandoraChart',
-    label: 'Pandora',
-    maxData: 15000,
-    color: 'rgba(0, 123, 255, 1)',
-    bg: 'rgba(0, 123, 255, 0.2)',
-  },
-  {
-    id: 'soundcloudChart',
-    label: 'SoundCloud',
-    maxData: 10000,
-    color: 'rgba(255, 85, 0, 1)',
-    bg: 'rgba(255, 85, 0, 0.2)',
-  },
-  {
-    id: 'deezerChart',
-    label: 'Deezer',
-    maxData: 5000,
-    color: 'rgba(0, 176, 255, 1)',
-    bg: 'rgba(0, 176, 255, 0.2)',
-  },
-  {
-    id: 'tiktokChart',
-    label: 'TikTok',
-    maxData: 30000,
-    color: 'rgba(255, 255, 0, 1)',
-    bg: 'rgba(255, 255, 0, 0.2)',
-  },
-]
-
-// Function for charts initialization
-function initCharts() {
-  performance.mark('initCharts-start')
-  if (chart) {
-    chart.destroy()
-  }
-  if (chart2) {
-    chart2.destroy()
-  }
-
-  platforms.forEach((platform) => {
-    if (platformCharts[platform.id]) {
-      platformCharts[platform.id].destroy()
-    }
-  })
-
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Data Points',
-          data: [],
-          borderColor: 'rgba(75, 192, 192, 1)',
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-    },
-  })
-
-  chart2 = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Index of Data Points',
-          data: [],
-          backgroundColor: 'rgba(153, 102, 255, 0.2)',
-          borderColor: 'rgba(153, 102, 255, 1)',
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-    },
-  })
-
-  // Charts settings for each platform
-  const chartConfig = (label, data, borderColor, backgroundColor) => ({
-    type: 'line',
-    data: {
-      labels: months,
-      datasets: [
-        {
-          label: label,
-          data: data,
-          borderColor: borderColor,
-          backgroundColor: backgroundColor,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  })
-
-  platforms.forEach((platform) => {
-    const ctx = document.getElementById(platform.id).getContext('2d')
-    platformCharts[platform.id] = new Chart(
-      ctx,
-      chartConfig(platform.label, platform.data, platform.color, platform.bg)
-    )
-  })
-
-  artist_charts_worker.onmessage = function (e) {
-    const processedPlatforms = e.data.platforms
-
-    processedPlatforms.forEach((platform) => {
-      const ctx = document.getElementById(platform.id).getContext('2d')
-
-      if (platformCharts[platform.id]) {
-        platformCharts[platform.id].destroy()
-      }
-
-      platformCharts[platform.id] = new Chart(
-        ctx,
-        chartConfig(platform.label, platform.data, platform.color, platform.bg)
-      )
-    })
-  }
-}
 
 // Update charts after receiving data from Web Worker
 function updateMainThreadChart() {
