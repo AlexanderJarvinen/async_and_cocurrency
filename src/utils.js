@@ -77,24 +77,19 @@ export function initializeMemoryLogTable() {
 // Function to simulate asynchronous data fetching with random delays
 export function fetchDataChunk(chunkSize, currentIndex, largeData, callback) {
     const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
-
     const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
 
-    setTimeout(() => {
-        callback(newData, currentIndex);
-    }, delay);
-}
-
-// Function to simulate asynchronous data fetching with random delays
-export function fetchDataChunk2(chunkSize, currentIndex, largeData) {
-    return new Promise((resolve) => {
-        const delay = Math.random() * 1000; // Random delay from 0 to 1000 ms
-        const newData = largeData.slice(currentIndex, currentIndex + chunkSize);
-
+    if(callback) {
         setTimeout(() => {
-            resolve(newData);
+            callback(newData, currentIndex);
         }, delay);
-    });
+    } else {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve(newData);
+            }, delay);
+        });
+    }
 }
 
 export function logMetrics(memoryUsed, timeElapsed) {

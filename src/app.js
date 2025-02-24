@@ -6,7 +6,6 @@ import {
   showLoader,
   hideLoader,
   initializeMemoryLogTable,
-  fetchDataChunk2,
   fetchDataChunk,
   logMetrics
 } from './utils'
@@ -274,7 +273,7 @@ export async function processChunksSequentially(largeData, chunkSize) {
   showLoader(); // Show loading indicator at the beginning of processing
 
   while (currentIndex < largeData.length) {
-    const chunkData = await fetchDataChunk2(chunkSize, currentIndex, largeData);
+    const chunkData = await fetchDataChunk(chunkSize, currentIndex, largeData);
     dataQueue.push(chunkData);
 
     // Measuring the current memory usage and time
