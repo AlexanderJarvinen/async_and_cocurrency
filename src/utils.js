@@ -3,6 +3,9 @@ const largeData = Array.from({ length: dataLength }, (_, i) => i)
 const batchSize = Math.floor(dataLength / 100) // Bulk
 let globalProgress = 0
 
+import { data } from './chartsUpdate.js';
+import { updateMainThreadChart } from './chartsUpdate.js'
+
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
 
@@ -108,4 +111,43 @@ function updateProgressBar(index, progressBarId, progressTextId) {
   progressBar.value = progress
   progressText.innerText = `${Math.floor(progress)}%`
   globalProgress = progress
+}
+
+
+// Function for data processing using macrotasks and Performance API
+export function processDataForMainFlow() {
+  processLargeData({
+    loaderId: 'mainThreadLoader',
+    progressBarId: 'main-thread-progress-bar',
+    progressTextId: 'main-thread-progress-text',
+    logId: 'mainThreadLog',
+    updateChartCallback: updateMainThreadChart,
+    batchProcessor: processBatch,
+    dataContainer: data,  // Main data array
+  })
+}
+
+// Data processing in batches using macrotasks (setTimeout)
+async function processBatch(batch) {
+  const results = []
+
+  for (const value of batch) {
+    if (value % 2 === 0) {
+      const result = await processEvenNumber(value)
+      results.push(result)
+    } else {
+      results.push(value)
+    }
+  }
+
+  return results
+}
+
+// Function for processing even numbers with delay
+function processEvenNumber(value) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(value) // Return value after delay
+    }, Math.random() * 1000) // Random delay up to 1000 ms
+  })
 }

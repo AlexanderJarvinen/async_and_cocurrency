@@ -7,6 +7,7 @@ let chart, chart2;
 const platformCharts = {};
 let ctx = document.getElementById('chart').getContext('2d');
 let ctx2 = document.getElementById('chart2').getContext('2d');
+export let data = [];
 
 // Function for charts initialization
 export function initCharts() {
@@ -116,4 +117,11 @@ export function initCharts() {
       )
     })
   }
+}
+
+// Update charts after receiving data from Web Worker
+export function updateMainThreadChart() {
+  chart.data.labels = data.map((_, i) => i + 1)
+  chart.data.datasets[0].data = data
+  chart.update()
 }

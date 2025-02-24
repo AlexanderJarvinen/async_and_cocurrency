@@ -2,7 +2,7 @@ import './style.css'
 import MyWorker from './worker.worker.js'
 
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
-import { logMetrics, processLargeData, dataLength } from './utils.js'
+import { logMetrics, processLargeData, dataLength, processDataForMainFlow } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
 
 // Creating a new SharedArrayBuffer
@@ -13,18 +13,9 @@ const worker = new MyWorker()
 
 const youtube_chart_worker = new YoutubeChartWorker()
 
-let data = []
 let indexData = []
 let randomArray = []
 let indices = []
-
-
-// Update charts after receiving data from Web Worker
-function updateMainThreadChart() {
-  chart.data.labels = data.map((_, i) => i + 1)
-  chart.data.datasets[0].data = data
-  chart.update()
-}
 
 function updateMainWorkerChart() {
   chart2.data.labels = indexData.map((_, i) => i + 1)
@@ -58,43 +49,6 @@ worker.onmessage = function (e) {
   indexData.push(indices)
 }
 
-// Function for processing even numbers with delay
-function processEvenNumber(value) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(value) // Return value after delay
-    }, Math.random() * 1000) // Random delay up to 1000 ms
-  })
-}
-
-// Data processing in batches using macrotasks (setTimeout)
-async function processBatch(batch) {
-  const results = []
-
-  for (const value of batch) {
-    if (value % 2 === 0) {
-      const result = await processEvenNumber(value)
-      results.push(result)
-    } else {
-      results.push(value)
-    }
-  }
-
-  return results
-}
-
-// Function for data processing using macrotasks and Performance API
-function processDataForMainFlow() {
-  processLargeData({
-    loaderId: 'mainThreadLoader',
-    progressBarId: 'main-thread-progress-bar',
-    progressTextId: 'main-thread-progress-text',
-    logId: 'mainThreadLog',
-    updateChartCallback: updateMainThreadChart,
-    batchProcessor: processBatch,
-    dataContainer: data,  // Main data array
-  })
-}
 
 // Initialize data and start processing
 function initDataForWorker() {
