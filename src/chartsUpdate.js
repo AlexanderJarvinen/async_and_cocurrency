@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import { platforms, artist_charts_worker, months, indexData, platformCharts, data  } from './initData.js';
+import { platforms, artist_charts_worker, months, indexData, platformCharts, data, chartConfig  } from './initData.js';
 
 let chart, chart2;
 let ctx = document.getElementById('chart').getContext('2d');
@@ -63,31 +63,7 @@ export function initCharts() {
       },
     },
   })
-
-  // Charts settings for each platform
-  const chartConfig = (label, data, borderColor, backgroundColor) => ({
-    type: 'line',
-    data: {
-      labels: months,
-      datasets: [
-        {
-          label: label,
-          data: data,
-          borderColor: borderColor,
-          backgroundColor: backgroundColor,
-          fill: true,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
-      },
-    },
-  })
+  
 
   platforms.forEach((platform) => {
     const ctx = document.getElementById(platform.id).getContext('2d')
@@ -96,23 +72,7 @@ export function initCharts() {
       chartConfig(platform.label, platform.data, platform.color, platform.bg)
     )
   })
-
-  artist_charts_worker.onmessage = function (e) {
-    const processedPlatforms = e.data.platforms
-
-    processedPlatforms.forEach((platform) => {
-      const ctx = document.getElementById(platform.id).getContext('2d')
-
-      if (platformCharts[platform.id]) {
-        platformCharts[platform.id].destroy()
-      }
-
-      platformCharts[platform.id] = new Chart(
-        ctx,
-        chartConfig(platform.label, platform.data, platform.color, platform.bg)
-      )
-    })
-  }
+  
 }
 
 // Update charts after receiving data from Web Worker

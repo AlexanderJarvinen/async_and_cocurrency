@@ -92,6 +92,30 @@ export const months = [
   'December',
 ];
 
+// Charts settings for each platform
+export const chartConfig = (label, data, borderColor, backgroundColor) => ({
+  type: 'line',
+  data: {
+    labels: months,
+    datasets: [
+      {
+        label: label,
+        data: data,
+        borderColor: borderColor,
+        backgroundColor: backgroundColor,
+        fill: true,
+      },
+    ],
+  },
+  options: {
+    responsive: true,
+    scales: {
+      y: {
+        beginAtZero: true,
+      },
+    },
+  },
+})
 
 
 export const artist_charts_worker = new ArtistChartsWorker();

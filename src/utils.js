@@ -9,7 +9,8 @@ import {
   batchSize,
   indexData,
   platformCharts,
-  data
+  data,
+  chartConfig
 } from './initData.js';
 import { updateMainThreadChart, updateMainWorkerChart } from './chartsUpdate.js';
 
@@ -200,4 +201,21 @@ youtube_chart_worker.onmessage = function (e) {
     platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData
     platformCharts['youtubeChart'].update()
   }
+}
+
+artist_charts_worker.onmessage = function (e) {
+  const processedPlatforms = e.data.platforms
+
+  processedPlatforms.forEach((platform) => {
+    const ctx = document.getElementById(platform.id).getContext('2d')
+
+    if (platformCharts[platform.id]) {
+      platformCharts[platform.id].destroy()
+    }
+
+    platformCharts[platform.id] = new Chart(
+      ctx,
+      chartConfig(platform.label, platform.data, platform.color, platform.bg)
+    )
+  })
 }
