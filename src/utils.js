@@ -1,13 +1,21 @@
-export const dataLength = 100 // Length of the data array
-const largeData = Array.from({ length: dataLength }, (_, i) => i)
-const batchSize = Math.floor(dataLength / 100) // Bulk
+import {
+  worker,
+  artist_charts_worker,
+  platforms,
+  sharedBuffer,
+  youtube_chart_worker,
+  dataLength,
+  largeData,
+  batchSize,
+  indexData,
+  platformCharts,
+  data
+} from './initData.js';
+import { updateMainThreadChart, updateMainWorkerChart } from './chartsUpdate.js';
+
 let globalProgress = 0;
 let randomArray = [];
 let indices = [];
-export let indexData = [];
-
-import { worker, artist_charts_worker, platforms, sharedBuffer, youtube_chart_worker,  } from './initData.js';
-import { updateMainThreadChart, updateMainWorkerChart, data, platformCharts } from './chartsUpdate.js'
 
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
@@ -115,7 +123,6 @@ function updateProgressBar(index, progressBarId, progressTextId) {
   progressText.innerText = `${Math.floor(progress)}%`
   globalProgress = progress
 }
-
 
 // Function for data processing using macrotasks and Performance API
 export function processDataForMainFlow() {

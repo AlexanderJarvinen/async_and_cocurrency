@@ -1,14 +1,9 @@
-
 import Chart from 'chart.js/auto';
-
-import { platforms, artist_charts_worker, months  } from './initData.js';
-import { indexData  } from './utils.js';
+import { platforms, artist_charts_worker, months, indexData, platformCharts, data  } from './initData.js';
 
 let chart, chart2;
-export const platformCharts = {};
 let ctx = document.getElementById('chart').getContext('2d');
 let ctx2 = document.getElementById('chart2').getContext('2d');
-export let data = [];
 
 // Function for charts initialization
 export function initCharts() {

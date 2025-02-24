@@ -2,7 +2,12 @@ import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
 import ArtistChartsWorker from './workers/artistsCharts.worker.js';
 import MyWorker from './worker.worker.js';
 
-
+export const dataLength = 100; // Length of the data array
+export const largeData = Array.from({ length: dataLength }, (_, i) => i)
+export const batchSize = Math.floor(dataLength / 100) // Bulk
+export let indexData = [];
+export const platformCharts = {};
+export let data = [];
 
 // Rendering of  charts
 export const platforms = [
