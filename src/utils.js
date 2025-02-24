@@ -1,3 +1,5 @@
+import { resetAllProcesses, updateChart } from './chartInit';
+
 export function addMemoryLog(isReset) {
     const logDiv = document.getElementById("log");
     const table = document.getElementById("memoryLogTable");
@@ -138,27 +140,45 @@ export function logMetrics(memoryUsed, timeElapsed) {
         memoryUsedRow.appendChild(memoryCell);
         timeElapsedRow.appendChild(timeCell);
     }
+}
 
+// Function for processing chunks sequentially
+export async function processChunksSequentially(largeData, chunkSize) {
+    resetAllProcesses();
+    let currentIndex = 0;
+    const totalChunks = Math.ceil(largeData.length / chunkSize);
+    let dataQueue = [];
+    const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+    const startTime = performance.now();
 
+    showLoader(); // Show loading indicator at the beginning of processing
 
+    while (currentIndex < largeData.length) {
+        const chunkData = await fetchDataChunk(chunkSize, currentIndex, largeData);
+        dataQueue.push(chunkData);
 
-    // // Create a new table row
-    // const row1 = document.createElement("tr").setAttribute('id', 'memoryUsed');
-    // const row2 = document.createElement("tr").setAttribute('id', 'timeElapsed');
-    //
-    // logDiv.appendChild(row1);
-    //
-    // // Create cells for memory and time
-    // const memoryCell = document.createElement("td");
-    // memoryCell.textContent = `${(memoryUsed / 1024 / 1024).toFixed(2)} MB`; // Convert bytes to MB
-    //
-    // const timeCell = document.createElement("td");
-    // timeCell.textContent = `${timeElapsed.toFixed(2)} ms`; // Time in milliseconds
-    //
-    // // Adding cells to a row
-    // row.appendChild(memoryCell);
-    // row.appendChild(timeCell);
-    //
-    // // Add a row to the table (log container)
+        // Measuring the current memory usage and time
+        const currentMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
+        const currentTime = performance.now();
+        const memoryUsed = currentMemory - startMemory;
+        const timeElapsed = currentTime - startTime;
 
+        // Logging metrics
+        logMetrics(memoryUsed, timeElapsed);
+
+        currentIndex += chunkSize;
+    }
+
+    for (const chunk of dataQueue) {
+        const chunkRenderStartTime = performance.now();
+
+        updateChart(chunk);
+        await new Promise(resolve => setTimeout(resolve, 0)); // Freeing up the thread for the browser
+
+        const chunkRenderEndTime = performance.now();
+        console.log(`Chart updated for chunk in ${(chunkRenderEndTime - chunkRenderStartTime).toFixed(2)}ms`);
+    }
+
+    hideLoader(); // Remove the loading indicator after processing is complete
+    addMemoryLog(false);
 }
