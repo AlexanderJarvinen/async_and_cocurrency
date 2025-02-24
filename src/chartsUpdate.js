@@ -1,10 +1,11 @@
 
 import Chart from 'chart.js/auto';
 
-import { platforms, artist_charts_worker, months } from './initData.js';
+import { platforms, artist_charts_worker, months  } from './initData.js';
+import { indexData  } from './utils.js';
 
 let chart, chart2;
-const platformCharts = {};
+export const platformCharts = {};
 let ctx = document.getElementById('chart').getContext('2d');
 let ctx2 = document.getElementById('chart2').getContext('2d');
 export let data = [];
@@ -124,4 +125,11 @@ export function updateMainThreadChart() {
   chart.data.labels = data.map((_, i) => i + 1)
   chart.data.datasets[0].data = data
   chart.update()
+};
+
+
+export function updateMainWorkerChart() {
+  chart2.data.labels = indexData.map((_, i) => i + 1)
+  chart2.data.datasets[0].data = indexData
+  chart2.update()
 }

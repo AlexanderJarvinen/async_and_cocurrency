@@ -1,5 +1,6 @@
-
-import ArtistChartsWorker from './workers/artistsCharts.worker.js'
+import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
+import ArtistChartsWorker from './workers/artistsCharts.worker.js';
+import MyWorker from './worker.worker.js';
 
 
 
@@ -86,4 +87,11 @@ export const months = [
   'December',
 ];
 
+
+
 export const artist_charts_worker = new ArtistChartsWorker();
+export const youtube_chart_worker = new YoutubeChartWorker()
+export const worker = new MyWorker();
+
+// Creating a new SharedArrayBuffer
+export const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT) // 12 months

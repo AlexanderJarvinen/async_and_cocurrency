@@ -1,10 +1,13 @@
 export const dataLength = 100 // Length of the data array
 const largeData = Array.from({ length: dataLength }, (_, i) => i)
 const batchSize = Math.floor(dataLength / 100) // Bulk
-let globalProgress = 0
+let globalProgress = 0;
+let randomArray = [];
+let indices = [];
+export let indexData = [];
 
-import { data } from './chartsUpdate.js';
-import { updateMainThreadChart } from './chartsUpdate.js'
+import { worker, artist_charts_worker, platforms, sharedBuffer, youtube_chart_worker,  } from './initData.js';
+import { updateMainThreadChart, updateMainWorkerChart, data, platformCharts } from './chartsUpdate.js'
 
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
@@ -127,6 +130,18 @@ export function processDataForMainFlow() {
   })
 }
 
+export function initDataForWorker() {
+  processLargeData({
+    loaderId: 'mainWorkerLoader',
+    progressBarId: 'main-worker-progress-bar',
+    progressTextId: 'main-worker-progress-text',
+    logId: 'mainWorkerLog',
+    updateChartCallback: updateMainWorkerChart,
+    batchProcessor: processBatch,
+    workerProcessor: processDataInWorker, // Transmit data to the Warker
+  })
+}
+
 // Data processing in batches using macrotasks (setTimeout)
 async function processBatch(batch) {
   const results = []
@@ -150,4 +165,32 @@ function processEvenNumber(value) {
       resolve(value) // Return value after delay
     }, Math.random() * 1000) // Random delay up to 1000 ms
   })
+}
+
+// Send data to Web Worker for processing
+export function processDataInWorker(batch) {
+  worker.postMessage({ batch, dataLength })
+  artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
+  youtube_chart_worker.postMessage({ buffer: sharedBuffer })
+}
+
+
+// Web Worker message handler
+worker.onmessage = function (e) {
+  randomArray = e.data.randomArray
+  indices = e.data.indices
+
+  // Update graphs with results from Web Worker
+  indexData.push(indices)
+}
+
+
+youtube_chart_worker.onmessage = function (e) {
+  const youtubePopularityData = e.data
+
+  // Check if there is a chart for YouTube in platformCharts and update its data
+  if (platformCharts['youtubeChart']) {
+    platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData
+    platformCharts['youtubeChart'].update()
+  }
 }
