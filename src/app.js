@@ -1,5 +1,5 @@
 import './style.css'
-import { logMetrics, processLargeData, dataLength, processDataForMainFlow, initDataForWorker } from './utils.js'
+import { logMetrics, processLargeData, dataLength, processDataForMainFlow, initDataForWorker, initDataForYoutubeChart } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
 
 window.onload = () => {
@@ -11,4 +11,8 @@ window.onload = () => {
   document
     .getElementById('startWorkersButton')
     .addEventListener('click', initDataForWorker)
+
+  document
+    .getElementById('youtubeDataLoadingButton')
+    .addEventListener('click', initDataForYoutubeChart)
 }

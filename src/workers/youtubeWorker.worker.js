@@ -37,9 +37,10 @@ function calculateYouTubePopularity(
 
 // Generate data for YouTube based on 12 months popularity formula
 function getYouTubeData(sharedBuffer) {
-  const popularityData = new Float32Array(sharedBuffer)
+  const youtubeData = new Float32Array(sharedBuffer, 0, 12);
   let subscribers = Math.floor(Math.random() * 100) + 1
-  let s = 0
+  let s = 0;
+  let month = 0
 
   // Emulation of long calculations
   setTimeout(() => {
@@ -56,8 +57,8 @@ function getYouTubeData(sharedBuffer) {
     const virality = 1 // 1 viral video
 
     // Calculation of popularity for 12 months and writing to SharedArrayBuffer
-    for (let month = 0; month < 12; month++) {
-      popularityData[month] = Math.floor(
+    while (month < 12) {
+      youtubeData[month] = Math.floor(
         calculateYouTubePopularity(
           subscribers,
           views,
@@ -69,11 +70,12 @@ function getYouTubeData(sharedBuffer) {
         ) *
           (1 + (Math.random() - 0.5) / 5)
       )
+      month++;
     }
 
     // Notify the main thread of completion
-    postMessage(popularityData)
-  }, 0)
+    postMessage(youtubeData)
+  }, 1000)
 }
 
 // Handler of messages from the main thread

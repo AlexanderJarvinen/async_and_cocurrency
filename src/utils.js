@@ -173,7 +173,15 @@ function processEvenNumber(value) {
 
 // Send data to Web Worker for processing
 export function processDataInWorker(batch) {
+
   worker.postMessage({ batch, dataLength })
-  artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
-  youtube_chart_worker.postMessage({ buffer: sharedBuffer })
+  // artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
+  console.log('sharedBuffer', sharedBuffer);
+  if (globalProgress === 1) {
+    youtube_chart_worker.postMessage({ buffer: sharedBuffer })
+  }
+}
+
+export function initDataForYoutubeChart () {
+  youtube_chart_worker.postMessage({ buffer: sharedBuffer });
 }

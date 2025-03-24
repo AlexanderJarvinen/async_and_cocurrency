@@ -11,7 +11,9 @@ export const youtube_chart_worker = new YoutubeChartWorker()
 export const worker = new MyWorker();
 
 // Creating a new SharedArrayBuffer
-export const sharedBuffer = new SharedArrayBuffer(12 * Float32Array.BYTES_PER_ELEMENT) // 12 months
+export const sharedBuffer = new SharedArrayBuffer(24 * Float32Array.BYTES_PER_ELEMENT)
+// 12 months for every platform:
+//YouTube: 1 - 12
 
 // Web Worker message handler
 worker.onmessage = function (e) {
