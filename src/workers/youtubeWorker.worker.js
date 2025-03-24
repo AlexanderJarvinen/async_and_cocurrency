@@ -37,45 +37,48 @@ function calculateYouTubePopularity(
 
 // Generate data for YouTube based on 12 months popularity formula
 function getYouTubeData(sharedBuffer) {
-  const youtubeData = new Float32Array(sharedBuffer, 0, 12);
-  let subscribers = Math.floor(Math.random() * 100) + 1
-  let s = 0;
+  const youtubeData = new Float32Array(sharedBuffer, 0, 12)
+  let subscribers = Math.floor(Math.random() * 100) + 1;
+  let youtubeDataProceed = [];
+
+  const views = 50000000
+  const engagement = 5
+  const mentions = 10000
+  const retention = 60
+  const growth = 10
+  const virality = 1
+
   let month = 0
 
-  // Emulation of long calculations
-  setTimeout(() => {
-    while (s <= 1000000) {
-      subscribers += Math.floor(Math.random() * 100) + 1
-      s++
+  const interval = setInterval(() => {
+    for (let i = 0; i < 50000; i++) {
+      subscribers += Math.floor(Math.random() * 10) + 1
     }
 
-    const views = 50000000
-    const engagement = 5 // 5% engagement
-    const mentions = 10000
-    const retention = 60 // 60% retention
-    const growth = 10 // 10% growth
-    const virality = 1 // 1 viral video
+    youtubeData[month] = Math.floor(
+      calculateYouTubePopularity(
+        subscribers,
+        views,
+        engagement,
+        mentions,
+        retention,
+        growth,
+        virality
+      ) * (1 + (Math.random() - 0.5) / 5)
+    )
 
-    // Calculation of popularity for 12 months and writing to SharedArrayBuffer
-    while (month < 12) {
-      youtubeData[month] = Math.floor(
-        calculateYouTubePopularity(
-          subscribers,
-          views,
-          engagement,
-          mentions,
-          retention,
-          growth,
-          virality
-        ) *
-          (1 + (Math.random() - 0.5) / 5)
-      )
-      month++;
+    youtubeDataProceed.push(youtubeData[month]);
+
+    // Отправляем только один месяц
+    postMessage(youtubeDataProceed)
+
+    month++
+
+    if (month >= 12) {
+      clearInterval(interval)
+      postMessage(youtubeDataProceed)
     }
-
-    // Notify the main thread of completion
-    postMessage(youtubeData)
-  }, 1000)
+  }, 1000) // Каждую секунду добавляется новый месяц
 }
 
 // Handler of messages from the main thread

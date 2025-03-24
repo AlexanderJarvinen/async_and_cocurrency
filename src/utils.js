@@ -176,7 +176,6 @@ export function processDataInWorker(batch) {
 
   worker.postMessage({ batch, dataLength })
   // artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
-  console.log('sharedBuffer', sharedBuffer);
   if (globalProgress === 1) {
     youtube_chart_worker.postMessage({ buffer: sharedBuffer })
   }
