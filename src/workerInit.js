@@ -25,15 +25,23 @@ worker.onmessage = function (e) {
 }
 
 
-youtube_chart_worker.onmessage = function (e) {
-  const youtubePopularityData = e.data
+const progressBar = document.getElementById("youtube-chart-progress-bar");
+const progressText = document.getElementById("youtube-chart-progress-text");
 
-  // Check if there is a chart for YouTube in platformCharts and update its data
-  if (platformCharts['youtubeChart']) {
-    platformCharts['youtubeChart'].data.datasets[0].data = youtubePopularityData
-    platformCharts['youtubeChart'].update()
+youtube_chart_worker.onmessage = function (e) {
+  if (e.data.length) {
+    const progressValue = (e.data.length / 12) * 100;
+
+    // Обновляем прогресс-бар и текст
+    progressBar.value = progressValue;
+    progressText.textContent = `${Math.round(progressValue)}%`;
+
+    // Обновляем график
+    platformCharts["youtubeChart"].data.datasets[0].data = e.data;
+    platformCharts["youtubeChart"].update();
   }
-}
+
+};
 
 artist_charts_worker.onmessage = function (e) {
   const processedPlatforms = e.data.platforms
