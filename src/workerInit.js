@@ -6,9 +6,11 @@ import { platformCharts, platforms, indexData, chartConfig  } from './initData.j
 let randomArray = [];
 let indices = [];
 
-export const artist_charts_worker = new ArtistChartsWorker();
-export const youtube_chart_worker = new YoutubeChartWorker()
-export const worker = new MyWorker();
+export const workers = {
+  artist_charts_worker: new ArtistChartsWorker(),
+  youtube_chart_worker: new YoutubeChartWorker(),
+  worker: new MyWorker()
+};
 
 // Creating a new SharedArrayBuffer
 export const sharedBuffer = new SharedArrayBuffer(24 * Float32Array.BYTES_PER_ELEMENT)
@@ -16,7 +18,7 @@ export const sharedBuffer = new SharedArrayBuffer(24 * Float32Array.BYTES_PER_EL
 //YouTube: 1 - 12
 
 // Web Worker message handler
-worker.onmessage = function (e) {
+workers.worker.onmessage = function (e) {
   randomArray = e.data.randomArray
   indices = e.data.indices
 
@@ -28,36 +30,35 @@ worker.onmessage = function (e) {
 const progressBar = document.getElementById("youtube-chart-progress-bar");
 const progressText = document.getElementById("youtube-chart-progress-text");
 
-youtube_chart_worker.onmessage = function (e) {
+// Обработчик сообщений для youtube_chart_worker
+export function youtubeChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
-
-    // Обновляем прогресс-бар и текст
     progressBar.value = progressValue;
     progressText.textContent = `${Math.round(progressValue)}%`;
 
-    // Обновляем график
     platformCharts["youtubeChart"].data.datasets[0].data = e.data;
     platformCharts["youtubeChart"].update();
   }
+}
 
-};
+workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler;
 
-artist_charts_worker.onmessage = function (e) {
-  const processedPlatforms = e.data.platforms
+workers.artist_charts_worker.onmessage = function (e) {
+  const processedPlatforms = e.data.platforms;
 
   processedPlatforms.forEach((platform) => {
-    const ctx = document.getElementById(platform.id).getContext('2d')
+    const ctx = document.getElementById(platform.id).getContext('2d');
 
     if (platformCharts[platform.id]) {
-      platformCharts[platform.id].destroy()
+      platformCharts[platform.id].destroy();
     }
 
     platformCharts[platform.id] = new Chart(
       ctx,
       chartConfig(platform.label, platform.data, platform.color, platform.bg)
-    )
-  })
-}
+    );
+  });
+};
 
 

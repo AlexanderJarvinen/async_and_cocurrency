@@ -8,8 +8,9 @@ import {
   data,
   chartConfig
 } from './initData.js';
-import { updateMainThreadChart, updateMainWorkerChart } from './chartsUpdate.js';
-import { worker, artist_charts_worker, sharedBuffer, youtube_chart_worker } from './workerInit.js';
+import { updateMainThreadChart, updateMainWorkerChart, initCharts } from './chartsUpdate.js';
+import { workers, sharedBuffer, youtubeChartWorkerOnMessaheHandler } from './workerInit.js';
+import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
 
 let globalProgress = 0;
 
@@ -123,6 +124,7 @@ function updateProgressBar(index, progressBarId, progressTextId) {
 
 // Function for data processing using macrotasks and Performance API
 export function processDataForMainFlow() {
+  initCharts()
   processLargeData({
     loaderId: 'mainThreadLoader',
     progressBarId: 'main-thread-progress-bar',
@@ -135,6 +137,7 @@ export function processDataForMainFlow() {
 }
 
 export function initDataForWorker() {
+  initCharts()
   processLargeData({
     loaderId: 'mainWorkerLoader',
     progressBarId: 'main-worker-progress-bar',
@@ -171,16 +174,29 @@ function processEvenNumber(value) {
   })
 }
 
-// Send data to Web Worker for processing
-export function processDataInWorker(batch) {
+// Функция для перезапуска youtube_chart_worker
+function restartYoutubeWorker() {
+  // Завершаем текущий экземпляр
+  if (workers.youtube_chart_worker) {
+    workers.youtube_chart_worker.terminate();
+  }
+  // Создаем новый экземпляр и переназначаем обработчик
+  workers.youtube_chart_worker = new YoutubeChartWorker();
+  workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler;
+}
 
-  worker.postMessage({ batch, dataLength })
+// Отправка данных в воркеры
+export function processDataInWorker(batch) {
+  // Отправляем данные в другой воркер, если нужно
+  workers.worker.postMessage({ batch, dataLength });
   // artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
   if (globalProgress === 1) {
-    youtube_chart_worker.postMessage({ buffer: sharedBuffer })
+    restartYoutubeWorker();
+    workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer });
   }
 }
 
-export function initDataForYoutubeChart () {
-  youtube_chart_worker.postMessage({ buffer: sharedBuffer });
+export function initDataForYoutubeChart() {
+  restartYoutubeWorker();
+  workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer });
 }

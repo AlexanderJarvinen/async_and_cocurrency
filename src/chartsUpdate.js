@@ -1,6 +1,5 @@
 import Chart from 'chart.js/auto';
 import { platforms, months, indexData, platformCharts, data, chartConfig  } from './initData.js';
-import { artist_charts_worker } from './workerInit.js';
 
 let chart, chart2;
 let ctx = document.getElementById('chart').getContext('2d');
