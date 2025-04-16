@@ -77,6 +77,7 @@ function getSpotifyData(sharedBuffer) {
 // Обработчик сообщений из основного потока
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
+    console.log('getSpotifyData', e.data.buffer);
     getSpotifyData(e.data.buffer)
   }
 }
