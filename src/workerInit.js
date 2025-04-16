@@ -7,7 +7,7 @@ import TwitterChartWorker from './workers/twitterWorker.worker.js';
 import PandoraChartWorker from './workers/pandoraWorker.worker.js';
 import SoundcloudChartWorker from './workers/soundcloudWorker.worker.js';
 import DeezerChartWorker from './workers/deezerWorker.worker.js';
-import TiktokChartWorker from './workers/tiktokWorker.worker';
+import TiktokChartWorker from './workers/tiktokWorker.worker.js';
 import MyWorker from './worker.worker.js';
 import { platformCharts, platforms, indexData, chartConfig  } from './initData.js';
 
