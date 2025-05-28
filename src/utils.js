@@ -78,17 +78,17 @@ export function processLargeData({
   let index = 0
 
   function processNextChunk() {
-    if (index >= largeData.length) {
-      hideLoader(loaderId)
-      updateChartCallback()
-      return
-    }
-
     const batch = largeData.slice(index, index + batchSize)
 
     // Start time measurement
     const startTime = performance.now()
     const initialMemory = performance.memory.usedJSHeapSize
+    
+    if (index >= largeData.length) {
+      hideLoader(loaderId)
+      updateChartCallback()
+      return
+    }
 
     batchProcessor(batch, dataContainer).then((resp) => {
       if (resp) {

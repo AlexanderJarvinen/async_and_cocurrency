@@ -16,8 +16,12 @@ import {
 
 import { chartConfig } from './config'
 
-let randomArray = []
-let indices = []
+let randomArray = [];
+let indices = [];
+const totalPlatforms = 9;
+const monthsPerPlatform = 12;
+const bytesPerElement = 4; // Float32
+const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
 
 export const workers = {
   artist_charts_worker: new ArtistChartsWorker(),
@@ -33,10 +37,6 @@ export const workers = {
   worker: new MyWorker(),
 }
 
-const totalPlatforms = 9
-const monthsPerPlatform = 12
-const bytesPerElement = 4 // Float32
-const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement // 9 * 12 * 4 = 432 байта
 export const sharedBuffer = new SharedArrayBuffer(bufferSize)
 
 // Web Worker message handler
