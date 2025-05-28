@@ -1,8 +1,5 @@
 import './style.css'
 import {
-  logMetrics,
-  processLargeData,
-  dataLength,
   processDataForMainFlow,
   initDataForWorker,
   initDataForYoutubeChart,

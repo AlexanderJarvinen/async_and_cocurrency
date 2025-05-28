@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   root: true,
   env: {
     browser: true,
@@ -14,5 +14,6 @@ module.exports = {
   rules: {
     'no-console': 'warn',
     'prettier/prettier': ['error', { semi: false, singleQuote: true }],
+    'css/use-baseline': 'off',
   },
 }

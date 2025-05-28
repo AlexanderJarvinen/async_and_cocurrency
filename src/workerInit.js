@@ -11,7 +11,6 @@ import TiktokChartWorker from './workers/tiktokWorker.worker.js'
 import MyWorker from './worker.worker.js'
 import {
   platformCharts,
-  platforms,
   indexData,
   chartConfig,
 } from './initData.js'

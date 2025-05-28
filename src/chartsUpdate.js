@@ -1,7 +1,6 @@
 import Chart from 'chart.js/auto'
 import {
   platforms,
-  months,
   indexData,
   platformCharts,
   data,

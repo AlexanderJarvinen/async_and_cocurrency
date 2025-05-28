@@ -1,12 +1,8 @@
 import {
-  platforms,
   dataLength,
   largeData,
   batchSize,
-  indexData,
-  platformCharts,
   data,
-  chartConfig,
 } from './initData.js'
 import {
   updateMainThreadChart,
