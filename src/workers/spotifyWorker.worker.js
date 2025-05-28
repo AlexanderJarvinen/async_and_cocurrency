@@ -58,7 +58,8 @@ function getSpotifyData(sharedBuffer) {
         saveRate,
         skipRate,
         virality
-      ) * (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
+      ) *
+        (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
     )
 
     spotifyDataProceed.push(spotifyData[month])
@@ -77,7 +78,7 @@ function getSpotifyData(sharedBuffer) {
 // Message handler from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
-    console.log('getSpotifyData', e.data.buffer);
+    console.log('getSpotifyData', e.data.buffer)
     getSpotifyData(e.data.buffer)
   }
 }

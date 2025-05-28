@@ -6,9 +6,13 @@ import {
   indexData,
   platformCharts,
   data,
-  chartConfig
-} from './initData.js';
-import { updateMainThreadChart, updateMainWorkerChart, initCharts } from './chartsUpdate.js';
+  chartConfig,
+} from './initData.js'
+import {
+  updateMainThreadChart,
+  updateMainWorkerChart,
+  initCharts,
+} from './chartsUpdate.js'
 import {
   workers,
   sharedBuffer,
@@ -20,20 +24,19 @@ import {
   pandoraChartWorkerOnMessaheHandler,
   soundcloudChartWorkerOnMessaheHandler,
   deezerChartWorkerOnMessaheHandler,
-  tiktokChartWorkerOnMessaheHandler
-} from './workerInit.js';
+  tiktokChartWorkerOnMessaheHandler,
+} from './workerInit.js'
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
-import SpotifyChartWorker from './workers/spotifyWorker.worker.js';
-import InstaChartWorker from './workers/instaWorker.worker.js';
-import FacebookChartWorker from './workers/facebookWorker.worker.js';
-import TwitterChartWorker from './workers/twitterWorker.worker.js';
-import PandoraChartWorker from './workers/pandoraWorker.worker.js';
-import SoundcloudChartWorker from './workers/soundcloudWorker.worker.js';
-import DeezerChartWorker from './workers/deezerWorker.worker.js';
-import TiktokChartWorker from './workers/tiktokWorker.worker';
+import SpotifyChartWorker from './workers/spotifyWorker.worker.js'
+import InstaChartWorker from './workers/instaWorker.worker.js'
+import FacebookChartWorker from './workers/facebookWorker.worker.js'
+import TwitterChartWorker from './workers/twitterWorker.worker.js'
+import PandoraChartWorker from './workers/pandoraWorker.worker.js'
+import SoundcloudChartWorker from './workers/soundcloudWorker.worker.js'
+import DeezerChartWorker from './workers/deezerWorker.worker.js'
+import TiktokChartWorker from './workers/tiktokWorker.worker'
 
-let globalProgress = 0;
-
+let globalProgress = 0
 
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
@@ -152,7 +155,7 @@ export function processDataForMainFlow() {
     logId: 'mainThreadLog',
     updateChartCallback: updateMainThreadChart,
     batchProcessor: processBatch,
-    dataContainer: data,  // Main data array
+    dataContainer: data, // Main data array
   })
 }
 
@@ -196,179 +199,171 @@ function processEvenNumber(value) {
 
 // Function for restarting youtube_chart_worker
 function restartYoutubeWorker() {
-
   if (workers.youtube_chart_worker) {
-    workers.youtube_chart_worker.terminate();
+    workers.youtube_chart_worker.terminate()
   }
 
-  workers.youtube_chart_worker = new YoutubeChartWorker();
-  workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler;
+  workers.youtube_chart_worker = new YoutubeChartWorker()
+  workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler
 }
 
 // Function for restarting spotify_chart_worker
 function restartSpotifyWorker() {
-
   if (workers.spotify_chart_worker) {
-    workers.spotify_chart_worker.terminate();
+    workers.spotify_chart_worker.terminate()
   }
 
-  workers.spotify_chart_worker = new SpotifyChartWorker();
-  workers.spotify_chart_worker.onmessage = spotifyChartWorkerOnMessaheHandler;
+  workers.spotify_chart_worker = new SpotifyChartWorker()
+  workers.spotify_chart_worker.onmessage = spotifyChartWorkerOnMessaheHandler
 }
 
 // Function for restarting insta_chart_worker
 function restartInstaWorker() {
-
   if (workers.insta_chart_worker) {
-    workers.insta_chart_worker.terminate();
+    workers.insta_chart_worker.terminate()
   }
 
-  workers.insta_chart_worker = new InstaChartWorker();
-  workers.insta_chart_worker.onmessage = instaChartWorkerOnMessaheHandler;
+  workers.insta_chart_worker = new InstaChartWorker()
+  workers.insta_chart_worker.onmessage = instaChartWorkerOnMessaheHandler
 }
 
 // Function for restarting facebook_chart_worker
 function restartFacebookWorker() {
-
   if (workers.facebook_chart_worker) {
-    workers.facebook_chart_worker.terminate();
+    workers.facebook_chart_worker.terminate()
   }
 
-  workers.facebook_chart_worker = new FacebookChartWorker();
-  workers.facebook_chart_worker.onmessage = facebookChartWorkerOnMessaheHandler;
+  workers.facebook_chart_worker = new FacebookChartWorker()
+  workers.facebook_chart_worker.onmessage = facebookChartWorkerOnMessaheHandler
 }
 
 // Function for restarting twitter_chart_worker
 function restartTwitterWorker() {
-
   if (workers.twitter_chart_worker) {
-    workers.twitter_chart_worker.terminate();
+    workers.twitter_chart_worker.terminate()
   }
 
-  workers.twitter_chart_worker = new TwitterChartWorker();
-  workers.twitter_chart_worker.onmessage = twitterChartWorkerOnMessaheHandler;
+  workers.twitter_chart_worker = new TwitterChartWorker()
+  workers.twitter_chart_worker.onmessage = twitterChartWorkerOnMessaheHandler
 }
 
 // Function for restarting pandora_chart_worker
 function restartPandoraWorker() {
-
   if (workers.pandora_chart_worker) {
-    workers.pandora_chart_worker.terminate();
+    workers.pandora_chart_worker.terminate()
   }
 
-  workers.pandora_chart_worker = new PandoraChartWorker();
-  workers.pandora_chart_worker.onmessage = pandoraChartWorkerOnMessaheHandler;
+  workers.pandora_chart_worker = new PandoraChartWorker()
+  workers.pandora_chart_worker.onmessage = pandoraChartWorkerOnMessaheHandler
 }
 
 // Function for restarting soundcloud_chart_worker
 function restartSoundcloudWorker() {
-
   if (workers.soundcloud_chart_worker) {
-    workers.soundcloud_chart_worker.terminate();
+    workers.soundcloud_chart_worker.terminate()
   }
 
-  workers.soundcloud_chart_worker = new SoundcloudChartWorker();
-  workers.soundcloud_chart_worker.onmessage = soundcloudChartWorkerOnMessaheHandler;
+  workers.soundcloud_chart_worker = new SoundcloudChartWorker()
+  workers.soundcloud_chart_worker.onmessage =
+    soundcloudChartWorkerOnMessaheHandler
 }
 
 // Function for restarting deezer_chart_worker
 function restartDeezerWorker() {
-
   if (workers.deezer_chart_worker) {
-    workers.deezer_chart_worker.terminate();
+    workers.deezer_chart_worker.terminate()
   }
 
-  workers.deezer_chart_worker = new DeezerChartWorker();
-  workers.deezer_chart_worker.onmessage = deezerChartWorkerOnMessaheHandler;
+  workers.deezer_chart_worker = new DeezerChartWorker()
+  workers.deezer_chart_worker.onmessage = deezerChartWorkerOnMessaheHandler
 }
 
 // Function for restarting tiktok_chart_worker
 function restartTiktokWorker() {
-
   if (workers.tiktok_chart_worker) {
-    workers.tiktok_chart_worker.terminate();
+    workers.tiktok_chart_worker.terminate()
   }
 
-  workers.tiktok_chart_worker = new TiktokChartWorker();
-  workers.tiktok_chart_worker.onmessage = tiktokChartWorkerOnMessaheHandler;
+  workers.tiktok_chart_worker = new TiktokChartWorker()
+  workers.tiktok_chart_worker.onmessage = tiktokChartWorkerOnMessaheHandler
 }
 
 // Sending data to wokers
 export function processDataInWorker(batch) {
   // Send data to another WorKer, if necessary
-  workers.worker.postMessage({ batch, dataLength });
+  workers.worker.postMessage({ batch, dataLength })
   // artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
   if (globalProgress === 1) {
-    restartYoutubeWorker();
-    workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartYoutubeWorker()
+    workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartSpotifyWorker();
-    workers.spotify_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartSpotifyWorker()
+    workers.spotify_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartInstaWorker();
-    workers.insta_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartInstaWorker()
+    workers.insta_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartFacebookWorker();
-    workers.facebook_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartFacebookWorker()
+    workers.facebook_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartTwitterWorker();
-    workers.twitter_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartTwitterWorker()
+    workers.twitter_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartPandoraWorker();
-    workers.pandora_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartPandoraWorker()
+    workers.pandora_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartSoundcloudWorker();
-    workers.soundcloud_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartSoundcloudWorker()
+    workers.soundcloud_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartDeezerWorker();
-    workers.deezer_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartDeezerWorker()
+    workers.deezer_chart_worker.postMessage({ buffer: sharedBuffer })
 
-    restartTiktokWorker();
-    workers.tiktok_chart_worker.postMessage({ buffer: sharedBuffer });
+    restartTiktokWorker()
+    workers.tiktok_chart_worker.postMessage({ buffer: sharedBuffer })
   }
 }
 
 export function initDataForYoutubeChart() {
-  restartYoutubeWorker();
-  workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartYoutubeWorker()
+  workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForSpotifyChart() {
-  restartSpotifyWorker();
-  workers.spotify_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartSpotifyWorker()
+  workers.spotify_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForInstaChart() {
-  restartInstaWorker();
-  workers.insta_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartInstaWorker()
+  workers.insta_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForFacebookChart() {
-  restartFacebookWorker();
-  workers.facebook_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartFacebookWorker()
+  workers.facebook_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForTwitterChart() {
-  restartTwitterWorker();
-  workers.twitter_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartTwitterWorker()
+  workers.twitter_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForPandoraChart() {
-  restartPandoraWorker();
-  workers.pandora_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartPandoraWorker()
+  workers.pandora_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForSoundcloudChart() {
-  restartSoundcloudWorker();
-  workers.soundcloud_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartSoundcloudWorker()
+  workers.soundcloud_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForDeezerChart() {
-  restartDeezerWorker();
-  workers.deezer_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartDeezerWorker()
+  workers.deezer_chart_worker.postMessage({ buffer: sharedBuffer })
 }
 
 export function initDataForTiktokChart() {
-  restartTiktokWorker();
-  workers.tiktok_chart_worker.postMessage({ buffer: sharedBuffer });
+  restartTiktokWorker()
+  workers.tiktok_chart_worker.postMessage({ buffer: sharedBuffer })
 }

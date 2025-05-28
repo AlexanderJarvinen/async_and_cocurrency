@@ -1,9 +1,16 @@
-import Chart from 'chart.js/auto';
-import { platforms, months, indexData, platformCharts, data, chartConfig  } from './initData.js';
+import Chart from 'chart.js/auto'
+import {
+  platforms,
+  months,
+  indexData,
+  platformCharts,
+  data,
+  chartConfig,
+} from './initData.js'
 
-let chart, chart2;
-let ctx = document.getElementById('chart').getContext('2d');
-let ctx2 = document.getElementById('chart2').getContext('2d');
+let chart, chart2
+let ctx = document.getElementById('chart').getContext('2d')
+let ctx2 = document.getElementById('chart2').getContext('2d')
 
 // Function for charts initialization
 export function initCharts() {
@@ -64,7 +71,6 @@ export function initCharts() {
     },
   })
 
-
   platforms.forEach((platform) => {
     const ctx = document.getElementById(platform.id).getContext('2d')
     platformCharts[platform.id] = new Chart(
@@ -72,7 +78,6 @@ export function initCharts() {
       chartConfig(platform.label, platform.data, platform.color, platform.bg)
     )
   })
-
 }
 
 // Update charts after receiving data from Web Worker
@@ -80,8 +85,7 @@ export function updateMainThreadChart() {
   chart.data.labels = data.map((_, i) => i + 1)
   chart.data.datasets[0].data = data
   chart.update()
-};
-
+}
 
 export function updateMainWorkerChart() {
   chart2.data.labels = indexData.map((_, i) => i + 1)

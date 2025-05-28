@@ -57,7 +57,8 @@ function getInstagramData(sharedBuffer) {
         saves,
         shares,
         virality
-      ) * (1 + (Math.random() - 0.5) / 6)
+      ) *
+        (1 + (Math.random() - 0.5) / 6)
     )
 
     instagramDataProceed.push(instagramData[month])

@@ -1,9 +1,9 @@
-export const dataLength = 100; // Length of the data array
+export const dataLength = 100 // Length of the data array
 export const largeData = Array.from({ length: dataLength }, (_, i) => i)
 export const batchSize = Math.floor(dataLength / 100) // Bulk
-export let indexData = [];
-export const platformCharts = {};
-export let data = [];
+export let indexData = []
+export const platformCharts = {}
+export let data = []
 
 // Rendering of  charts
 export const platforms = [
@@ -70,7 +70,7 @@ export const platforms = [
     color: 'rgba(255, 255, 0, 1)',
     bg: 'rgba(255, 255, 0, 0.2)',
   },
-];
+]
 
 // Data emulation for 12 months
 export const months = [
@@ -86,7 +86,7 @@ export const months = [
   'October',
   'November',
   'December',
-];
+]
 
 // Charts settings for each platform
 export const chartConfig = (label, data, borderColor, backgroundColor) => ({
@@ -112,5 +112,3 @@ export const chartConfig = (label, data, borderColor, backgroundColor) => ({
     },
   },
 })
-
-

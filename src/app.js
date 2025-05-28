@@ -13,7 +13,7 @@ import {
   initDataForPandoraChart,
   initDataForSoundcloudChart,
   initDataForDeezerChart,
-  initDataForTiktokChart
+  initDataForTiktokChart,
 } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
 

@@ -37,10 +37,10 @@ function calculateYouTubePopularity(
 
 // Generate data for YouTube based on 12 months popularity formula
 function getYouTubeData(sharedBuffer) {
-  const offset = 1 * 12 * 4; // Offset for YouTube
+  const offset = 1 * 12 * 4 // Offset for YouTube
   const youtubeData = new Float32Array(sharedBuffer, offset, 12)
-  let subscribers = Math.floor(Math.random() * 100) + 1;
-  let youtubeDataProceed = [];
+  let subscribers = Math.floor(Math.random() * 100) + 1
+  let youtubeDataProceed = []
 
   const views = 50000000
   const engagement = 5
@@ -65,10 +65,11 @@ function getYouTubeData(sharedBuffer) {
         retention,
         growth,
         virality
-      ) * (1 + (Math.random() - 0.5) / 5)
+      ) *
+        (1 + (Math.random() - 0.5) / 5)
     )
 
-    youtubeDataProceed.push(youtubeData[month]);
+    youtubeDataProceed.push(youtubeData[month])
 
     // Send only one month
     postMessage(youtubeDataProceed)
@@ -85,7 +86,7 @@ function getYouTubeData(sharedBuffer) {
 // Handler of messages from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
-    console.log('getYouTubeData', e.data.buffer);
+    console.log('getYouTubeData', e.data.buffer)
     getYouTubeData(e.data.buffer)
   }
 }

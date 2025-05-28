@@ -57,7 +57,8 @@ function getFacebookData(sharedBuffer) {
         shares,
         comments,
         virality
-      ) * (1 + (Math.random() - 0.5) / 6)
+      ) *
+        (1 + (Math.random() - 0.5) / 6)
     )
 
     facebookDataProceed.push(facebookData[month])

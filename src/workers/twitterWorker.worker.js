@@ -57,7 +57,8 @@ function getTwitterData(sharedBuffer) {
         impressions,
         engagementRate,
         virality
-      ) * (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
+      ) *
+        (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
     )
 
     twitterDataProceed.push(twitterData[month])
