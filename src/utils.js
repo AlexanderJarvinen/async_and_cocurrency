@@ -2,13 +2,13 @@ import {
   dataLength,
   largeData,
   batchSize,
-  data,
 } from './initData.js'
 import {
   updateMainThreadChart,
   updateMainWorkerChart,
   initCharts,
 } from './chartsUpdate.js'
+import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
 import {
   workers,
   sharedBuffer,
@@ -83,7 +83,7 @@ export function processLargeData({
     // Start time measurement
     const startTime = performance.now()
     const initialMemory = performance.memory.usedJSHeapSize
-    
+
     if (index >= largeData.length) {
       hideLoader(loaderId)
       updateChartCallback()
@@ -144,32 +144,21 @@ function updateProgressBar(index, progressBarId, progressTextId) {
 // Function for data processing using macrotasks and Performance API
 export function processDataForMainFlow() {
   initCharts()
-  processLargeData({
-    loaderId: 'mainThreadLoader',
-    progressBarId: 'main-thread-progress-bar',
-    progressTextId: 'main-thread-progress-text',
-    logId: 'mainThreadLog',
-    updateChartCallback: updateMainThreadChart,
-    batchProcessor: processBatch,
-    dataContainer: data, // Main data array
-  })
+  processLargeData(mainFlowDataConfig)
 }
 
-export function initDataForWorker() {
+export function initData(isInit = false) {
   initCharts()
-  processLargeData({
-    loaderId: 'mainWorkerLoader',
-    progressBarId: 'main-worker-progress-bar',
-    progressTextId: 'main-worker-progress-text',
-    logId: 'mainWorkerLog',
-    updateChartCallback: updateMainWorkerChart,
-    batchProcessor: processBatch,
-    workerProcessor: processDataInWorker, // Transmit data to the Warker
-  })
+  if (isInit) {
+    processLargeData(mainFlowDataConfig)
+  } else {
+    processLargeData(mainWorkerDataConfig)
+  }
+
 }
 
 // Data processing in batches using macrotasks (setTimeout)
-async function processBatch(batch) {
+export async function processBatch(batch) {
   const results = []
 
   for (const value of batch) {

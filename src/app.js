@@ -1,7 +1,6 @@
 import './style.css'
 import {
-  processDataForMainFlow,
-  initDataForWorker,
+  initData,
   initDataForYoutubeChart,
   initDataForSpotifyChart,
   initDataForInstaChart,
@@ -18,11 +17,11 @@ window.onload = () => {
   initCharts()
   document
     .getElementById('startMainChartDataLoadingButton')
-    .addEventListener('click', processDataForMainFlow)
+    .addEventListener('click', initData())
 
   document
     .getElementById('startWorkersButton')
-    .addEventListener('click', initDataForWorker)
+    .addEventListener('click', initData(true))
 
   document
     .getElementById('youtubeDataLoadingButton')
