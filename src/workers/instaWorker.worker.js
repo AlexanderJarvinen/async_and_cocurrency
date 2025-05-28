@@ -1,4 +1,4 @@
-// Формула для расчета популярности Instagram
+// Formula for calculating Instagram popularity
 function calculateInstagramPopularity(
   followers,
   engagementRate,
@@ -27,13 +27,13 @@ function calculateInstagramPopularity(
   )
 }
 
-// Генерация данных для Instagram на 12 месяцев
+// Generate data for Instagram for 12 months
 function getInstagramData(sharedBuffer) {
-  const instagramData = new Float32Array(sharedBuffer, 12 * 2, 12) // например, начинаем с offset (24 байта на float * 12 * 2)
+  const instagramData = new Float32Array(sharedBuffer, 12 * 2, 12) // for example, start with offset (24 bytes per float * 12 * 2)
   let month = 0
   let instagramDataProceed = []
 
-  // Стартовые значения
+  // Start values
   let followers = 80000
   let engagementRate = 6.5 // %
   let reach = 50000
@@ -43,7 +43,7 @@ function getInstagramData(sharedBuffer) {
   const virality = 1.1
 
   const interval = setInterval(() => {
-    // Имитируем рост
+    // Simulate growth
     followers += Math.floor(Math.random() * 2000)
     engagementRate += (Math.random() - 0.5) * 0.3
     reach += Math.floor(Math.random() * 2000)
@@ -73,7 +73,7 @@ function getInstagramData(sharedBuffer) {
   }, 1000)
 }
 
-// Обработчик сообщений из основного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
     getInstagramData(e.data.buffer)

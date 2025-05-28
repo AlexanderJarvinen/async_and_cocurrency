@@ -1,4 +1,4 @@
-// Формула для расчета популярности SoundCloud
+// Formula for calculating SoundCloud popularity
 function calculateSoundCloudPopularity(
   activeUsers,
   totalStreams,
@@ -8,13 +8,13 @@ function calculateSoundCloudPopularity(
   skipRate,
   virality
 ) {
-  const w1 = 0.3; // Активные пользователи
-  const w2 = 0.25; // Общее количество прослушиваний
-  const w3 = 0.15; // Подписчики
-  const w4 = 0.1; // Добавления в плейлисты
-  const w5 = 0.1; // Коэффициент сохранения
-  const w6 = 0.05; // Коэффициент пропусков (обратный эффект)
-  const w7 = 0.05; // Вирусность
+  const w1 = 0.3; // Active users
+  const w2 = 0.25; // Total number of streams
+  const w3 = 0.15; // Followers
+  const w4 = 0.1; // Playlist additions
+  const w5 = 0.1; // Save rate
+  const w6 = 0.05; // Skip rate (inverse effect)
+  const w7 = 0.05; // Virality
 
   return (
     w1 * activeUsers +
@@ -22,30 +22,30 @@ function calculateSoundCloudPopularity(
     w3 * followers +
     w4 * playlistAdds +
     w5 * saveRate -
-    w6 * skipRate + // Коэффициент пропусков уменьшает рейтинг
+    w6 * skipRate + // Skip rate decreases the rating
     w7 * virality
   );
 }
 
-// Генерация данных для SoundCloud на 12 месяцев
+// Generating data for SoundCloud over 12 months
 function getSoundCloudData(sharedBuffer) {
-  const offset = 12 * 4 * 6; // Предполагаем, что SoundCloud — седьмая платформа
+  const offset = 12 * 4 * 6; // Assume SoundCloud is the seventh platform
   const soundCloudData = new Float32Array(sharedBuffer, offset, 12);
   let month = 0;
   const soundCloudDataProceed = [];
 
-  // Стартовые значения
-  let activeUsers = 175000000; // 175 млн активных пользователей
-  let totalStreams = 200000000; // 200 млн прослушиваний
-  let followers = 10000000; // 10 млн подписчиков
+  // Starting values
+  let activeUsers = 175000000; // 175 million active users
+  let totalStreams = 200000000; // 200 million streams
+  let followers = 10000000; // 10 million followers
 
-  const playlistAdds = 500000; // 500 тыс. добавлений в плейлисты
+  const playlistAdds = 500000; // 500 thousand playlist additions
   const saveRate = 60; // 60%
   const skipRate = 20; // 20%
   const virality = 1.1;
 
   const interval = setInterval(() => {
-    // Рост значений
+    // Simulate growth
     activeUsers += Math.floor(Math.random() * 1000000);
     totalStreams += Math.floor(Math.random() * 5000000);
     followers += Math.floor(Math.random() * 50000);
@@ -59,7 +59,7 @@ function getSoundCloudData(sharedBuffer) {
         saveRate,
         skipRate,
         virality
-      ) * (1 + (Math.random() - 0.5) / 5) // небольшое случайное колебание
+      ) * (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
     );
 
     soundCloudDataProceed.push(soundCloudData[month]);
@@ -75,7 +75,7 @@ function getSoundCloudData(sharedBuffer) {
   }, 1000);
 }
 
-// Обработчик сообщений из основного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
     getSoundCloudData(e.data.buffer);

@@ -1,4 +1,4 @@
-// Формула для расчета популярности Twitter
+// Formula for calculating Twitter popularity
 function calculateTwitterPopularity(
   followers,
   likes,
@@ -27,13 +27,13 @@ function calculateTwitterPopularity(
   )
 }
 
-// Генерация данных для Twitter на 12 месяцев
+// Generate Twitter data for 12 months
 function getTwitterData(sharedBuffer) {
-  const twitterData = new Float32Array(sharedBuffer, 12 * 4 * 4, 12) // оффсет после 4 платформ * 12 значений * 4 байта (float32)
+  const twitterData = new Float32Array(sharedBuffer, 12 * 4 * 4, 12) // offset after 4 platforms * 12 values * 4 bytes (float32)
   let month = 0
   let twitterDataProceed = []
 
-  // Стартовые значения
+  // Initial values
   let followers = 80000
   const likes = 7000
   const retweets = 3000
@@ -43,7 +43,7 @@ function getTwitterData(sharedBuffer) {
   const virality = 1.3
 
   const interval = setInterval(() => {
-    // Рост значений
+    // Value growth
     followers += Math.floor(Math.random() * 1800)
     impressions += Math.floor(Math.random() * 5000)
     engagementRate += (Math.random() - 0.5) * 0.25
@@ -57,7 +57,7 @@ function getTwitterData(sharedBuffer) {
         impressions,
         engagementRate,
         virality
-      ) * (1 + (Math.random() - 0.5) / 5) // небольшое случайное колебание
+      ) * (1 + (Math.random() - 0.5) / 5) // slight random fluctuation
     )
 
     twitterDataProceed.push(twitterData[month])
@@ -73,7 +73,7 @@ function getTwitterData(sharedBuffer) {
   }, 1000)
 }
 
-// Обработчик сообщений из основного потока
+// Message handler from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
     getTwitterData(e.data.buffer)

@@ -194,108 +194,108 @@ function processEvenNumber(value) {
   })
 }
 
-// Функция для перезапуска youtube_chart_worker
+// Function for restarting youtube_chart_worker
 function restartYoutubeWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.youtube_chart_worker) {
     workers.youtube_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.youtube_chart_worker = new YoutubeChartWorker();
   workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска spotify_chart_worker
+// Function for restarting spotify_chart_worker
 function restartSpotifyWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.spotify_chart_worker) {
     workers.spotify_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.spotify_chart_worker = new SpotifyChartWorker();
   workers.spotify_chart_worker.onmessage = spotifyChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска insta_chart_worker
+// Function for restarting insta_chart_worker
 function restartInstaWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.insta_chart_worker) {
     workers.insta_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.insta_chart_worker = new InstaChartWorker();
   workers.insta_chart_worker.onmessage = instaChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска facebook_chart_worker
+// Function for restarting facebook_chart_worker
 function restartFacebookWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.facebook_chart_worker) {
     workers.facebook_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.facebook_chart_worker = new FacebookChartWorker();
   workers.facebook_chart_worker.onmessage = facebookChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска twitter_chart_worker
+// Function for restarting twitter_chart_worker
 function restartTwitterWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.twitter_chart_worker) {
     workers.twitter_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.twitter_chart_worker = new TwitterChartWorker();
   workers.twitter_chart_worker.onmessage = twitterChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска pandora_chart_worker
+// Function for restarting pandora_chart_worker
 function restartPandoraWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.pandora_chart_worker) {
     workers.pandora_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.pandora_chart_worker = new PandoraChartWorker();
   workers.pandora_chart_worker.onmessage = pandoraChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска soundcloud_chart_worker
+// Function for restarting soundcloud_chart_worker
 function restartSoundcloudWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.soundcloud_chart_worker) {
     workers.soundcloud_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.soundcloud_chart_worker = new SoundcloudChartWorker();
   workers.soundcloud_chart_worker.onmessage = soundcloudChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска deezer_chart_worker
+// Function for restarting deezer_chart_worker
 function restartDeezerWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.deezer_chart_worker) {
     workers.deezer_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.deezer_chart_worker = new DeezerChartWorker();
   workers.deezer_chart_worker.onmessage = deezerChartWorkerOnMessaheHandler;
 }
 
-// Функция для перезапуска tiktok_chart_worker
+// Function for restarting tiktok_chart_worker
 function restartTiktokWorker() {
-  // Завершаем текущий экземпляр
+
   if (workers.tiktok_chart_worker) {
     workers.tiktok_chart_worker.terminate();
   }
-  // Создаем новый экземпляр и переназначаем обработчик
+
   workers.tiktok_chart_worker = new TiktokChartWorker();
   workers.tiktok_chart_worker.onmessage = tiktokChartWorkerOnMessaheHandler;
 }
 
-// Отправка данных в воркеры
+// Sending data to wokers
 export function processDataInWorker(batch) {
-  // Отправляем данные в другой воркер, если нужно
+  // Send data to another WorKer, if necessary
   workers.worker.postMessage({ batch, dataLength });
   // artist_charts_worker.postMessage({ platforms, buffer: sharedBuffer })
   if (globalProgress === 1) {

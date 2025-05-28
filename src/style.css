@@ -32,21 +32,21 @@ canvas {
 }
 
 .chart-wrapper {
-  position: relative; /* Set relative to the wrapper */
-  display: inline-block; /* Adjust the size to fit the content */
+  position: relative;
+  display: inline-block;
 }
 
 .loader-wrapper {
-  position: absolute; /* Absolute positioning inside the wrapper */
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  display: flex; /* Use Flexbox for centering */
-  justify-content: center; /* Horizontal centering */
-  align-items: center; /* Vertical centering */
-  pointer-events: none; /* So that mouse events do not interfere with the graphics */
-  z-index: 10; /* On top of the chart */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
 }
 
 .loader {

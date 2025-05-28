@@ -37,7 +37,7 @@ function calculateYouTubePopularity(
 
 // Generate data for YouTube based on 12 months popularity formula
 function getYouTubeData(sharedBuffer) {
-  const offset = 1 * 12 * 4; // Смещение для YouTube
+  const offset = 1 * 12 * 4; // Offset for YouTube
   const youtubeData = new Float32Array(sharedBuffer, offset, 12)
   let subscribers = Math.floor(Math.random() * 100) + 1;
   let youtubeDataProceed = [];
@@ -70,7 +70,7 @@ function getYouTubeData(sharedBuffer) {
 
     youtubeDataProceed.push(youtubeData[month]);
 
-    // Отправляем только один месяц
+    // Send only one month
     postMessage(youtubeDataProceed)
 
     month++
@@ -79,7 +79,7 @@ function getYouTubeData(sharedBuffer) {
       clearInterval(interval)
       postMessage(youtubeDataProceed)
     }
-  }, 1000) // Каждую секунду добавляется новый месяц
+  }, 1000) // Every second, a new month is added
 }
 
 // Handler of messages from the main thread

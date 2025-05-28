@@ -71,7 +71,7 @@ const progressDeezerText = document.getElementById("deezer-chart-progress-text")
 const progressTiktokBar = document.getElementById("tiktok-chart-progress-bar");
 const progressTiktokText = document.getElementById("tiktok-chart-progress-text");
 
-// Обработчик сообщений для youtube_chart_worker
+// Message handler for youtube_chart_worker
 export function youtubeChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -83,7 +83,7 @@ export function youtubeChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для spotify_chart_worker
+// Message handler for spotify_chart_worker
 export function spotifyChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -95,7 +95,7 @@ export function spotifyChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для insta_chart_worker
+// Message handler for insta_chart_worker
 export function instaChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -107,7 +107,7 @@ export function instaChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для facebook_chart_worker
+// Message handler for facebook_chart_worker
 export function facebookChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -119,7 +119,7 @@ export function facebookChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для twitter_chart_worker
+// Message handler for twitter_chart_worker
 export function twitterChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -131,7 +131,7 @@ export function twitterChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для pandora_chart_worker
+// Message handler for pandora_chart_worker
 export function pandoraChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -143,7 +143,7 @@ export function pandoraChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для soundcloud_chart_worker
+// Message handler for soundcloud_chart_worker
 export function soundcloudChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -155,7 +155,7 @@ export function soundcloudChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для deezer_chart_worker
+// Message handler for deezer_chart_worker
 export function deezerChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;
@@ -167,7 +167,7 @@ export function deezerChartWorkerOnMessaheHandler(e) {
   }
 }
 
-// Обработчик сообщений для tiktok_chart_worker
+// Message handler for tiktok_chart_worker
 export function tiktokChartWorkerOnMessaheHandler(e) {
   if (e.data.length) {
     const progressValue = (e.data.length / 12) * 100;

@@ -1,4 +1,4 @@
-// Формула для расчета популярности Facebook
+// Formula for calculating Facebook popularity
 function calculateFacebookPopularity(
   followers,
   engagementRate,
@@ -27,13 +27,13 @@ function calculateFacebookPopularity(
   )
 }
 
-// Генерация данных для Facebook на 12 месяцев
+// Generate data for Facebook for 12 months
 function getFacebookData(sharedBuffer) {
-  const facebookData = new Float32Array(sharedBuffer, 12 * 3 * 4, 12) // оффсет после YouTube + Spotify + Instagram (3 массива * 12 float * 4 байта)
+  const facebookData = new Float32Array(sharedBuffer, 12 * 3 * 4, 12) // offset after YouTube + Spotify + Instagram (3 arrays * 12 float * 4 bytes)
   let month = 0
   let facebookDataProceed = []
 
-  // Стартовые значения
+  // Start values
   let followers = 120000
   let engagementRate = 5.2 // %
   let reach = 60000
@@ -43,7 +43,7 @@ function getFacebookData(sharedBuffer) {
   const virality = 1.0
 
   const interval = setInterval(() => {
-    // Имитация роста
+    // Growth Simulation
     followers += Math.floor(Math.random() * 2500)
     engagementRate += (Math.random() - 0.5) * 0.3
     reach += Math.floor(Math.random() * 3000)
@@ -73,7 +73,7 @@ function getFacebookData(sharedBuffer) {
   }, 1000)
 }
 
-// Обработчик сообщений из основного потока
+// Handler of messages from the main thread
 onmessage = function (e) {
   if (e.data && e.data.buffer) {
     getFacebookData(e.data.buffer)
