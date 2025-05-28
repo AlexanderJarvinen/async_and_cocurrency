@@ -12,8 +12,9 @@ import MyWorker from './worker.worker.js'
 import {
   platformCharts,
   indexData,
-  chartConfig,
 } from './initData.js'
+
+import { chartConfig } from './config'
 
 let randomArray = []
 let indices = []

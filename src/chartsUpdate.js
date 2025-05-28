@@ -4,8 +4,8 @@ import {
   indexData,
   platformCharts,
   data,
-  chartConfig,
 } from './initData.js'
+import { mainChartConfig, mainWorkerChartConfig, chartConfig } from './config';
 
 let chart, chart2
 let ctx = document.getElementById('chart').getContext('2d')
@@ -27,48 +27,9 @@ export function initCharts() {
     }
   })
 
-  chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Data Points',
-          data: [],
-          borderColor: 'rgba(75, 192, 192, 1)',
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-    },
-  })
+  chart = new Chart(ctx, mainChartConfig);
 
-  chart2 = new Chart(ctx2, {
-    type: 'bar',
-    data: {
-      labels: [],
-      datasets: [
-        {
-          label: 'Index of Data Points',
-          data: [],
-          backgroundColor: 'rgba(153, 102, 255, 0.2)',
-          borderColor: 'rgba(153, 102, 255, 1)',
-          borderWidth: 1,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-    },
-  })
+  chart2 = new Chart(ctx2, mainWorkerChartConfig);
 
   platforms.forEach((platform) => {
     const ctx = document.getElementById(platform.id).getContext('2d')
