@@ -1,15 +1,16 @@
 import './style.css'
 import {
   initData,
-  initDataForYoutubeChart,
-  initDataForSpotifyChart,
-  initDataForInstaChart,
-  initDataForFacebookChart,
-  initDataForTwitterChart,
-  initDataForPandoraChart,
-  initDataForSoundcloudChart,
-  initDataForDeezerChart,
-  initDataForTiktokChart,
+  // initDataForYoutubeChart,
+  // initDataForSpotifyChart,
+  // initDataForInstaChart,
+  // initDataForFacebookChart,
+  // initDataForTwitterChart,
+  // initDataForPandoraChart,
+  // initDataForSoundcloudChart,
+  // initDataForDeezerChart,
+  // initDataForTiktokChart,
+  initDataFunctions
 } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
 
@@ -19,15 +20,15 @@ window.onload = () => {
   const platformInitMap = {
     startMainChart: () => initData(),
     startWorkers: () => initData(true),
-    youtube: initDataForYoutubeChart,
-    spotify: initDataForSpotifyChart,
-    instagram: initDataForInstaChart,
-    facebook: initDataForFacebookChart,
-    twitter: initDataForTwitterChart,
-    pandora: initDataForPandoraChart,
-    soundcloud: initDataForSoundcloudChart,
-    deezer: initDataForDeezerChart,
-    tiktok: initDataForTiktokChart,
+    youtube: initDataFunctions.initDataForYoutubeChart,
+    spotify: initDataFunctions.initDataForSpotifyChart,
+    instagram: initDataFunctions.initDataForInstaChart,
+    facebook: initDataFunctions.initDataForFacebookChart,
+    twitter: initDataFunctions.initDataForTwitterChart,
+    pandora: initDataFunctions.initDataForPandoraChart,
+    soundcloud: initDataFunctions.initDataForSoundcloudChart,
+    deezer: initDataFunctions.initDataForDeezerChart,
+    tiktok: initDataFunctions.initDataForTiktokChart,
   }
 
   Object.entries(platformInitMap).forEach(([platform, handler]) => {

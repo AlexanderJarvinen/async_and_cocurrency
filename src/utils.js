@@ -26,6 +26,42 @@ import TiktokChartWorker from './workers/tiktokWorker.worker'
 
 let globalProgress = 0
 
+const chartWorkerConfigs = {
+  youtube: { workerKey: 'youtube_chart_worker', chartId: 'youtubeChart', WorkerClass: YoutubeChartWorker },
+  spotify: { workerKey: 'spotify_chart_worker', chartId: 'spotifyChart', WorkerClass: SpotifyChartWorker },
+  instagram: { workerKey: 'insta_chart_worker', chartId: 'instagramChart', WorkerClass: InstaChartWorker },
+  facebook: { workerKey: 'facebook_chart_worker', chartId: 'facebookChart', WorkerClass: FacebookChartWorker },
+  twitter: { workerKey: 'twitter_chart_worker', chartId: 'twitterChart', WorkerClass: TwitterChartWorker },
+  pandora: { workerKey: 'pandora_chart_worker', chartId: 'pandoraChart', WorkerClass: PandoraChartWorker },
+  soundcloud: { workerKey: 'soundcloud_chart_worker', chartId: 'soundcloudChart', WorkerClass: SoundcloudChartWorker },
+  deezer: { workerKey: 'deezer_chart_worker', chartId: 'deezerChart', WorkerClass: DeezerChartWorker },
+  tiktok: { workerKey: 'tiktok_chart_worker', chartId: 'tiktokChart', WorkerClass: TiktokChartWorker },
+}
+
+export const restartWorkerFunctions = {}
+export const initDataFunctions = {}
+
+for (const [platform, { workerKey, chartId, WorkerClass }] of Object.entries(chartWorkerConfigs)) {
+  // Restart function
+  restartWorkerFunctions[`restart${capitalize(platform)}Worker`] = function () {
+    if (workers[workerKey]) {
+      workers[workerKey].terminate()
+    }
+    workers[workerKey] = new WorkerClass()
+    workers[workerKey].onmessage = createChartWorkerHandler(platform, chartId)
+  }
+
+  // InitData function
+  initDataFunctions[`initDataFor${capitalize(platform)}Chart`] = function () {
+    restartWorkerFunctions[`restart${capitalize(platform)}Worker`]()
+    workers[workerKey].postMessage({ buffer: sharedBuffer })
+  }
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 export function logMetrics(logPanel, memoryUsed, timeElapsed) {
   const logDiv = document.getElementById(logPanel)
 
@@ -174,112 +210,21 @@ function processEvenNumber(value) {
   })
 }
 
-// Function for restarting youtube_chart_worker
-function restartYoutubeWorker() {
-  if (workers.youtube_chart_worker) {
-    workers.youtube_chart_worker.terminate()
-  }
-
-  workers.youtube_chart_worker = new YoutubeChartWorker()
-  workers.youtube_chart_worker.onmessage = createChartWorkerHandler('youtube', 'youtubeChart')
-}
-
-// Function for restarting spotify_chart_worker
-function restartSpotifyWorker() {
-  if (workers.spotify_chart_worker) {
-    workers.spotify_chart_worker.terminate()
-  }
-
-  workers.spotify_chart_worker = new SpotifyChartWorker()
-  workers.spotify_chart_worker.onmessage = createChartWorkerHandler('spotify', 'spotifyChart')
-}
-
-// Function for restarting insta_chart_worker
-function restartInstaWorker() {
-  if (workers.insta_chart_worker) {
-    workers.insta_chart_worker.terminate()
-  }
-
-  workers.insta_chart_worker = new InstaChartWorker()
-  workers.insta_chart_worker.onmessage = createChartWorkerHandler('instagram', 'instagramChart')
-}
-
-// Function for restarting facebook_chart_worker
-function restartFacebookWorker() {
-  if (workers.facebook_chart_worker) {
-    workers.facebook_chart_worker.terminate()
-  }
-
-  workers.facebook_chart_worker = new FacebookChartWorker()
-  workers.facebook_chart_worker.onmessage = createChartWorkerHandler('facebook', 'facebookChart')
-}
-
-// Function for restarting twitter_chart_worker
-function restartTwitterWorker() {
-  if (workers.twitter_chart_worker) {
-    workers.twitter_chart_worker.terminate()
-  }
-
-  workers.twitter_chart_worker = new TwitterChartWorker()
-  workers.twitter_chart_worker.onmessage = createChartWorkerHandler('twitter', 'twitterChart')
-}
-
-// Function for restarting pandora_chart_worker
-function restartPandoraWorker() {
-  if (workers.pandora_chart_worker) {
-    workers.pandora_chart_worker.terminate()
-  }
-
-  workers.pandora_chart_worker = new PandoraChartWorker()
-  workers.pandora_chart_worker.onmessage = createChartWorkerHandler('pandora', 'pandoraChart')
-}
-
-// Function for restarting soundcloud_chart_worker
-function restartSoundcloudWorker() {
-  if (workers.soundcloud_chart_worker) {
-    workers.soundcloud_chart_worker.terminate()
-  }
-
-  workers.soundcloud_chart_worker = new SoundcloudChartWorker()
-  workers.soundcloud_chart_worker.onmessage =
-    createChartWorkerHandler('soundcloud', 'soundcloudChart')
-}
-
-// Function for restarting deezer_chart_worker
-function restartDeezerWorker() {
-  if (workers.deezer_chart_worker) {
-    workers.deezer_chart_worker.terminate()
-  }
-
-  workers.deezer_chart_worker = new DeezerChartWorker()
-  workers.deezer_chart_worker.onmessage = createChartWorkerHandler('deezer', 'deezerChart')
-}
-
-// Function for restarting tiktok_chart_worker
-function restartTiktokWorker() {
-  if (workers.tiktok_chart_worker) {
-    workers.tiktok_chart_worker.terminate()
-  }
-
-  workers.tiktok_chart_worker = new TiktokChartWorker()
-  workers.tiktok_chart_worker.onmessage = createChartWorkerHandler('tiktok', 'tiktokChart')
-}
-
 // Sending data to wokers
 export function processDataInWorker(batch) {
   workers.worker.postMessage({ batch, dataLength })
 
   if (globalProgress === 1) {
     const chartWorkers = [
-      ['youtube_chart_worker', restartYoutubeWorker],
-      ['spotify_chart_worker', restartSpotifyWorker],
-      ['insta_chart_worker', restartInstaWorker],
-      ['facebook_chart_worker', restartFacebookWorker],
-      ['twitter_chart_worker', restartTwitterWorker],
-      ['pandora_chart_worker', restartPandoraWorker],
-      ['soundcloud_chart_worker', restartSoundcloudWorker],
-      ['deezer_chart_worker', restartDeezerWorker],
-      ['tiktok_chart_worker', restartTiktokWorker],
+      ['youtube_chart_worker', () => restartWorkerFunctions.restartYoutubeWorker],
+      ['spotify_chart_worker', () => restartWorkerFunctions.restartSpotifyWorker],
+      ['insta_chart_worker', () => restartWorkerFunctions.restartInstaWorker],
+      ['facebook_chart_worker', () => restartWorkerFunctions.restartFacebookWorker],
+      ['twitter_chart_worker', () => restartWorkerFunctions.restartTwitterWorker],
+      ['pandora_chart_worker', () => restartWorkerFunctions.restartPandoraWorker],
+      ['soundcloud_chart_worker', () => restartWorkerFunctions.restartSoundcloudWorker],
+      ['deezer_chart_worker', () => restartWorkerFunctions.restartDeezerWorker],
+      ['tiktok_chart_worker', () => restartWorkerFunctions.restartTiktokWorker],
     ]
 
     for (const [workerKey, restartFn] of chartWorkers) {
@@ -287,49 +232,4 @@ export function processDataInWorker(batch) {
       workers[workerKey].postMessage({ buffer: sharedBuffer })
     }
   }
-}
-
-export function initDataForYoutubeChart() {
-  restartYoutubeWorker()
-  workers.youtube_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForSpotifyChart() {
-  restartSpotifyWorker()
-  workers.spotify_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForInstaChart() {
-  restartInstaWorker()
-  workers.insta_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForFacebookChart() {
-  restartFacebookWorker()
-  workers.facebook_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForTwitterChart() {
-  restartTwitterWorker()
-  workers.twitter_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForPandoraChart() {
-  restartPandoraWorker()
-  workers.pandora_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForSoundcloudChart() {
-  restartSoundcloudWorker()
-  workers.soundcloud_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForDeezerChart() {
-  restartDeezerWorker()
-  workers.deezer_chart_worker.postMessage({ buffer: sharedBuffer })
-}
-
-export function initDataForTiktokChart() {
-  restartTiktokWorker()
-  workers.tiktok_chart_worker.postMessage({ buffer: sharedBuffer })
 }
