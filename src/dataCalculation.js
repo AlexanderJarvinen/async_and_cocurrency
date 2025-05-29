@@ -14,416 +14,331 @@ export function getRandomData(baseValue, variance) {
 }
 
 export function getSpotifyData(sharedBuffer) {
-  const spotifyData = new Float32Array(sharedBuffer, 0, 12) // Spotify — the first platform, offset 0
-  let month = 0
-  const spotifyDataProceed = []
-
-  // Initial values
-  let monthlyListeners = 100_000
-  let totalStreams = 2_000_000
-  let followers = 50_000
-
-  const playlistAdds = 10_000
-  const saveRate = 60 // %
-  const skipRate = 20 // %
-  const virality = 1.2
-
-  const spotifyWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const spotifyInverseIndices = [5]
-
-  const interval = setInterval(() => {
-    // Simulating growth
-    monthlyListeners += Math.floor(Math.random() * 5_000)
-    totalStreams += Math.floor(Math.random() * 100_000)
-    followers += Math.floor(Math.random() * 1_000)
-
-    const metrics = [
-      monthlyListeners,
-      totalStreams,
-      followers,
-      playlistAdds,
-      saveRate,
-      skipRate,
-      virality
-    ]
-
-    spotifyData[month] = Math.floor(
-      calculatePopularity(metrics, spotifyWeights, spotifyInverseIndices) *
-      (1 + (Math.random() - 0.5) / 5)
-    )
-
-    spotifyDataProceed.push(spotifyData[month])
-    postMessage(spotifyDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(spotifyDataProceed)
-    }
-  }, 1000)
+  generatePlatformData({
+    sharedBuffer,
+    offset: 0,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [5],
+    initialMetrics: {
+      monthlyListeners: 100_000,
+      totalStreams: 2_000_000,
+      followers: 50_000,
+    },
+    constantMetrics: {
+      playlistAdds: 10_000,
+      saveRate: 60,
+      skipRate: 20,
+      virality: 1.2,
+    },
+    updateMetrics: {
+      monthlyListeners: val => val + Math.floor(Math.random() * 5_000),
+      totalStreams: val => val + Math.floor(Math.random() * 100_000),
+      followers: val => val + Math.floor(Math.random() * 1_000),
+    },
+  })
 }
 
 export function getTikTokData(sharedBuffer) {
-  const offset = 12 * 4 * 8 // TikTok — ninth platform (index 8)
-  const tiktokData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const tiktokDataProceed = []
+  const offset = 12 * 4 * 8 // TikTok — девятая платформа (индекс 8)
 
-  // Initial values
-  let activeUsers = 1_500_000_000 // 1.5 billion active users
-  let totalViews = 5_000_000_000 // 5 billion views
-  let followers = 100_000_000 // 100 million followers
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [5], // skipRate инвертирован
 
-  const engagementRate = 3.4 // %
-  const retentionRate = 50 // %
-  const skipRate = 20 // %
-  const virality = 1.2
+    initialMetrics: {
+      activeUsers: 1_500_000_000,
+      totalViews: 5_000_000_000,
+      followers: 100_000_000,
+    },
 
-  const tikTokWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const tikTokInverseIndices = [5]
+    constantMetrics: {
+      engagementRate: 3.4, // %
+      retentionRate: 50,   // %
+      skipRate: 20,        // %
+      virality: 1.2
+    },
 
-  const interval = setInterval(() => {
-    // Simulating growth
-    activeUsers += Math.floor(Math.random() * 10_000_000)
-    totalViews += Math.floor(Math.random() * 100_000_000)
-    followers += Math.floor(Math.random() * 1_000_000)
+    updateMetrics: {
+      activeUsers: prev => prev + Math.floor(Math.random() * 10_000_000),
+      totalViews:  prev => prev + Math.floor(Math.random() * 100_000_000),
+      followers:   prev => prev + Math.floor(Math.random() * 1_000_000),
+    },
 
-    const metrics = [
-      activeUsers,
-      totalViews,
-      followers,
-      engagementRate,
-      retentionRate,
-      skipRate,
-      virality
-    ]
+    fluctuation: 5,
 
-    tiktokData[month] = Math.floor(
-      calculatePopularity(metrics, tikTokWeights, tikTokInverseIndices) *
-      (1 + (Math.random() - 0.5) / 5)
-    )
-
-    tiktokDataProceed.push(tiktokData[month])
-    postMessage(tiktokDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(tiktokDataProceed)
+    onFinish: result => {
+      // Можно логировать или отправлять результат
+      console.log('TikTok data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
 export function getTwitterData(sharedBuffer) {
-  const offset = 12 * 4 * 4 // Twitter — fifth platform (0-based index: 4)
-  const twitterData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const twitterDataProceed = []
+  const offset = 12 * 4 * 4 // Twitter — пятая платформа (индекс 4)
 
-  // Initial values
-  let followers = 80_000
-  const likes = 7_000
-  const retweets = 3_000
-  const quoteTweets = 1_200
-  let impressions = 40_000
-  let engagementRate = 3.8 // %
-  const virality = 1.3
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.2, 0.15, 0.1, 0.1, 0.1, 0.05],
+    inverseIndices: [],
 
-  const twitterWeights = [0.3, 0.2, 0.15, 0.1, 0.1, 0.1, 0.05]
-  const twitterInverseIndices = []
+    initialMetrics: {
+      followers: 80_000,
+      impressions: 40_000,
+      engagementRate: 3.8
+    },
 
-  const interval = setInterval(() => {
-    // Value growth
-    followers += Math.floor(Math.random() * 1_800)
-    impressions += Math.floor(Math.random() * 5_000)
-    engagementRate += (Math.random() - 0.5) * 0.25
+    constantMetrics: {
+      likes: 7000,
+      retweets: 3000,
+      quoteTweets: 1200,
+      virality: 1.3
+    },
 
-    const metrics = [
-      followers,
-      likes,
-      retweets,
-      quoteTweets,
-      impressions,
-      engagementRate,
-      virality
-    ]
+    updateMetrics: {
+      followers: prev => prev + Math.floor(Math.random() * 1800),
+      impressions: prev => prev + Math.floor(Math.random() * 5000),
+      engagementRate: prev => prev + (Math.random() - 0.5) * 0.25
+    },
 
-    twitterData[month] = Math.floor(
-      calculatePopularity(metrics, twitterWeights, twitterInverseIndices) *
-      (1 + (Math.random() - 0.5) / 5)
-    )
+    fluctuation: 5,
 
-    twitterDataProceed.push(twitterData[month])
-    postMessage(twitterDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(twitterDataProceed)
+    onFinish: result => {
+      console.log('Twitter data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
 export function getDeezerData(sharedBuffer) {
-  const offset = 12 * 4 * 7 // Deezer — eighth platform
-  const deezerData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const deezerDataProceed = []
+  const offset = 12 * 4 * 7 // Deezer — восьмая платформа (index 7)
 
-  // Initial values
-  let activeUsers = 18_000_000
-  let totalStreams = 200_000_000
-  let followers = 10_000_000
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [5], // skipRate
 
-  const playlistAdds = 500_000
-  const saveRate = 60 // %
-  const skipRate = 20 // %
-  const virality = 1.1
+    initialMetrics: {
+      activeUsers: 18_000_000,
+      totalStreams: 200_000_000,
+      followers: 10_000_000,
+    },
 
-  const deezerWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const deezerInverseIndices = [5] // skipRate
+    constantMetrics: {
+      playlistAdds: 500_000,
+      saveRate: 60,
+      skipRate: 20,
+      virality: 1.1,
+    },
 
-  const interval = setInterval(() => {
-    // Growth
-    activeUsers += Math.floor(Math.random() * 1_000_000)
-    totalStreams += Math.floor(Math.random() * 5_000_000)
-    followers += Math.floor(Math.random() * 50_000)
+    updateMetrics: {
+      activeUsers: prev => prev + Math.floor(Math.random() * 1_000_000),
+      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
+      followers: prev => prev + Math.floor(Math.random() * 50_000),
+    },
 
-    const metrics = [
-      activeUsers,
-      totalStreams,
-      followers,
-      playlistAdds,
-      saveRate,
-      skipRate,
-      virality
-    ]
+    fluctuation: 5,
 
-    deezerData[month] = Math.floor(
-      calculatePopularity(metrics, deezerWeights, deezerInverseIndices) *
-      (1 + (Math.random() - 0.5) / 5)
-    )
-
-    deezerDataProceed.push(deezerData[month])
-    postMessage(deezerDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(deezerDataProceed)
+    onFinish: result => {
+      console.log('Deezer data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
 export function getFacebookData(sharedBuffer) {
-  const offset = 12 * 4 * 3 // offset after YouTube, Spotify, Instagram (3 platforms)
-  const facebookData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const facebookDataProceed = []
+  const offset = 12 * 4 * 3 // Facebook — четвёртая платформа (index 3)
 
-  // Initial values
-  let followers = 120000
-  let engagementRate = 5.2 // %
-  let reach = 60000
-  const likes = 10000
-  const shares = 3000
-  const comments = 1500
-  const virality = 1.0
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [], // Все метрики положительные
 
-  const facebookWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const inverseIndices = [] // All metrics are positive
+    initialMetrics: {
+      followers: 120_000,
+      engagementRate: 5.2,
+      reach: 60_000,
+    },
 
-  const interval = setInterval(() => {
-    // Growth simulation
-    followers += Math.floor(Math.random() * 2500)
-    engagementRate += (Math.random() - 0.5) * 0.3
-    reach += Math.floor(Math.random() * 3000)
+    constantMetrics: {
+      likes: 10_000,
+      shares: 3_000,
+      comments: 1_500,
+      virality: 1.0,
+    },
 
-    const metrics = [
-      followers,
-      engagementRate,
-      reach,
-      likes,
-      shares,
-      comments,
-      virality
-    ]
+    updateMetrics: {
+      followers: prev => prev + Math.floor(Math.random() * 2_500),
+      engagementRate: prev => prev + (Math.random() - 0.5) * 0.3,
+      reach: prev => prev + Math.floor(Math.random() * 3_000),
+    },
 
-    facebookData[month] = Math.floor(
-      calculatePopularity(metrics, facebookWeights, inverseIndices) *
-      (1 + (Math.random() - 0.5) / 6) // fluctuation
-    )
+    fluctuation: 6, // как в оригинале
 
-    facebookDataProceed.push(facebookData[month])
-    postMessage(facebookDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(facebookDataProceed)
+    onFinish: result => {
+      console.log('Facebook data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
-
 export function getInstagramData(sharedBuffer) {
-  const offset = 12 * 4 * 2 // third slot (if starting from 0)
-  const instagramData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const instagramDataProceed = []
+  const offset = 12 * 4 * 2 // Instagram — третья платформа (index 2)
 
-  // Initial values
-  let followers = 80000
-  let engagementRate = 6.5 // %
-  let reach = 50000
-  const storyViews = 15000
-  const saves = 3000
-  const shares = 2000
-  const virality = 1.1
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [], // все метрики положительные
 
-  // Weight coefficients for Instagram
-  const instagramWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const inverseIndices = [] // All metrics have a positive effect
+    initialMetrics: {
+      followers: 80_000,
+      engagementRate: 6.5,
+      reach: 50_000,
+    },
 
-  const interval = setInterval(() => {
-    // Growth simulation
-    followers += Math.floor(Math.random() * 2000)
-    engagementRate += (Math.random() - 0.5) * 0.3
-    reach += Math.floor(Math.random() * 2000)
+    constantMetrics: {
+      storyViews: 15_000,
+      saves: 3_000,
+      shares: 2_000,
+      virality: 1.1,
+    },
 
-    const metrics = [
-      followers,
-      engagementRate,
-      reach,
-      storyViews,
-      saves,
-      shares,
-      virality
-    ]
+    updateMetrics: {
+      followers: prev => prev + Math.floor(Math.random() * 2_000),
+      engagementRate: prev => prev + (Math.random() - 0.5) * 0.3,
+      reach: prev => prev + Math.floor(Math.random() * 2_000),
+    },
 
-    instagramData[month] = Math.floor(
-      calculatePopularity(metrics, instagramWeights, inverseIndices) *
-      (1 + (Math.random() - 0.5) / 6) // slight fluctuation
-    )
+    fluctuation: 6, // как в оригинале
 
-    instagramDataProceed.push(instagramData[month])
-    postMessage(instagramDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(instagramDataProceed)
+    onFinish: result => {
+      console.log('Instagram data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
 export function getPandoraData(sharedBuffer) {
-  const offset = 12 * 4 * 5 // sixth platform
-  const pandoraData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const pandoraDataProceed = []
+  const offset = 12 * 4 * 5 // шестая платформа (индекс 5)
 
-  // Initial values
-  let activeUsers = 46000000
-  let totalStreams = 100000000
-  let followers = 5000000
-  const playlistAdds = 100000
-  const saveRate = 60
-  const skipRate = 20
-  const virality = 1.1
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [5], // skipRate негативно влияет
 
-  // Weight coefficients
-  const weights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const inverse = [5] // skipRate has a negative effect
+    initialMetrics: {
+      activeUsers: 46_000_000,
+      totalStreams: 100_000_000,
+      followers: 5_000_000,
+    },
 
-  const interval = setInterval(() => {
-    // Growth emulation
-    activeUsers += Math.floor(Math.random() * 100000)
-    totalStreams += Math.floor(Math.random() * 5000000)
-    followers += Math.floor(Math.random() * 50000)
+    constantMetrics: {
+      playlistAdds: 100_000,
+      saveRate: 60,
+      skipRate: 20,
+      virality: 1.1,
+    },
 
-    const metrics = [
-      activeUsers,
-      totalStreams,
-      followers,
-      playlistAdds,
-      saveRate,
-      skipRate,
-      virality
-    ]
+    updateMetrics: {
+      activeUsers: prev => prev + Math.floor(Math.random() * 100_000),
+      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
+      followers: prev => prev + Math.floor(Math.random() * 50_000),
+    },
 
-    pandoraData[month] = Math.floor(
-      calculatePopularity(metrics, weights, inverse) *
-      (1 + (Math.random() - 0.5) / 5) // slight fluctuation
-    )
+    fluctuation: 5,
 
-    pandoraDataProceed.push(pandoraData[month])
-    postMessage(pandoraDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(pandoraDataProceed)
+    onFinish: (result) => {
+      console.log('Pandora data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
 export function getSoundCloudData(sharedBuffer) {
-  const offset = 12 * 4 * 6 // SoundCloud as the seventh platform
-  const soundCloudData = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const soundCloudDataProceed = []
+  const offset = 12 * 4 * 6 // седьмая платформа (индекс 6)
 
-  // Initial values
-  let activeUsers = 175_000_000
-  let totalStreams = 200_000_000
-  let followers = 10_000_000
+  generatePlatformData({
+    sharedBuffer,
+    offset,
+    weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
+    inverseIndices: [5], // skipRate негативно влияет
 
-  const playlistAdds = 500_000
-  const saveRate = 60 // %
-  const skipRate = 20 // %
-  const virality = 1.1
+    initialMetrics: {
+      activeUsers: 175_000_000,
+      totalStreams: 200_000_000,
+      followers: 10_000_000,
+    },
 
-  const soundCloudWeights = [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05]
-  const soundCloudInverseIndices = [5]
+    constantMetrics: {
+      playlistAdds: 500_000,
+      saveRate: 60,
+      skipRate: 20,
+      virality: 1.1,
+    },
 
-  const interval = setInterval(() => {
-    // Growth simulation
-    activeUsers += Math.floor(Math.random() * 1_000_000)
-    totalStreams += Math.floor(Math.random() * 5_000_000)
-    followers += Math.floor(Math.random() * 50_000)
+    updateMetrics: {
+      activeUsers: prev => prev + Math.floor(Math.random() * 1_000_000),
+      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
+      followers: prev => prev + Math.floor(Math.random() * 50_000),
+    },
 
-    const metrics = [
-      activeUsers,
-      totalStreams,
-      followers,
-      playlistAdds,
-      saveRate,
-      skipRate,
-      virality
-    ]
+    fluctuation: 5,
 
-    soundCloudData[month] = Math.floor(
-      calculatePopularity(metrics, soundCloudWeights, soundCloudInverseIndices) *
-      (1 + (Math.random() - 0.5) / 5) // fluctuation
-    )
-
-    soundCloudDataProceed.push(soundCloudData[month])
-    postMessage(soundCloudDataProceed)
-
-    month++
-    if (month >= 12) {
-      clearInterval(interval)
-      postMessage(soundCloudDataProceed)
+    onFinish: (result) => {
+      console.log('SoundCloud data generation finished', result)
     }
-  }, 1000)
+  })
 }
 
-export function calculatePopularity(metrics, weights, inverse = []) {
+function calculatePopularity(metrics, weights, inverse = []) {
   return metrics.reduce((acc, val, idx) => {
     const effect = inverse.includes(idx) ? -1 : 1
     return acc + effect * weights[idx] * val
   }, 0)
+}
+
+function generatePlatformData({
+                                       sharedBuffer,
+                                       offset,
+                                       weights,
+                                       inverseIndices,
+                                       initialMetrics,
+                                       constantMetrics,
+                                       updateMetrics,
+                                       fluctuation = 5, // колебания по умолчанию
+                                       onFinish = () => {}
+                                     }) {
+  const data = new Float32Array(sharedBuffer, offset, 12)
+  let month = 0
+  const result = []
+
+  const interval = setInterval(() => {
+    // Обновляем метрики
+    for (const key in updateMetrics) {
+      initialMetrics[key] = updateMetrics[key](initialMetrics[key])
+    }
+
+    const allMetrics = [
+      ...Object.values(initialMetrics),
+      ...Object.values(constantMetrics),
+    ]
+
+    data[month] = Math.floor(
+      calculatePopularity(allMetrics, weights, inverseIndices) *
+      (1 + (Math.random() - 0.5) / fluctuation)
+    )
+
+    result.push(data[month])
+    postMessage(result)
+
+    month++
+    if (month >= 12) {
+      clearInterval(interval)
+      postMessage(result)
+      onFinish(result)
+    }
+  }, 1000)
 }
 
 
