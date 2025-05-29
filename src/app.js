@@ -13,7 +13,7 @@ window.onload = () => {
     startWorkers: () => initData(true),
     youtube: initDataFunctions.initDataForYoutubeChart,
     spotify: initDataFunctions.initDataForSpotifyChart,
-    instagram: initDataFunctions.initDataForInstaChart,
+    instagram: initDataFunctions.initDataForInstagramChart,
     facebook: initDataFunctions.initDataForFacebookChart,
     twitter: initDataFunctions.initDataForTwitterChart,
     pandora: initDataFunctions.initDataForPandoraChart,
