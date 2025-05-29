@@ -1,13 +1,10 @@
-import { platformCharts, indexData } from './initData.js';
+import { platformCharts, indexData, sharedBuffer } from './initData.js';
 import Chart from 'chart.js/auto';
 
 import { chartConfig, platforms } from './config';
 
 let indices = [];
-const totalPlatforms = 9;
-const monthsPerPlatform = 12;
-const bytesPerElement = 4; // Float32
-const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
+// const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
 
 export const workers = {
   artist_charts_worker: new Worker('./workers/artistsCharts.worker.js', {
@@ -43,7 +40,7 @@ export const workers = {
   worker: new Worker('./worker.worker.js', { type: 'module' }),
 };
 
-export const sharedBuffer = new SharedArrayBuffer(bufferSize);
+// export const sharedBuffer = new SharedArrayBuffer(bufferSize);
 
 const progressElements = {};
 

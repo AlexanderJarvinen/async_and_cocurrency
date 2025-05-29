@@ -1,9 +1,9 @@
 import { dataLength, largeData, batchSize } from './initData.js';
 import { initCharts } from './chartsUpdate.js';
 import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
+import { sharedBuffer } from './initData'
 import {
   workers,
-  sharedBuffer,
   createChartWorkerHandler,
 } from './workerInit.js';
 

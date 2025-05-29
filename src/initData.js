@@ -4,7 +4,11 @@ export const batchSize = Math.floor(dataLength / 100); // Bulk
 export let indexData = [];
 export const platformCharts = {};
 export let data = [];
-
+const totalPlatforms = 9;
+const monthsPerPlatform = 12;
+const bytesPerElement = 4; // Float32
+const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
+export const sharedBuffer = new SharedArrayBuffer(bufferSize);
 // Rendering of  charts
 export const platforms = [
   {
@@ -87,3 +91,5 @@ export const months = [
   'November',
   'December',
 ];
+
+
