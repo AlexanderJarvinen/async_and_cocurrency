@@ -1,5 +1,5 @@
 import { getRandomData } from '../dataCalculation';
-// Handler of messages from the main thread
+
 onmessage = function (e) {
   const platforms = e.data.platforms;
   const sharedBuffer = e.data.buffer;
@@ -12,13 +12,11 @@ onmessage = function (e) {
     return { ...platform, data };
   });
 
-  // Use data from SharedArrayBuffer for processing
   processedPlatforms.forEach((platform, index) => {
     if (index === 0) {
       platform.data = Array.from(popularityData);
     }
   });
 
-  // Send the result back to the main thread
   postMessage({ platforms: processedPlatforms });
 };

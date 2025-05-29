@@ -4,7 +4,6 @@ import Chart from 'chart.js/auto';
 import { chartConfig, platforms } from './config';
 
 let indices = [];
-// const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
 
 export const workers = {
   artist_charts_worker: new Worker('./workers/artistsCharts.worker.js', {
@@ -39,8 +38,6 @@ export const workers = {
   }),
   worker: new Worker('./worker.worker.js', { type: 'module' }),
 };
-
-// export const sharedBuffer = new SharedArrayBuffer(bufferSize);
 
 const progressElements = {};
 

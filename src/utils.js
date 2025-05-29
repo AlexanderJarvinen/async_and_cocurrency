@@ -1,6 +1,6 @@
 import { dataLength, largeData, batchSize } from './initData.js';
 import { initCharts } from './chartsUpdate.js';
-import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
+import { mainFlowDataConfig, mainWorkerDataConfig, chartWorkerConfigs } from './config';
 import { sharedBuffer } from './initData'
 import {
   workers,
@@ -9,64 +9,8 @@ import {
 
 let globalProgress = 0;
 
-const chartWorkerConfigs = {
-  youtube: {
-    workerKey: 'youtube_chart_worker',
-    chartId: 'youtubeChart',
-    WorkerClass: () =>
-      new Worker('./workers/youtubeWorker.worker.js', { type: 'module' }),
-  },
-  spotify: {
-    workerKey: 'spotify_chart_worker',
-    chartId: 'spotifyChart',
-    WorkerClass: () =>
-      new Worker('./workers/spotifyWorker.worker.js', { type: 'module' }),
-  },
-  instagram: {
-    workerKey: 'insta_chart_worker',
-    chartId: 'instagramChart',
-    WorkerClass: () =>
-      new Worker('./workers/instaWorker.worker.js', { type: 'module' }),
-  },
-  facebook: {
-    workerKey: 'facebook_chart_worker',
-    chartId: 'facebookChart',
-    WorkerClass: () =>
-      new Worker('./workers/facebookWorker.worker.js', { type: 'module' }),
-  },
-  twitter: {
-    workerKey: 'twitter_chart_worker',
-    chartId: 'twitterChart',
-    WorkerClass: () =>
-      new Worker('./workers/twitterWorker.worker.js', { type: 'module' }),
-  },
-  pandora: {
-    workerKey: 'pandora_chart_worker',
-    chartId: 'pandoraChart',
-    WorkerClass: () =>
-      new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }),
-  },
-  soundcloud: {
-    workerKey: 'soundcloud_chart_worker',
-    chartId: 'soundcloudChart',
-    WorkerClass: () =>
-      new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }),
-  },
-  deezer: {
-    workerKey: 'deezer_chart_worker',
-    chartId: 'deezerChart',
-    WorkerClass: () =>
-      new Worker('./workers/soundcloudWorker.worker.js', { type: 'module' }),
-  },
-  tiktok: {
-    workerKey: 'tiktok_chart_worker',
-    chartId: 'tiktokChart',
-    WorkerClass: () =>
-      new Worker('./workers/tiktokWorker.worker.js', { type: 'module' }),
-  },
-};
 
-// const workers = {}
+
 export const restartWorkerFunctions = {};
 export const initDataFunctions = {};
 

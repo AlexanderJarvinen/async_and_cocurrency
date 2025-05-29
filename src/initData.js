@@ -4,17 +4,17 @@ export const batchSize = Math.floor(dataLength / 100); // Bulk
 export let indexData = [];
 export const platformCharts = {};
 export let data = [];
-const tiktokOffset = 12 * 4 * 8; // TikTok — девятая платформа (индекс 8)
-const twitterOffset = 12 * 4 * 4; // Twitter — пятая платформа (индекс 4)
-const deezerOffset = 12 * 4 * 7; // Deezer — восьмая платформа (index 7)
-const facebookOffset = 12 * 4 * 3; // Facebook — четвёртая платформа (index 3)
-const instagrammOffset = 12 * 4 * 2; // Instagram — третья платформа (index 2)
-const pandoraOffset = 12 * 4 * 5; // шестая платформа (индекс 5)
-const soundcloudOffset = 12 * 4 * 6; // седьмая платформа (индекс 6)
+const tiktokOffset = 12 * 4 * 8; // TikTok is the ninth platform (index 8)
+const twitterOffset = 12 * 4 * 4; // Twitter - the fifth platform (index 4)
+const deezerOffset = 12 * 4 * 7; // Deezer - the eighth platform (index 7)
+const facebookOffset = 12 * 4 * 3; // Facebook is the fourth platform (index 3)
+const instagrammOffset = 12 * 4 * 2; // Instagram is the third platform (index 2)
+const pandoraOffset = 12 * 4 * 5; // sixth platform (index 5)
+const soundcloudOffset = 12 * 4 * 6; // seventh platform (index 6)
 const totalPlatforms = 9;
 const monthsPerPlatform = 12;
 const bytesPerElement = 4; // Float32
-const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
+const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 bytes
 export const sharedBuffer = new SharedArrayBuffer(bufferSize);
 // Rendering of  charts
 export const platforms = [
@@ -124,7 +124,7 @@ export const spotifySourceData = {
 export const tiktokSourceData = {
   tiktokOffset,
   weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
-  inverseIndices: [5], // skipRate инвертирован
+  inverseIndices: [5], // skipRate inverted
 
   initialMetrics: {
     activeUsers: 1_500_000_000,
@@ -148,7 +148,6 @@ export const tiktokSourceData = {
 fluctuation: 5,
 
   onFinish: (result) => {
-  // Можно логировать или отправлять результат
   console.log('TikTok data generation finished', result);
 },
 }
@@ -249,7 +248,7 @@ export const facebookSourceData = {
 export const instagrammSourceData = {
     instagrammOffset,
     weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
-    inverseIndices: [], // все метрики положительные
+    inverseIndices: [],  // all metrics are positive
 
     initialMetrics: {
     followers: 80_000,
@@ -270,7 +269,7 @@ export const instagrammSourceData = {
       reach: (prev) => prev + Math.floor(Math.random() * 2_000),
   },
 
-  fluctuation: 6, // как в оригинале
+  fluctuation: 6,  // as in the original
 
     onFinish: (result) => {
     console.log('Instagram data generation finished', result);
@@ -280,7 +279,7 @@ export const instagrammSourceData = {
 export const pandoraSourceData = {
     pandoraOffset,
     weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
-    inverseIndices: [5], // skipRate негативно влияет
+    inverseIndices: [5], // skipRate is negatively affected
 
     initialMetrics: {
     activeUsers: 46_000_000,
@@ -311,7 +310,7 @@ export const pandoraSourceData = {
 export const soundcloudSourceData = {
     soundcloudOffset ,
     weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
-    inverseIndices: [5], // skipRate негативно влияет
+    inverseIndices: [5], // skipRate is negatively affected
 
     initialMetrics: {
     activeUsers: 175_000_000,
@@ -342,7 +341,7 @@ export const soundcloudSourceData = {
 export const youtubeSourceData = {
   offset: 1 * 12 * 4, // YouTube offset
   weights: [0.25, 0.2, 0.2, 0.1, 0.1, 0.1, 0.05],
-  inverseIndices: [], // Нет инверсий для YouTube метрик
+  inverseIndices: [], // No inversions for YouTube metrics
   initialMetrics: {
     subscribers: Math.floor(Math.random() * 100) + 1,
   },

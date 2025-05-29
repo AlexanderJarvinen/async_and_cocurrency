@@ -111,7 +111,7 @@ function generatePlatformData({
   initialMetrics,
   constantMetrics,
   updateMetrics,
-  fluctuation = 5, // колебания по умолчанию
+  fluctuation = 5, // default oscillation
   onFinish = () => {},
 }) {
   const data = new Float32Array(sharedBuffer, offset, 12);
@@ -119,7 +119,7 @@ function generatePlatformData({
   const result = [];
 
   const interval = setInterval(() => {
-    // Обновляем метрики
+    // Updating metrics
     for (const key in updateMetrics) {
       initialMetrics[key] = updateMetrics[key](initialMetrics[key]);
     }

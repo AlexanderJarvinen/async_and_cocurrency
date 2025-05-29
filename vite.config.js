@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  root: 'src', // если твои исходники в папке src
+  root: 'src',
   build: {
-    outDir: '../dist', // чтобы сборка шла в dist, как раньше
+    outDir: '../dist',
     emptyOutDir: true,
   },
   server: {
