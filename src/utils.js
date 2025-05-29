@@ -1,9 +1,5 @@
 import { dataLength, largeData, batchSize } from './initData.js';
-import {
-  updateMainThreadChart,
-  updateMainWorkerChart,
-  initCharts,
-} from './chartsUpdate.js';
+import { initCharts } from './chartsUpdate.js';
 import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
 import {
   workers,

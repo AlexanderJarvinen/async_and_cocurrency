@@ -1,8 +1,8 @@
 import { platformCharts, indexData } from './initData.js';
+import Chart from 'chart.js/auto';
 
 import { chartConfig, platforms } from './config';
 
-let randomArray = [];
 let indices = [];
 const totalPlatforms = 9;
 const monthsPerPlatform = 12;
@@ -124,7 +124,6 @@ workers.artist_charts_worker.onmessage = function (e) {
 
 // Web Worker message handler
 workers.worker.onmessage = function (e) {
-  randomArray = e.data.randomArray;
   indices = e.data.indices;
 
   // Update graphs with results from Web Worker
