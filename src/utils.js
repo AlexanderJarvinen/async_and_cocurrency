@@ -12,15 +12,7 @@ import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
 import {
   workers,
   sharedBuffer,
-  youtubeChartWorkerOnMessaheHandler,
-  spotifyChartWorkerOnMessaheHandler,
-  instaChartWorkerOnMessaheHandler,
-  facebookChartWorkerOnMessaheHandler,
-  twitterChartWorkerOnMessaheHandler,
-  pandoraChartWorkerOnMessaheHandler,
-  soundcloudChartWorkerOnMessaheHandler,
-  deezerChartWorkerOnMessaheHandler,
-  tiktokChartWorkerOnMessaheHandler,
+  createChartWorkerHandler
 } from './workerInit.js'
 import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
 import SpotifyChartWorker from './workers/spotifyWorker.worker.js'
@@ -189,7 +181,7 @@ function restartYoutubeWorker() {
   }
 
   workers.youtube_chart_worker = new YoutubeChartWorker()
-  workers.youtube_chart_worker.onmessage = youtubeChartWorkerOnMessaheHandler
+  workers.youtube_chart_worker.onmessage = createChartWorkerHandler('youtube', 'youtubeChart')
 }
 
 // Function for restarting spotify_chart_worker
@@ -199,7 +191,7 @@ function restartSpotifyWorker() {
   }
 
   workers.spotify_chart_worker = new SpotifyChartWorker()
-  workers.spotify_chart_worker.onmessage = spotifyChartWorkerOnMessaheHandler
+  workers.spotify_chart_worker.onmessage = createChartWorkerHandler('spotify', 'spotifyChart')
 }
 
 // Function for restarting insta_chart_worker
@@ -209,7 +201,7 @@ function restartInstaWorker() {
   }
 
   workers.insta_chart_worker = new InstaChartWorker()
-  workers.insta_chart_worker.onmessage = instaChartWorkerOnMessaheHandler
+  workers.insta_chart_worker.onmessage = createChartWorkerHandler('instagram', 'instagramChart')
 }
 
 // Function for restarting facebook_chart_worker
@@ -219,7 +211,7 @@ function restartFacebookWorker() {
   }
 
   workers.facebook_chart_worker = new FacebookChartWorker()
-  workers.facebook_chart_worker.onmessage = facebookChartWorkerOnMessaheHandler
+  workers.facebook_chart_worker.onmessage = createChartWorkerHandler('facebook', 'facebookChart')
 }
 
 // Function for restarting twitter_chart_worker
@@ -229,7 +221,7 @@ function restartTwitterWorker() {
   }
 
   workers.twitter_chart_worker = new TwitterChartWorker()
-  workers.twitter_chart_worker.onmessage = twitterChartWorkerOnMessaheHandler
+  workers.twitter_chart_worker.onmessage = createChartWorkerHandler('twitter', 'twitterChart')
 }
 
 // Function for restarting pandora_chart_worker
@@ -239,7 +231,7 @@ function restartPandoraWorker() {
   }
 
   workers.pandora_chart_worker = new PandoraChartWorker()
-  workers.pandora_chart_worker.onmessage = pandoraChartWorkerOnMessaheHandler
+  workers.pandora_chart_worker.onmessage = createChartWorkerHandler('pandora', 'pandoraChart')
 }
 
 // Function for restarting soundcloud_chart_worker
@@ -250,7 +242,7 @@ function restartSoundcloudWorker() {
 
   workers.soundcloud_chart_worker = new SoundcloudChartWorker()
   workers.soundcloud_chart_worker.onmessage =
-    soundcloudChartWorkerOnMessaheHandler
+    createChartWorkerHandler('soundcloud', 'soundcloudChart')
 }
 
 // Function for restarting deezer_chart_worker
@@ -260,7 +252,7 @@ function restartDeezerWorker() {
   }
 
   workers.deezer_chart_worker = new DeezerChartWorker()
-  workers.deezer_chart_worker.onmessage = deezerChartWorkerOnMessaheHandler
+  workers.deezer_chart_worker.onmessage = createChartWorkerHandler('deezer', 'deezerChart')
 }
 
 // Function for restarting tiktok_chart_worker
@@ -270,7 +262,7 @@ function restartTiktokWorker() {
   }
 
   workers.tiktok_chart_worker = new TiktokChartWorker()
-  workers.tiktok_chart_worker.onmessage = tiktokChartWorkerOnMessaheHandler
+  workers.tiktok_chart_worker.onmessage = createChartWorkerHandler('tiktok', 'tiktokChart')
 }
 
 // Sending data to wokers
