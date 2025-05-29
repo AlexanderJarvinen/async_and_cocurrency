@@ -14,28 +14,19 @@ import {
   sharedBuffer,
   createChartWorkerHandler
 } from './workerInit.js'
-import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
-import SpotifyChartWorker from './workers/spotifyWorker.worker.js'
-import InstaChartWorker from './workers/instaWorker.worker.js'
-import FacebookChartWorker from './workers/facebookWorker.worker.js'
-import TwitterChartWorker from './workers/twitterWorker.worker.js'
-import PandoraChartWorker from './workers/pandoraWorker.worker.js'
-import SoundcloudChartWorker from './workers/soundcloudWorker.worker.js'
-import DeezerChartWorker from './workers/deezerWorker.worker.js'
-import TiktokChartWorker from './workers/tiktokWorker.worker'
 
 let globalProgress = 0
 
 const chartWorkerConfigs = {
-  youtube: { workerKey: 'youtube_chart_worker', chartId: 'youtubeChart', WorkerClass: YoutubeChartWorker },
-  spotify: { workerKey: 'spotify_chart_worker', chartId: 'spotifyChart', WorkerClass: SpotifyChartWorker },
-  instagram: { workerKey: 'insta_chart_worker', chartId: 'instagramChart', WorkerClass: InstaChartWorker },
-  facebook: { workerKey: 'facebook_chart_worker', chartId: 'facebookChart', WorkerClass: FacebookChartWorker },
-  twitter: { workerKey: 'twitter_chart_worker', chartId: 'twitterChart', WorkerClass: TwitterChartWorker },
-  pandora: { workerKey: 'pandora_chart_worker', chartId: 'pandoraChart', WorkerClass: PandoraChartWorker },
-  soundcloud: { workerKey: 'soundcloud_chart_worker', chartId: 'soundcloudChart', WorkerClass: SoundcloudChartWorker },
-  deezer: { workerKey: 'deezer_chart_worker', chartId: 'deezerChart', WorkerClass: DeezerChartWorker },
-  tiktok: { workerKey: 'tiktok_chart_worker', chartId: 'tiktokChart', WorkerClass: TiktokChartWorker },
+  youtube: { workerKey: 'youtube_chart_worker', chartId: 'youtubeChart', WorkerClass:  new Worker('./workers/youtubeWorker.worker.js', { type: 'module' }) },
+  spotify: { workerKey: 'spotify_chart_worker', chartId: 'spotifyChart', WorkerClass: new Worker('./workers/spotifyWorker.worker.js', { type: 'module' }) },
+  instagram: { workerKey: 'insta_chart_worker', chartId: 'instagramChart', WorkerClass: new Worker('./workers/instaWorker.worker.js', { type: 'module' }) },
+  facebook: { workerKey: 'facebook_chart_worker', chartId: 'facebookChart', WorkerClass: new Worker('./workers/facebookWorker.worker.js', { type: 'module' }) },
+  twitter: { workerKey: 'twitter_chart_worker', chartId: 'twitterChart', WorkerClass: new Worker('./workers/twitterWorker.worker.js', { type: 'module' }) },
+  pandora: { workerKey: 'pandora_chart_worker', chartId: 'pandoraChart', WorkerClass: new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }) },
+  soundcloud: { workerKey: 'soundcloud_chart_worker', chartId: 'soundcloudChart', WorkerClass: new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }) },
+  deezer: { workerKey: 'deezer_chart_worker', chartId: 'deezerChart', WorkerClass:  new Worker('./workers/soundcloudWorker.worker.js', { type: 'module' }) },
+  tiktok: { workerKey: 'tiktok_chart_worker', chartId: 'tiktokChart', WorkerClass: new Worker('./workers/tiktokWorker.worker.js', { type: 'module' }) },
 }
 
 export const restartWorkerFunctions = {}

@@ -1,14 +1,4 @@
-import YoutubeChartWorker from './workers/youtubeWorker.worker.js'
-import ArtistChartsWorker from './workers/artistsCharts.worker.js'
-import SpotifyChartWorker from './workers/spotifyWorker.worker.js'
-import InstaChartWorker from './workers/instaWorker.worker.js'
-import FacebookChartWorker from './workers/facebookWorker.worker.js'
-import TwitterChartWorker from './workers/twitterWorker.worker.js'
-import PandoraChartWorker from './workers/pandoraWorker.worker.js'
-import SoundcloudChartWorker from './workers/soundcloudWorker.worker.js'
-import DeezerChartWorker from './workers/deezerWorker.worker.js'
-import TiktokChartWorker from './workers/tiktokWorker.worker.js'
-import MyWorker from './worker.worker.js'
+
 import {
   platformCharts,
   indexData,
@@ -24,17 +14,17 @@ const bytesPerElement = 4; // Float32
 const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
 
 export const workers = {
-  artist_charts_worker: new ArtistChartsWorker(),
-  youtube_chart_worker: new YoutubeChartWorker(),
-  spotify_chart_worker: new SpotifyChartWorker(),
-  insta_chart_worker: new InstaChartWorker(),
-  facebook_chart_worker: new FacebookChartWorker(),
-  twitter_chart_worker: new TwitterChartWorker(),
-  pandora_chart_worker: new PandoraChartWorker(),
-  soundcloud_chart_worker: new SoundcloudChartWorker(),
-  deezer_chart_worker: new DeezerChartWorker(),
-  tiktok_chart_worker: new TiktokChartWorker(),
-  worker: new MyWorker(),
+  artist_charts_worker: new Worker('./workers/artistsCharts.worker.js', { type: 'module' }),
+  youtube_chart_worker: new Worker('./workers/youtubeWorker.worker.js', { type: 'module' }),
+  spotify_chart_worker: new Worker('./workers/spotifyWorker.worker.js', { type: 'module' }),
+  insta_chart_worker: new Worker('./workers/instaWorker.worker.js', { type: 'module' }),
+  facebook_chart_worker: new Worker('./workers/facebookWorker.worker.js', { type: 'module' }),
+  twitter_chart_worker: new Worker('./workers/twitterWorker.worker.js', { type: 'module' }),
+  pandora_chart_worker: new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }),
+  soundcloud_chart_worker: new Worker('./workers/soundcloudWorker.worker.js', { type: 'module' }),
+  deezer_chart_worker: new Worker('./workers/deezerWorker.worker.js', { type: 'module' }),
+  tiktok_chart_worker: new Worker('./workers/tiktokWorker.worker.js', { type: 'module' }),
+  worker: new Worker('./worker.worker.js', { type: 'module' }),
 }
 
 export const sharedBuffer = new SharedArrayBuffer(bufferSize)
