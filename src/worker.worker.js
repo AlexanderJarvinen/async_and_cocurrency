@@ -1,11 +1,10 @@
+import { getRandom } from './utils'
 // Handler of messages from the main thread
 onmessage = function (e) {
   const { batch, dataLength } = e.data
 
   // Generation of random number array
-  const randomArray = Array.from({ length: dataLength }, () =>
-    Math.floor(Math.random() * dataLength)
-  )
+  const randomArray = getRandom(dataLength);
 
   // Find indexes of elements from batch in randomArray
   const indices = batch.map((item) => {

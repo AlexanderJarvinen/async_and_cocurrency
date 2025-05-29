@@ -1,10 +1,4 @@
-// Function for generating random data with fluctuations
-function getRandomData(baseValue, variance) {
-  return Array.from({ length: 12 }, () => {
-    const randomVariation = Math.floor(Math.random() * variance) - variance / 2
-    return Math.max(0, baseValue + randomVariation)
-  })
-}
+import { getRandomData } from '../dataCalculation'
 
 // Formula for calculating YouTube popularity
 function calculateYouTubePopularity(

@@ -1,3 +1,4 @@
+import { getRandomData } from '../dataCalculation'
 // Handler of messages from the main thread
 onmessage = function (e) {
   const platforms = e.data.platforms
@@ -22,12 +23,4 @@ onmessage = function (e) {
   postMessage({ platforms: processedPlatforms })
 }
 
-// Function of random data generation (similar to the main program)
-function getRandomData(baseValue, variance) {
-  const randomData = Array.from({ length: 12 }, () => {
-    const randomVariation = Math.floor(Math.random() * variance) - variance / 2
-    return Math.max(0, baseValue + randomVariation)
-  })
 
-  return randomData
-}
