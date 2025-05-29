@@ -1,6 +1,6 @@
 import { platformCharts, indexData } from './initData.js';
 
-import { chartConfig } from './config';
+import { chartConfig, platforms } from './config';
 
 let randomArray = [];
 let indices = [];
@@ -44,18 +44,6 @@ export const workers = {
 };
 
 export const sharedBuffer = new SharedArrayBuffer(bufferSize);
-
-const platforms = [
-  'youtube',
-  'spotify',
-  'instagram',
-  'facebook',
-  'twitter',
-  'pandora',
-  'soundcloud',
-  'deezer',
-  'tiktok',
-];
 
 const progressElements = {};
 

@@ -292,6 +292,30 @@ export function getSoundCloudData(sharedBuffer) {
   });
 }
 
+export function getYouTubeData(sharedBuffer) {
+  generatePlatformData({
+    sharedBuffer,
+    offset: 1 * 12 * 4, // YouTube offset
+    weights: [0.25, 0.2, 0.2, 0.1, 0.1, 0.1, 0.05],
+    inverseIndices: [], // Нет инверсий для YouTube метрик
+    initialMetrics: {
+      subscribers: Math.floor(Math.random() * 100) + 1,
+    },
+    constantMetrics: {
+      views: 50000000,
+      engagement: 5,
+      mentions: 10000,
+      retention: 60,
+      growth: 10,
+      virality: 1,
+    },
+    updateMetrics: {
+      subscribers: (val) => val + Math.floor(Math.random() * 10) + 1,
+    },
+    fluctuation: 5,
+  });
+}
+
 function calculatePopularity(metrics, weights, inverse = []) {
   return metrics.reduce((acc, val, idx) => {
     const effect = inverse.includes(idx) ? -1 : 1;

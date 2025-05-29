@@ -93,3 +93,15 @@ export const mainWorkerDataConfig = {
   batchProcessor: processBatch,
   workerProcessor: processDataInWorker, // Transmit data to the Warker
 };
+
+export const platforms = [
+  'youtube',
+  'spotify',
+  'instagram',
+  'facebook',
+  'twitter',
+  'pandora',
+  'soundcloud',
+  'deezer',
+  'tiktok',
+];
