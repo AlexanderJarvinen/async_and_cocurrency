@@ -106,25 +106,4 @@ export const platforms = [
   'tiktok',
 ];
 
-// export const spotifySourceData = {
-//   sharedBuffer,
-//   offset: 0,
-//   weights: [0.3, 0.25, 0.15, 0.1, 0.1, 0.05, 0.05],
-//   inverseIndices: [5],
-//   initialMetrics: {
-//     monthlyListeners: 100_000,
-//     totalStreams: 2_000_000,
-//     followers: 50_000,
-//   },
-//   constantMetrics: {
-//     playlistAdds: 10_000,
-//     saveRate: 60,
-//     skipRate: 20,
-//     virality: 1.2,
-//   },
-//   updateMetrics: {
-//     monthlyListeners: (val) => val + Math.floor(Math.random() * 5_000),
-//     totalStreams: (val) => val + Math.floor(Math.random() * 100_000),
-//     followers: (val) => val + Math.floor(Math.random() * 1_000),
-//   },
-// }
+
