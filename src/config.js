@@ -1,13 +1,7 @@
-
-import { months } from './initData';
-import {
-  updateMainThreadChart,
-  updateMainWorkerChart,
-} from './chartsUpdate.js'
-import { processBatch, processDataInWorker } from './utils';
-import {
-  data,
-} from './initData.js'
+import { months } from './initData'
+import { updateMainThreadChart, updateMainWorkerChart } from './chartsUpdate.js'
+import { processBatch, processDataInWorker } from './utils'
+import { data } from './initData.js'
 
 export const mainChartConfig = {
   type: 'line',
@@ -28,7 +22,7 @@ export const mainChartConfig = {
       duration: 0,
     },
   },
-};
+}
 
 export const mainWorkerChartConfig = {
   type: 'bar',
@@ -77,16 +71,15 @@ export const chartConfig = (label, data, borderColor, backgroundColor) => ({
   },
 })
 
-
 export const mainFlowDataConfig = {
   loaderId: 'mainThreadLoader',
-    progressBarId: 'main-thread-progress-bar',
+  progressBarId: 'main-thread-progress-bar',
   progressTextId: 'main-thread-progress-text',
   logId: 'mainThreadLog',
   updateChartCallback: updateMainThreadChart,
   batchProcessor: processBatch,
   dataContainer: data, // Main data array
-};
+}
 
 export const mainWorkerDataConfig = {
   loaderId: 'mainWorkerLoader',

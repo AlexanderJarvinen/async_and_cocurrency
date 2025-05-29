@@ -1,11 +1,6 @@
 import Chart from 'chart.js/auto'
-import {
-  platforms,
-  indexData,
-  platformCharts,
-  data,
-} from './initData.js'
-import { mainChartConfig, mainWorkerChartConfig, chartConfig } from './config';
+import { platforms, indexData, platformCharts, data } from './initData.js'
+import { mainChartConfig, mainWorkerChartConfig, chartConfig } from './config'
 
 let chart, chart2
 let ctx = document.getElementById('chart').getContext('2d')
@@ -27,9 +22,9 @@ export function initCharts() {
     }
   })
 
-  chart = new Chart(ctx, mainChartConfig);
+  chart = new Chart(ctx, mainChartConfig)
 
-  chart2 = new Chart(ctx2, mainWorkerChartConfig);
+  chart2 = new Chart(ctx2, mainWorkerChartConfig)
 
   platforms.forEach((platform) => {
     const ctx = document.getElementById(platform.id).getContext('2d')

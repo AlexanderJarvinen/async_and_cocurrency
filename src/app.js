@@ -1,8 +1,5 @@
 import './style.css'
-import {
-  initData,
-  initDataFunctions
-} from './utils.js'
+import { initData, initDataFunctions } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
 
 window.onload = () => {

@@ -1,6 +1,7 @@
 export function getRandom(dataLength) {
   return Array.from({ length: dataLength }, () =>
-    Math.floor(Math.random() * dataLength));
+    Math.floor(Math.random() * dataLength)
+  )
 }
 
 // Function of random data generation (similar to the main program)
@@ -31,9 +32,9 @@ export function getSpotifyData(sharedBuffer) {
       virality: 1.2,
     },
     updateMetrics: {
-      monthlyListeners: val => val + Math.floor(Math.random() * 5_000),
-      totalStreams: val => val + Math.floor(Math.random() * 100_000),
-      followers: val => val + Math.floor(Math.random() * 1_000),
+      monthlyListeners: (val) => val + Math.floor(Math.random() * 5_000),
+      totalStreams: (val) => val + Math.floor(Math.random() * 100_000),
+      followers: (val) => val + Math.floor(Math.random() * 1_000),
     },
   })
 }
@@ -55,23 +56,23 @@ export function getTikTokData(sharedBuffer) {
 
     constantMetrics: {
       engagementRate: 3.4, // %
-      retentionRate: 50,   // %
-      skipRate: 20,        // %
-      virality: 1.2
+      retentionRate: 50, // %
+      skipRate: 20, // %
+      virality: 1.2,
     },
 
     updateMetrics: {
-      activeUsers: prev => prev + Math.floor(Math.random() * 10_000_000),
-      totalViews:  prev => prev + Math.floor(Math.random() * 100_000_000),
-      followers:   prev => prev + Math.floor(Math.random() * 1_000_000),
+      activeUsers: (prev) => prev + Math.floor(Math.random() * 10_000_000),
+      totalViews: (prev) => prev + Math.floor(Math.random() * 100_000_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 1_000_000),
     },
 
     fluctuation: 5,
 
-    onFinish: result => {
+    onFinish: (result) => {
       // Можно логировать или отправлять результат
       console.log('TikTok data generation finished', result)
-    }
+    },
   })
 }
 
@@ -87,27 +88,27 @@ export function getTwitterData(sharedBuffer) {
     initialMetrics: {
       followers: 80_000,
       impressions: 40_000,
-      engagementRate: 3.8
+      engagementRate: 3.8,
     },
 
     constantMetrics: {
       likes: 7000,
       retweets: 3000,
       quoteTweets: 1200,
-      virality: 1.3
+      virality: 1.3,
     },
 
     updateMetrics: {
-      followers: prev => prev + Math.floor(Math.random() * 1800),
-      impressions: prev => prev + Math.floor(Math.random() * 5000),
-      engagementRate: prev => prev + (Math.random() - 0.5) * 0.25
+      followers: (prev) => prev + Math.floor(Math.random() * 1800),
+      impressions: (prev) => prev + Math.floor(Math.random() * 5000),
+      engagementRate: (prev) => prev + (Math.random() - 0.5) * 0.25,
     },
 
     fluctuation: 5,
 
-    onFinish: result => {
+    onFinish: (result) => {
       console.log('Twitter data generation finished', result)
-    }
+    },
   })
 }
 
@@ -134,16 +135,16 @@ export function getDeezerData(sharedBuffer) {
     },
 
     updateMetrics: {
-      activeUsers: prev => prev + Math.floor(Math.random() * 1_000_000),
-      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
-      followers: prev => prev + Math.floor(Math.random() * 50_000),
+      activeUsers: (prev) => prev + Math.floor(Math.random() * 1_000_000),
+      totalStreams: (prev) => prev + Math.floor(Math.random() * 5_000_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 50_000),
     },
 
     fluctuation: 5,
 
-    onFinish: result => {
+    onFinish: (result) => {
       console.log('Deezer data generation finished', result)
-    }
+    },
   })
 }
 
@@ -170,16 +171,16 @@ export function getFacebookData(sharedBuffer) {
     },
 
     updateMetrics: {
-      followers: prev => prev + Math.floor(Math.random() * 2_500),
-      engagementRate: prev => prev + (Math.random() - 0.5) * 0.3,
-      reach: prev => prev + Math.floor(Math.random() * 3_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 2_500),
+      engagementRate: (prev) => prev + (Math.random() - 0.5) * 0.3,
+      reach: (prev) => prev + Math.floor(Math.random() * 3_000),
     },
 
     fluctuation: 6, // как в оригинале
 
-    onFinish: result => {
+    onFinish: (result) => {
       console.log('Facebook data generation finished', result)
-    }
+    },
   })
 }
 
@@ -206,16 +207,16 @@ export function getInstagramData(sharedBuffer) {
     },
 
     updateMetrics: {
-      followers: prev => prev + Math.floor(Math.random() * 2_000),
-      engagementRate: prev => prev + (Math.random() - 0.5) * 0.3,
-      reach: prev => prev + Math.floor(Math.random() * 2_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 2_000),
+      engagementRate: (prev) => prev + (Math.random() - 0.5) * 0.3,
+      reach: (prev) => prev + Math.floor(Math.random() * 2_000),
     },
 
     fluctuation: 6, // как в оригинале
 
-    onFinish: result => {
+    onFinish: (result) => {
       console.log('Instagram data generation finished', result)
-    }
+    },
   })
 }
 
@@ -242,16 +243,16 @@ export function getPandoraData(sharedBuffer) {
     },
 
     updateMetrics: {
-      activeUsers: prev => prev + Math.floor(Math.random() * 100_000),
-      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
-      followers: prev => prev + Math.floor(Math.random() * 50_000),
+      activeUsers: (prev) => prev + Math.floor(Math.random() * 100_000),
+      totalStreams: (prev) => prev + Math.floor(Math.random() * 5_000_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 50_000),
     },
 
     fluctuation: 5,
 
     onFinish: (result) => {
       console.log('Pandora data generation finished', result)
-    }
+    },
   })
 }
 
@@ -278,16 +279,16 @@ export function getSoundCloudData(sharedBuffer) {
     },
 
     updateMetrics: {
-      activeUsers: prev => prev + Math.floor(Math.random() * 1_000_000),
-      totalStreams: prev => prev + Math.floor(Math.random() * 5_000_000),
-      followers: prev => prev + Math.floor(Math.random() * 50_000),
+      activeUsers: (prev) => prev + Math.floor(Math.random() * 1_000_000),
+      totalStreams: (prev) => prev + Math.floor(Math.random() * 5_000_000),
+      followers: (prev) => prev + Math.floor(Math.random() * 50_000),
     },
 
     fluctuation: 5,
 
     onFinish: (result) => {
       console.log('SoundCloud data generation finished', result)
-    }
+    },
   })
 }
 
@@ -299,16 +300,16 @@ function calculatePopularity(metrics, weights, inverse = []) {
 }
 
 function generatePlatformData({
-                                       sharedBuffer,
-                                       offset,
-                                       weights,
-                                       inverseIndices,
-                                       initialMetrics,
-                                       constantMetrics,
-                                       updateMetrics,
-                                       fluctuation = 5, // колебания по умолчанию
-                                       onFinish = () => {}
-                                     }) {
+  sharedBuffer,
+  offset,
+  weights,
+  inverseIndices,
+  initialMetrics,
+  constantMetrics,
+  updateMetrics,
+  fluctuation = 5, // колебания по умолчанию
+  onFinish = () => {},
+}) {
   const data = new Float32Array(sharedBuffer, offset, 12)
   let month = 0
   const result = []
@@ -326,7 +327,7 @@ function generatePlatformData({
 
     data[month] = Math.floor(
       calculatePopularity(allMetrics, weights, inverseIndices) *
-      (1 + (Math.random() - 0.5) / fluctuation)
+        (1 + (Math.random() - 0.5) / fluctuation)
     )
 
     result.push(data[month])
@@ -340,5 +341,3 @@ function generatePlatformData({
     }
   }, 1000)
 }
-
-

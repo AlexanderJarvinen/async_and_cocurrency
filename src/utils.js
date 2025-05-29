@@ -1,39 +1,82 @@
-import {
-  dataLength,
-  largeData,
-  batchSize,
-} from './initData.js'
+import { dataLength, largeData, batchSize } from './initData.js'
 import {
   updateMainThreadChart,
   updateMainWorkerChart,
   initCharts,
 } from './chartsUpdate.js'
-import { mainFlowDataConfig, mainWorkerDataConfig } from './config';
+import { mainFlowDataConfig, mainWorkerDataConfig } from './config'
 import {
   workers,
   sharedBuffer,
-  createChartWorkerHandler
+  createChartWorkerHandler,
 } from './workerInit.js'
 
 let globalProgress = 0
 
 const chartWorkerConfigs = {
-  youtube: { workerKey: 'youtube_chart_worker', chartId: 'youtubeChart', WorkerClass:  () => new Worker('./workers/youtubeWorker.worker.js', { type: 'module' }) },
-  spotify: { workerKey: 'spotify_chart_worker', chartId: 'spotifyChart', WorkerClass: () => new Worker('./workers/spotifyWorker.worker.js', { type: 'module' }) },
-  instagram: { workerKey: 'insta_chart_worker', chartId: 'instagramChart', WorkerClass: () => new Worker('./workers/instaWorker.worker.js', { type: 'module' }) },
-  facebook: { workerKey: 'facebook_chart_worker', chartId: 'facebookChart', WorkerClass: () => new Worker('./workers/facebookWorker.worker.js', { type: 'module' }) },
-  twitter: { workerKey: 'twitter_chart_worker', chartId: 'twitterChart', WorkerClass: () => new Worker('./workers/twitterWorker.worker.js', { type: 'module' }) },
-  pandora: { workerKey: 'pandora_chart_worker', chartId: 'pandoraChart', WorkerClass: () => new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }) },
-  soundcloud: { workerKey: 'soundcloud_chart_worker', chartId: 'soundcloudChart', WorkerClass: () => new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }) },
-  deezer: { workerKey: 'deezer_chart_worker', chartId: 'deezerChart', WorkerClass:  () => new Worker('./workers/soundcloudWorker.worker.js', { type: 'module' }) },
-  tiktok: { workerKey: 'tiktok_chart_worker', chartId: 'tiktokChart', WorkerClass: () => new Worker('./workers/tiktokWorker.worker.js', { type: 'module' }) },
+  youtube: {
+    workerKey: 'youtube_chart_worker',
+    chartId: 'youtubeChart',
+    WorkerClass: () =>
+      new Worker('./workers/youtubeWorker.worker.js', { type: 'module' }),
+  },
+  spotify: {
+    workerKey: 'spotify_chart_worker',
+    chartId: 'spotifyChart',
+    WorkerClass: () =>
+      new Worker('./workers/spotifyWorker.worker.js', { type: 'module' }),
+  },
+  instagram: {
+    workerKey: 'insta_chart_worker',
+    chartId: 'instagramChart',
+    WorkerClass: () =>
+      new Worker('./workers/instaWorker.worker.js', { type: 'module' }),
+  },
+  facebook: {
+    workerKey: 'facebook_chart_worker',
+    chartId: 'facebookChart',
+    WorkerClass: () =>
+      new Worker('./workers/facebookWorker.worker.js', { type: 'module' }),
+  },
+  twitter: {
+    workerKey: 'twitter_chart_worker',
+    chartId: 'twitterChart',
+    WorkerClass: () =>
+      new Worker('./workers/twitterWorker.worker.js', { type: 'module' }),
+  },
+  pandora: {
+    workerKey: 'pandora_chart_worker',
+    chartId: 'pandoraChart',
+    WorkerClass: () =>
+      new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }),
+  },
+  soundcloud: {
+    workerKey: 'soundcloud_chart_worker',
+    chartId: 'soundcloudChart',
+    WorkerClass: () =>
+      new Worker('./workers/pandoraWorker.worker.js', { type: 'module' }),
+  },
+  deezer: {
+    workerKey: 'deezer_chart_worker',
+    chartId: 'deezerChart',
+    WorkerClass: () =>
+      new Worker('./workers/soundcloudWorker.worker.js', { type: 'module' }),
+  },
+  tiktok: {
+    workerKey: 'tiktok_chart_worker',
+    chartId: 'tiktokChart',
+    WorkerClass: () =>
+      new Worker('./workers/tiktokWorker.worker.js', { type: 'module' }),
+  },
 }
 
 // const workers = {}
 export const restartWorkerFunctions = {}
 export const initDataFunctions = {}
 
-for (const [platform, { workerKey, chartId, WorkerClass }] of Object.entries(chartWorkerConfigs)) {
+for (const [platform, { workerKey, chartId, WorkerClass }] of Object.entries(
+  chartWorkerConfigs
+)) {
   restartWorkerFunctions[`restart${capitalize(platform)}Worker`] = function () {
     if (workers[workerKey]) {
       workers[workerKey].terminate()
@@ -173,7 +216,6 @@ export function initData(isInit = false) {
   } else {
     processLargeData(mainWorkerDataConfig)
   }
-
 }
 
 // Data processing in batches using macrotasks (setTimeout)
@@ -207,13 +249,31 @@ export function processDataInWorker(batch) {
 
   if (globalProgress === 1) {
     const chartWorkers = [
-      ['youtube_chart_worker', () => restartWorkerFunctions.restartYoutubeWorker],
-      ['spotify_chart_worker', () => restartWorkerFunctions.restartSpotifyWorker],
+      [
+        'youtube_chart_worker',
+        () => restartWorkerFunctions.restartYoutubeWorker,
+      ],
+      [
+        'spotify_chart_worker',
+        () => restartWorkerFunctions.restartSpotifyWorker,
+      ],
       ['insta_chart_worker', () => restartWorkerFunctions.restartInstaWorker],
-      ['facebook_chart_worker', () => restartWorkerFunctions.restartFacebookWorker],
-      ['twitter_chart_worker', () => restartWorkerFunctions.restartTwitterWorker],
-      ['pandora_chart_worker', () => restartWorkerFunctions.restartPandoraWorker],
-      ['soundcloud_chart_worker', () => restartWorkerFunctions.restartSoundcloudWorker],
+      [
+        'facebook_chart_worker',
+        () => restartWorkerFunctions.restartFacebookWorker,
+      ],
+      [
+        'twitter_chart_worker',
+        () => restartWorkerFunctions.restartTwitterWorker,
+      ],
+      [
+        'pandora_chart_worker',
+        () => restartWorkerFunctions.restartPandoraWorker,
+      ],
+      [
+        'soundcloud_chart_worker',
+        () => restartWorkerFunctions.restartSoundcloudWorker,
+      ],
       ['deezer_chart_worker', () => restartWorkerFunctions.restartDeezerWorker],
       ['tiktok_chart_worker', () => restartWorkerFunctions.restartTiktokWorker],
     ]

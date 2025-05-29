@@ -22,5 +22,3 @@ onmessage = function (e) {
   // Send the result back to the main thread
   postMessage({ platforms: processedPlatforms })
 }
-
-

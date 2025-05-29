@@ -4,7 +4,7 @@ onmessage = function (e) {
   const { batch, dataLength } = e.data
 
   // Generation of random number array
-  const randomArray = getRandom(dataLength);
+  const randomArray = getRandom(dataLength)
 
   // Find indexes of elements from batch in randomArray
   const indices = batch.map((item) => {
