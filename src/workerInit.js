@@ -1,13 +1,13 @@
-import { platformCharts, indexData } from './initData.js'
+import { platformCharts, indexData } from './initData.js';
 
-import { chartConfig } from './config'
+import { chartConfig } from './config';
 
-let randomArray = []
-let indices = []
-const totalPlatforms = 9
-const monthsPerPlatform = 12
-const bytesPerElement = 4 // Float32
-const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement // 9 * 12 * 4 = 432 байта
+let randomArray = [];
+let indices = [];
+const totalPlatforms = 9;
+const monthsPerPlatform = 12;
+const bytesPerElement = 4; // Float32
+const bufferSize = totalPlatforms * monthsPerPlatform * bytesPerElement; // 9 * 12 * 4 = 432 байта
 
 export const workers = {
   artist_charts_worker: new Worker('./workers/artistsCharts.worker.js', {
@@ -41,9 +41,9 @@ export const workers = {
     type: 'module',
   }),
   worker: new Worker('./worker.worker.js', { type: 'module' }),
-}
+};
 
-export const sharedBuffer = new SharedArrayBuffer(bufferSize)
+export const sharedBuffer = new SharedArrayBuffer(bufferSize);
 
 const platforms = [
   'youtube',
@@ -55,90 +55,90 @@ const platforms = [
   'soundcloud',
   'deezer',
   'tiktok',
-]
+];
 
-const progressElements = {}
+const progressElements = {};
 
 platforms.forEach((platform) => {
   progressElements[platform] = {
     bar: document.getElementById(`${platform}-chart-progress-bar`),
     text: document.getElementById(`${platform}-chart-progress-text`),
-  }
-})
+  };
+});
 
 export function createChartWorkerHandler(platformKey, chartKey) {
   return function (e) {
     if (e.data.length) {
-      const progressValue = (e.data.length / 12) * 100
-      progressElements[platformKey].bar.value = progressValue
+      const progressValue = (e.data.length / 12) * 100;
+      progressElements[platformKey].bar.value = progressValue;
       progressElements[platformKey].text.textContent =
-        `${Math.round(progressValue)}%`
+        `${Math.round(progressValue)}%`;
 
-      platformCharts[chartKey].data.datasets[0].data = e.data
-      platformCharts[chartKey].update()
+      platformCharts[chartKey].data.datasets[0].data = e.data;
+      platformCharts[chartKey].update();
     }
-  }
+  };
 }
 
 workers.youtube_chart_worker.onmessage = createChartWorkerHandler(
   'youtube',
-  'youtubeChart'
-)
+  'youtubeChart',
+);
 workers.spotify_chart_worker.onmessage = createChartWorkerHandler(
   'spotify',
-  'spotifyChart'
-)
+  'spotifyChart',
+);
 workers.insta_chart_worker.onmessage = createChartWorkerHandler(
   'instagram',
-  'instagramChart'
-)
+  'instagramChart',
+);
 workers.facebook_chart_worker.onmessage = createChartWorkerHandler(
   'facebook',
-  'facebookChart'
-)
+  'facebookChart',
+);
 workers.twitter_chart_worker.onmessage = createChartWorkerHandler(
   'twitter',
-  'twitterChart'
-)
+  'twitterChart',
+);
 workers.pandora_chart_worker.onmessage = createChartWorkerHandler(
   'pandora',
-  'pandoraChart'
-)
+  'pandoraChart',
+);
 workers.soundcloud_chart_worker.onmessage = createChartWorkerHandler(
   'soundcloud',
-  'soundcloudChart'
-)
+  'soundcloudChart',
+);
 workers.deezer_chart_worker.onmessage = createChartWorkerHandler(
   'deezer',
-  'deezerChart'
-)
+  'deezerChart',
+);
 workers.tiktok_chart_worker.onmessage = createChartWorkerHandler(
   'tiktok',
-  'tiktokChart'
-)
+  'tiktokChart',
+);
 
 workers.artist_charts_worker.onmessage = function (e) {
-  const processedPlatforms = e.data.platforms
+  const processedPlatforms = e.data.platforms;
 
   processedPlatforms.forEach((platform) => {
-    const ctx = document.getElementById(platform.id).getContext('2d')
+    const ctx = document.getElementById(platform.id).getContext('2d');
 
     if (platformCharts[platform.id]) {
-      platformCharts[platform.id].destroy()
+      platformCharts[platform.id].destroy();
     }
 
     platformCharts[platform.id] = new Chart(
       ctx,
-      chartConfig(platform.label, platform.data, platform.color, platform.bg)
-    )
-  })
-}
+      chartConfig(platform.label, platform.data, platform.color, platform.bg),
+    );
+  });
+};
 
 // Web Worker message handler
 workers.worker.onmessage = function (e) {
-  randomArray = e.data.randomArray
-  indices = e.data.indices
+  randomArray = e.data.randomArray;
+  indices = e.data.indices;
 
   // Update graphs with results from Web Worker
-  indexData.push(indices)
-}
+  indexData.push(indices);
+};

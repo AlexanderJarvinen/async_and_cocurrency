@@ -1,7 +1,10 @@
-import { months } from './initData'
-import { updateMainThreadChart, updateMainWorkerChart } from './chartsUpdate.js'
-import { processBatch, processDataInWorker } from './utils'
-import { data } from './initData.js'
+import { months } from './initData';
+import {
+  updateMainThreadChart,
+  updateMainWorkerChart,
+} from './chartsUpdate.js';
+import { processBatch, processDataInWorker } from './utils';
+import { data } from './initData.js';
 
 export const mainChartConfig = {
   type: 'line',
@@ -22,7 +25,7 @@ export const mainChartConfig = {
       duration: 0,
     },
   },
-}
+};
 
 export const mainWorkerChartConfig = {
   type: 'bar',
@@ -44,7 +47,7 @@ export const mainWorkerChartConfig = {
       duration: 0,
     },
   },
-}
+};
 
 // Charts settings for each platform
 export const chartConfig = (label, data, borderColor, backgroundColor) => ({
@@ -69,7 +72,7 @@ export const chartConfig = (label, data, borderColor, backgroundColor) => ({
       },
     },
   },
-})
+});
 
 export const mainFlowDataConfig = {
   loaderId: 'mainThreadLoader',
@@ -79,7 +82,7 @@ export const mainFlowDataConfig = {
   updateChartCallback: updateMainThreadChart,
   batchProcessor: processBatch,
   dataContainer: data, // Main data array
-}
+};
 
 export const mainWorkerDataConfig = {
   loaderId: 'mainWorkerLoader',
@@ -89,4 +92,4 @@ export const mainWorkerDataConfig = {
   updateChartCallback: updateMainWorkerChart,
   batchProcessor: processBatch,
   workerProcessor: processDataInWorker, // Transmit data to the Warker
-}
+};

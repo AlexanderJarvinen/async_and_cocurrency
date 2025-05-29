@@ -1,17 +1,17 @@
 export function getRandom(dataLength) {
   return Array.from({ length: dataLength }, () =>
-    Math.floor(Math.random() * dataLength)
-  )
+    Math.floor(Math.random() * dataLength),
+  );
 }
 
 // Function of random data generation (similar to the main program)
 export function getRandomData(baseValue, variance) {
   const randomData = Array.from({ length: 12 }, () => {
-    const randomVariation = Math.floor(Math.random() * variance) - variance / 2
-    return Math.max(0, baseValue + randomVariation)
-  })
+    const randomVariation = Math.floor(Math.random() * variance) - variance / 2;
+    return Math.max(0, baseValue + randomVariation);
+  });
 
-  return randomData
+  return randomData;
 }
 
 export function getSpotifyData(sharedBuffer) {
@@ -36,11 +36,11 @@ export function getSpotifyData(sharedBuffer) {
       totalStreams: (val) => val + Math.floor(Math.random() * 100_000),
       followers: (val) => val + Math.floor(Math.random() * 1_000),
     },
-  })
+  });
 }
 
 export function getTikTokData(sharedBuffer) {
-  const offset = 12 * 4 * 8 // TikTok — девятая платформа (индекс 8)
+  const offset = 12 * 4 * 8; // TikTok — девятая платформа (индекс 8)
 
   generatePlatformData({
     sharedBuffer,
@@ -71,13 +71,13 @@ export function getTikTokData(sharedBuffer) {
 
     onFinish: (result) => {
       // Можно логировать или отправлять результат
-      console.log('TikTok data generation finished', result)
+      console.log('TikTok data generation finished', result);
     },
-  })
+  });
 }
 
 export function getTwitterData(sharedBuffer) {
-  const offset = 12 * 4 * 4 // Twitter — пятая платформа (индекс 4)
+  const offset = 12 * 4 * 4; // Twitter — пятая платформа (индекс 4)
 
   generatePlatformData({
     sharedBuffer,
@@ -107,13 +107,13 @@ export function getTwitterData(sharedBuffer) {
     fluctuation: 5,
 
     onFinish: (result) => {
-      console.log('Twitter data generation finished', result)
+      console.log('Twitter data generation finished', result);
     },
-  })
+  });
 }
 
 export function getDeezerData(sharedBuffer) {
-  const offset = 12 * 4 * 7 // Deezer — восьмая платформа (index 7)
+  const offset = 12 * 4 * 7; // Deezer — восьмая платформа (index 7)
 
   generatePlatformData({
     sharedBuffer,
@@ -143,13 +143,13 @@ export function getDeezerData(sharedBuffer) {
     fluctuation: 5,
 
     onFinish: (result) => {
-      console.log('Deezer data generation finished', result)
+      console.log('Deezer data generation finished', result);
     },
-  })
+  });
 }
 
 export function getFacebookData(sharedBuffer) {
-  const offset = 12 * 4 * 3 // Facebook — четвёртая платформа (index 3)
+  const offset = 12 * 4 * 3; // Facebook — четвёртая платформа (index 3)
 
   generatePlatformData({
     sharedBuffer,
@@ -179,13 +179,13 @@ export function getFacebookData(sharedBuffer) {
     fluctuation: 6, // как в оригинале
 
     onFinish: (result) => {
-      console.log('Facebook data generation finished', result)
+      console.log('Facebook data generation finished', result);
     },
-  })
+  });
 }
 
 export function getInstagramData(sharedBuffer) {
-  const offset = 12 * 4 * 2 // Instagram — третья платформа (index 2)
+  const offset = 12 * 4 * 2; // Instagram — третья платформа (index 2)
 
   generatePlatformData({
     sharedBuffer,
@@ -215,13 +215,13 @@ export function getInstagramData(sharedBuffer) {
     fluctuation: 6, // как в оригинале
 
     onFinish: (result) => {
-      console.log('Instagram data generation finished', result)
+      console.log('Instagram data generation finished', result);
     },
-  })
+  });
 }
 
 export function getPandoraData(sharedBuffer) {
-  const offset = 12 * 4 * 5 // шестая платформа (индекс 5)
+  const offset = 12 * 4 * 5; // шестая платформа (индекс 5)
 
   generatePlatformData({
     sharedBuffer,
@@ -251,13 +251,13 @@ export function getPandoraData(sharedBuffer) {
     fluctuation: 5,
 
     onFinish: (result) => {
-      console.log('Pandora data generation finished', result)
+      console.log('Pandora data generation finished', result);
     },
-  })
+  });
 }
 
 export function getSoundCloudData(sharedBuffer) {
-  const offset = 12 * 4 * 6 // седьмая платформа (индекс 6)
+  const offset = 12 * 4 * 6; // седьмая платформа (индекс 6)
 
   generatePlatformData({
     sharedBuffer,
@@ -287,16 +287,16 @@ export function getSoundCloudData(sharedBuffer) {
     fluctuation: 5,
 
     onFinish: (result) => {
-      console.log('SoundCloud data generation finished', result)
+      console.log('SoundCloud data generation finished', result);
     },
-  })
+  });
 }
 
 function calculatePopularity(metrics, weights, inverse = []) {
   return metrics.reduce((acc, val, idx) => {
-    const effect = inverse.includes(idx) ? -1 : 1
-    return acc + effect * weights[idx] * val
-  }, 0)
+    const effect = inverse.includes(idx) ? -1 : 1;
+    return acc + effect * weights[idx] * val;
+  }, 0);
 }
 
 function generatePlatformData({
@@ -310,34 +310,34 @@ function generatePlatformData({
   fluctuation = 5, // колебания по умолчанию
   onFinish = () => {},
 }) {
-  const data = new Float32Array(sharedBuffer, offset, 12)
-  let month = 0
-  const result = []
+  const data = new Float32Array(sharedBuffer, offset, 12);
+  let month = 0;
+  const result = [];
 
   const interval = setInterval(() => {
     // Обновляем метрики
     for (const key in updateMetrics) {
-      initialMetrics[key] = updateMetrics[key](initialMetrics[key])
+      initialMetrics[key] = updateMetrics[key](initialMetrics[key]);
     }
 
     const allMetrics = [
       ...Object.values(initialMetrics),
       ...Object.values(constantMetrics),
-    ]
+    ];
 
     data[month] = Math.floor(
       calculatePopularity(allMetrics, weights, inverseIndices) *
-        (1 + (Math.random() - 0.5) / fluctuation)
-    )
+        (1 + (Math.random() - 0.5) / fluctuation),
+    );
 
-    result.push(data[month])
-    postMessage(result)
+    result.push(data[month]);
+    postMessage(result);
 
-    month++
+    month++;
     if (month >= 12) {
-      clearInterval(interval)
-      postMessage(result)
-      onFinish(result)
+      clearInterval(interval);
+      postMessage(result);
+      onFinish(result);
     }
-  }, 1000)
+  }, 1000);
 }

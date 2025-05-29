@@ -1,9 +1,9 @@
-import './style.css'
-import { initData, initDataFunctions } from './utils.js'
-import { initCharts } from './chartsUpdate.js'
+import './style.css';
+import { initData, initDataFunctions } from './utils.js';
+import { initCharts } from './chartsUpdate.js';
 
 window.onload = () => {
-  initCharts()
+  initCharts();
 
   const platformInitMap = {
     startMainChart: () => initData(),
@@ -17,12 +17,12 @@ window.onload = () => {
     soundcloud: initDataFunctions.initDataForSoundcloudChart,
     deezer: initDataFunctions.initDataForDeezerChart,
     tiktok: initDataFunctions.initDataForTiktokChart,
-  }
+  };
 
   Object.entries(platformInitMap).forEach(([platform, handler]) => {
-    const button = document.getElementById(`${platform}DataLoadingButton`)
+    const button = document.getElementById(`${platform}DataLoadingButton`);
     if (button) {
-      button.addEventListener('click', handler)
+      button.addEventListener('click', handler);
     }
-  })
-}
+  });
+};

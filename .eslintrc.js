@@ -13,7 +13,16 @@ export default {
   },
   rules: {
     'no-console': 'warn',
-    'prettier/prettier': ['error', { semi: false, singleQuote: true }],
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        semi: true,
+        trailingComma: 'all', // ← добавь это
+      },
+    ],
+    semi: ['error', 'always'],
+    'comma-dangle': ['error', 'always-multiline'],
     'css/use-baseline': 'off',
   },
-}
+};
