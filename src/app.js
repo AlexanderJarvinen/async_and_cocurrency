@@ -1,15 +1,6 @@
 import './style.css'
 import {
   initData,
-  // initDataForYoutubeChart,
-  // initDataForSpotifyChart,
-  // initDataForInstaChart,
-  // initDataForFacebookChart,
-  // initDataForTwitterChart,
-  // initDataForPandoraChart,
-  // initDataForSoundcloudChart,
-  // initDataForDeezerChart,
-  // initDataForTiktokChart,
   initDataFunctions
 } from './utils.js'
 import { initCharts } from './chartsUpdate.js'
