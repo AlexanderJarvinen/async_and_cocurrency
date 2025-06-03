@@ -78,7 +78,7 @@ export function simulateProblemLargeDataProcessing() {
   const endMark = "simulateProblemLargeDataProcessing-end";
   performance.mark(startMark);
 
-  const heapLimit = performance.memory.jsHeapSizeLimit; // Лимит кучи
+  const heapLimit = performance.memory.jsHeapSizeLimit; // Heap limit
   console.log(`Heap size limit: ${(heapLimit / 1024 / 1024).toFixed(2)} MB`);
 
   const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
@@ -90,7 +90,7 @@ export function simulateProblemLargeDataProcessing() {
     const usedHeapMB = usedHeap / 1024 / 1024;
     const heapLimitMB = heapLimit / 1024 / 1024;
 
-    if (usedHeap >= heapLimit * 0.9) { // Если используется 90% лимита
+    if (usedHeap >= heapLimit * 0.9) { // If 90% of the limit is used
       throw new Error(
         `Memory usage exceeded safe threshold: ${usedHeapMB.toFixed(2)} MB (limit: ${heapLimitMB.toFixed(2)} MB)`
       );
