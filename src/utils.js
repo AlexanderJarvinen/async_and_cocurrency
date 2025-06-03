@@ -143,12 +143,6 @@ function updateProgressBar(index, progressBarId, progressTextId) {
   globalProgress = progress;
 }
 
-// Function for data processing using macrotasks and Performance API
-export function processDataForMainFlow() {
-  initCharts();
-  processLargeData(mainFlowDataConfig);
-}
-
 export function initData(isInit = false) {
   const config = isInit ? mainFlowDataConfig : mainWorkerDataConfig;
 
