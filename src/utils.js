@@ -98,34 +98,34 @@ export function logMetrics(memoryUsed, timeElapsed) {
     const logDiv = document.getElementById("log");
     let table = logDiv.querySelector('table');
 
-    // Если таблицы нет, создаем новую
+    // If there is no table, create a new one
     if (!table) {
         table = document.createElement('table');
         logDiv.appendChild(table);
     }
 
-    // Проверяем, содержит ли таблица строки <tr>
+    // Check if the table contains rows <tr>
     const hasRows = table.getElementsByTagName('tr').length > 0;
 
     if (!hasRows) {
-        // Создаем строки <tr>
+        // Create strings <tr>
         const row1 = document.createElement("tr");
         row1.setAttribute('id', 'memoryUsed');
         const row2 = document.createElement("tr");
         row2.setAttribute('id', 'timeElapsed');
 
-        // Создаем ячейки для первой строки
+        // Create cells for the first row
         const cell1 = document.createElement('td');
-        cell1.textContent = 'Memory Used'; // Текст для первой ячейки
+        cell1.textContent = 'Memory Used'; // Text for the first cell
 
         const cell2 = document.createElement('td');
-        cell2.textContent = 'Time Elapsed'; // Текст для второй ячейки
+        cell2.textContent = 'Time Elapsed'; // Text for the second cell
 
-        // Добавляем ячейки в строки
+        // Add cells to rows
         row1.appendChild(cell1);
         row2.appendChild(cell2);
 
-        // Добавляем строки в таблицу
+        // Add rows to the table
         table.appendChild(row1);
         table.appendChild(row2);
 
