@@ -1,61 +1,73 @@
-# Data Visualization App
+# Social Platform Analytics Visualization
+This project visualizes popularity metrics across various social platforms using dynamic charts. It features:
 
-This is a web application for visualizing data using charts. The application uses Webpack for bundling, and `chart.js` for rendering charts. It also utilizes Web Workers for processing data in the background.
+- Real-time data simulation and rendering
+- Batched data processing
+- Web Workers for concurrent computation
+- Visual performance metrics (memory and time)
 
-## Features
+# Features
 
-- Visualize data using line and bar charts.
-- Process data using Web Workers.
-- Dynamic updates with progress bar.
+- Interactive dashboard with multiple charts
+- One-click data generation for platforms: YouTube, Spotify, Instagram, Facebook, Twitter, Pandora, SoundCloud, Deezer, TikTok
+- Batch data processing with progress bar
+- Performance logging (memory usage, time per batch)
+- Dual-mode operation: Main thread vs. Web Worker processing
 
-## Getting Started
+# Run Locally
 
-### Prerequisites
+## Install http-server if needed
+npm install -g http-server
 
-- [Node.js](https://nodejs.org/) (>= 14.x)
-- [npm](https://www.npmjs.com/) (comes with Node.js)
+## Serve the project directory
+http-server .
 
-### Installation
+## Then open http://localhost:8080 in your browser
 
-1. Clone the repository:
+# Usage
+- Load the main charts with:
 
-   ```bash
-   git clone https://github.com/AlexanderJarvinen/async_and_cocurrency.git
+  - Start Main Chart – loads data on main thread
+  - Start Workers – loads using Web Workers
 
-   ```
+- Click platform buttons (e.g., "Spotify", "YouTube") to simulate individual data feeds
 
-2. Navigate to the project directory:
+- Progress bar shows batch processing status
 
-   ```bash
-   cd async_and_cocurrency
+- Performance table displays memory & time per batch
 
-   ```
+# Technical Highlights
 
-3. Install the dependencies:
+- Chart.js is used for rendering charts
+- Web Workers simulate platform-specific data generation in parallel
+- SharedArrayBuffer used to share data between workers and main thread (if supported)
+- processLargeData() function handles chunking and visual progress
+- Performance logs are shown per batch in the dashboard
 
-   ```bash
-   npm install
-   ```
+# Core Concepts
 
-### Development
+## Main Chart Initialization
 
-To start the development server and open the application in your default browser, use:
+initCharts(); // Initializes and resets all platform charts
+initData(true); // Main thread data simulation
 
-````bash
-npm start
+## Worker-Based Simulation
 
-The application will be available at http://localhost:9000.
+initData(); // Worker-driven data generation
+initDataFunctions.initDataForSpotifyChart(); // Per-platform init
 
-### Build
+## Batch Processing
 
-To build the project for production, run:
+processLargeData({
+batchProcessor: processBatch,
+updateChartCallback: updateMainThreadChart,
+});
 
-```bash
-npm run build
+# Metrics Logging
 
-This will generate the bundle.js file in the dist directory.
+Every batch logs:
+- Used memory in MB
+- Time spent in ms
 
-## License
+Metrics are appended to a performance table in the UI.
 
-This project is licensed under the MIT License - see the [LICENSE]() file for details.
-````
