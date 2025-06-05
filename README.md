@@ -14,15 +14,26 @@ This project visualizes popularity metrics across various social platforms using
 - Performance logging (memory usage, time per batch)
 - Dual-mode operation: Main thread vs. Web Worker processing
 
-# Run Locally
+##  Installation and Launch
 
-## Install http-server if needed
-npm install -g http-server
+### Clone the repository
+git clone https://github.com/your-username/data-visualization-app.git
+cd data-visualization-app
 
-## Serve the project directory
-http-server .
+### Install dependencies
+npm install
 
-## Then open http://localhost:8080 in your browser
+### Start the development server
+npm run dev
+
+### Builds the app for production to the dist folder.
+npm run build
+
+### Runs ESLint to check code quality.
+npm run lint
+
+### Formats the code using Prettier.
+npm run format
 
 # Usage
 - Load the main charts with:
