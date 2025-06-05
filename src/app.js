@@ -6,8 +6,8 @@ window.onload = () => {
   initCharts();
 
   const platformInitMap = {
-    startMainChart: () => initData(),
-    startWorkers: () => initData(true),
+    startMainChart: () => initData(true),
+    startWorkers: () => initData(),
     youtube: initDataFunctions.initDataForYoutubeChart,
     spotify: initDataFunctions.initDataForSpotifyChart,
     instagram: initDataFunctions.initDataForInstagramChart,
