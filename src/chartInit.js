@@ -64,6 +64,8 @@ export function resetAllProcesses() {
 export function simulateProblemLargeDataProcessing() {
   showLoader();
   resetAllProcesses();
+
+  // Large array of data
   const largeData = Array.from({ length: 1000 }, (_, i) => i);
 
   // Check Memory API support
@@ -84,6 +86,7 @@ export function simulateProblemLargeDataProcessing() {
   const startMemory = performance.memory ? performance.memory.usedJSHeapSize : 0;
   const startTime = performance.now();
 
+  // Blocking of Main Thread
   largeData.forEach((value, index) => {
     // Check current memory usage
     const usedHeap = performance.memory.usedJSHeapSize;

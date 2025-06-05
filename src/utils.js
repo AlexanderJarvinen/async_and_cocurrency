@@ -154,7 +154,9 @@ export async function processChunksSequentially(largeData, chunkSize) {
     showLoader(); // Show loading indicator at the beginning of processing
 
     while (currentIndex < largeData.length) {
+        // Receiving of promise
         const chunkData = await fetchDataChunk(chunkSize, currentIndex, largeData);
+        // Collecting of promises to array
         dataQueue.push(chunkData);
 
         // Measuring the current memory usage and time
